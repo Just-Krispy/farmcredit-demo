@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Farm Credit SEMO — Patronage Dividend Tracker</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #f4f7f0;
+      color: #1a2e1a;
+      min-height: 100vh;
+    }
+
+    header {
+      background: #2d5a1b;
+      color: white;
+      padding: 16px 24px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    }
+
+    header .logo {
+      font-size: 22px;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+    }
+
+    header .logo span { color: #8bc34a; }
+
+    header .tagline {
+      font-size: 13px;
+      opacity: 0.8;
+      margin-top: 2px;
+    }
+
+    .hero {
+      background: linear-gradient(135deg, #2d5a1b 0%, #3d7a25 100%);
+      color: white;
+      padding: 48px 24px 40px;
+      text-align: center;
+    }
+
+    .hero h1 {
+      font-size: 28px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .hero p {
+      font-size: 16px;
+      opacity: 0.85;
+      max-width: 500px;
+      margin: 0 auto;
+    }
+
+    .main {
+      max-width: 700px;
+      margin: -28px auto 40px;
+      padding: 0 16px;
+    }
+
+    .card {
+      background: white;
+      border-radius: 16px;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.1);
+      padding: 32px;
+      margin-bottom: 20px;
+    }
+
+    .card h2 {
+      font-size: 18px;
+      font-weight: 600;
+      color: #2d5a1b;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .input-group {
+      margin-bottom: 24px;
+    }
+
+    .input-group label {
+      display: block;
+      font-size: 14px;
+      font-weight: 500;
+      color: #555;
+      margin-bottom: 8px;
+    }
+
+    .input-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .input-row input[type="range"] {
+      flex: 1;
+      height: 6px;
+      -webkit-appearance: none;
+      background: #d0e8c0;
+      border-radius: 3px;
+      outline: none;
+    }
+
+    .input-row input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: #2d5a1b;
+      cursor: pointer;
+      box-shadow: 0 2px 6px rgba(45,90,27,0.4);
+    }
+
+    .input-row .value-display {
+      font-size: 18px;
+      font-weight: 700;
+      color: #2d5a1b;
+      min-width: 120px;
+      text-align: right;
+    }
+
+    .rate-pills {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 12px;
+    }
+
+    .rate-pill {
+      background: #f0f7ea;
+      border: 2px solid #c8e6a0;
+      border-radius: 20px;
+      padding: 6px 14px;
+      font-size: 13px;
+      cursor: pointer;
+      transition: all 0.2s;
+      color: #2d5a1b;
+      font-weight: 500;
+    }
+
+    .rate-pill.active, .rate-pill:hover {
+      background: #2d5a1b;
+      border-color: #2d5a1b;
+      color: white;
+    }
+
+    .result-banner {
+      background: linear-gradient(135deg, #2d5a1b, #3d7a25);
+      color: white;
+      border-radius: 12px;
+      padding: 28px;
+      text-align: center;
+      margin: 24px 0;
+    }
+
+    .result-banner .label {
+      font-size: 13px;
+      opacity: 0.8;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 8px;
+    }
+
+    .result-banner .amount {
+      font-size: 52px;
+      font-weight: 800;
+      letter-spacing: -1px;
+      line-height: 1;
+    }
+
+    .result-banner .sub {
+      font-size: 14px;
+      opacity: 0.75;
+      margin-top: 8px;
+    }
+
+    .breakdown {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 12px;
+      margin-top: 20px;
+    }
+
+    .breakdown-item {
+      background: #f4f7f0;
+      border-radius: 10px;
+      padding: 14px;
+      text-align: center;
+    }
+
+    .breakdown-item .bi-label {
+      font-size: 11px;
+      color: #888;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 4px;
+    }
+
+    .breakdown-item .bi-value {
+      font-size: 18px;
+      font-weight: 700;
+      color: #2d5a1b;
+    }
+
+    .history-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 8px;
+    }
+
+    .history-table th {
+      text-align: left;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: #999;
+      padding: 8px 12px;
+      border-bottom: 1px solid #eee;
+    }
+
+    .history-table td {
+      padding: 12px;
+      border-bottom: 1px solid #f0f0f0;
+      font-size: 15px;
+    }
+
+    .history-table tr:last-child td { border-bottom: none; }
+
+    .history-table .year { font-weight: 600; color: #2d5a1b; }
+    .history-table .refund { font-weight: 700; color: #1a2e1a; }
+    .history-table .rate { color: #666; }
+
+    .badge-record {
+      background: #fff3cd;
+      color: #856404;
+      border: 1px solid #ffc107;
+      font-size: 11px;
+      font-weight: 600;
+      padding: 2px 8px;
+      border-radius: 10px;
+      margin-left: 8px;
+    }
+
+    .progress-bar-wrap {
+      background: #e8f5e0;
+      border-radius: 8px;
+      height: 10px;
+      overflow: hidden;
+      margin-top: 6px;
+    }
+
+    .progress-bar {
+      height: 100%;
+      background: linear-gradient(90deg, #2d5a1b, #8bc34a);
+      border-radius: 8px;
+      transition: width 0.4s ease;
+    }
+
+    .progress-label {
+      display: flex;
+      justify-content: space-between;
+      font-size: 12px;
+      color: #888;
+      margin-top: 4px;
+    }
+
+    .cta {
+      background: #f0f7ea;
+      border: 2px solid #c8e6a0;
+      border-radius: 12px;
+      padding: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .cta p { font-size: 14px; color: #555; }
+    .cta strong { color: #2d5a1b; }
+
+    .cta button {
+      background: #2d5a1b;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      padding: 10px 20px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    .cta button:hover { background: #3d7a25; }
+
+    footer {
+      text-align: center;
+      padding: 24px;
+      font-size: 12px;
+      color: #aaa;
+    }
+
+    @media (max-width: 520px) {
+      .breakdown { grid-template-columns: 1fr 1fr; }
+      .result-banner .amount { font-size: 40px; }
+      .cta { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div>
+    <div class="logo">Farm Credit <span>SEMO</span></div>
+    <div class="tagline">Member of the Farm Credit System</div>
+  </div>
+</header>
+
+<div class="hero">
+  <h1>💰 Your Patronage Dividend Tracker</h1>
+  <p>See your projected year-end cash refund based on your loan balance — updated in real time.</p>
+</div>
+
+<div class="main">
+
+  <!-- Calculator Card -->
+  <div class="card">
+    <h2>🌾 Calculate Your Projected Refund</h2>
+
+    <div class="input-group">
+      <label>Your Average Loan Balance</label>
+      <div class="input-row">
+        <input type="range" id="loanSlider" min="50000" max="2000000" step="10000" value="350000" oninput="update()" />
+        <div class="value-display" id="loanDisplay">$350,000</div>
+      </div>
+      <div class="progress-bar-wrap" style="margin-top:10px">
+        <div class="progress-bar" id="loanProgress" style="width:17%"></div>
+      </div>
+      <div class="progress-label"><span>$50K</span><span>$2M</span></div>
+    </div>
+
+    <div class="input-group">
+      <label>Patronage Rate (basis points)</label>
+      <div class="rate-pills">
+        <div class="rate-pill" onclick="setRate(0.5)">0.50%</div>
+        <div class="rate-pill active" onclick="setRate(0.95)">0.95% ← 2025 Rate</div>
+        <div class="rate-pill" onclick="setRate(1.2)">1.20%</div>
+        <div class="rate-pill" onclick="setRate(1.5)">1.50%</div>
+      </div>
+    </div>
+
+    <div class="result-banner">
+      <div class="label">Your Estimated 2025 Patronage Refund</div>
+      <div class="amount" id="refundAmount">$3,325</div>
+      <div class="sub" id="refundSub">Based on $350,000 average balance × 0.95% rate</div>
+    </div>
+
+    <div class="breakdown">
+      <div class="breakdown-item">
+        <div class="bi-label">Cash Refund</div>
+        <div class="bi-value" id="cashRefund">$3,325</div>
+      </div>
+      <div class="breakdown-item">
+        <div class="bi-label">Effective Rate</div>
+        <div class="bi-value" id="effectiveRate">0.95%</div>
+      </div>
+      <div class="breakdown-item">
+        <div class="bi-label">vs. Last Year</div>
+        <div class="bi-value" style="color:#27ae60" id="vsLastYear">+$248</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- History Card -->
+  <div class="card">
+    <h2>📊 Patronage History — Farm Credit SEMO</h2>
+    <table class="history-table">
+      <thead>
+        <tr>
+          <th>Year</th>
+          <th>Total Paid to Members</th>
+          <th>Est. Rate</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="year">2025</td>
+          <td class="refund">$9,100,000</td>
+          <td class="rate">0.95%</td>
+          <td><span class="badge-record">🏆 Record</span></td>
+        </tr>
+        <tr>
+          <td class="year">2024</td>
+          <td class="refund">$7,800,000</td>
+          <td class="rate">0.82%</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td class="year">2023</td>
+          <td class="refund">$6,900,000</td>
+          <td class="rate">0.74%</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td class="year">2022</td>
+          <td class="refund">$5,400,000</td>
+          <td class="rate">0.61%</td>
+          <td></td>
+        </tr>
+      </tbody>
+    </table>
+    <p style="font-size:12px;color:#aaa;margin-top:12px;">* Historical rates estimated for demonstration. Actual rates declared annually by the Board of Directors.</p>
+  </div>
+
+  <!-- Why it matters -->
+  <div class="card">
+    <h2>🏦 Why Farm Credit vs. a Bank?</h2>
+    <p style="color:#555;font-size:15px;line-height:1.6;margin-bottom:16px;">
+      When you borrow through Farm Credit SEMO, you're a <strong>member-owner</strong> — not just a customer. 
+      That means every year, a portion of the earnings comes back to you as a cash patronage refund. 
+      No bank offers this. It's one of the reasons borrowing here genuinely costs less over time.
+    </p>
+    <div class="cta">
+      <p>Want to maximize your patronage? <strong>Ask about consolidating your loans with SEMO.</strong></p>
+      <button onclick="alert('Contact your local branch — this demo would link to branch finder')">Talk to Us</button>
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  Farm Credit Southeast Missouri | (877) 730-7327 | farmcreditsemo.com<br/>
+  Equal Housing Lender | Equal Credit Opportunity | Equal Opportunity Provider
+</footer>
+
+<script>
+  let currentRate = 0.0095;
+  let loanValue = 350000;
+
+  function fmt(n) {
+    return '$' + Math.round(n).toLocaleString();
+  }
+
+  function update() {
+    const slider = document.getElementById('loanSlider');
+    loanValue = parseInt(slider.value);
+    document.getElementById('loanDisplay').textContent = fmt(loanValue);
+
+    // Progress bar
+    const pct = ((loanValue - 50000) / (2000000 - 50000)) * 100;
+    document.getElementById('loanProgress').style.width = pct + '%';
+
+    calculate();
+  }
+
+  function setRate(r) {
+    currentRate = r / 100;
+    document.querySelectorAll('.rate-pill').forEach(p => p.classList.remove('active'));
+    event.target.classList.add('active');
+    document.getElementById('effectiveRate').textContent = (currentRate * 100).toFixed(2) + '%';
+    calculate();
+  }
+
+  function calculate() {
+    const refund = loanValue * currentRate;
+    const lastYearRefund = loanValue * 0.0082; // 2024 rate
+    const diff = refund - lastYearRefund;
+
+    document.getElementById('refundAmount').textContent = fmt(refund);
+    document.getElementById('cashRefund').textContent = fmt(refund);
+    document.getElementById('refundSub').textContent =
+      'Based on ' + fmt(loanValue) + ' average balance × ' + (currentRate * 100).toFixed(2) + '% rate';
+
+    const vsEl = document.getElementById('vsLastYear');
+    if (diff >= 0) {
+      vsEl.textContent = '+' + fmt(diff);
+      vsEl.style.color = '#27ae60';
+    } else {
+      vsEl.textContent = fmt(diff);
+      vsEl.style.color = '#e74c3c';
+    }
+  }
+
+  // Init
+  calculate();
+</script>
+</body>
+</html>

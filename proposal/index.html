@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Farm Credit SEMO — Digital Member Experience Proposal</title>
+  <style>
+    @media print {
+      body { background: white !important; }
+      .no-print { display: none !important; }
+      .page { box-shadow: none !important; margin: 0 !important; border-radius: 0 !important; }
+      a { color: #2d5a1b !important; }
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Georgia, sans-serif; background: #e8ede4; color: #1a2e1a; }
+    .page { max-width: 860px; margin: 32px auto; background: white; border-radius: 20px; box-shadow: 0 8px 40px rgba(0,0,0,.12); overflow: hidden; }
+
+    /* COVER */
+    .cover { background: linear-gradient(150deg, #1e3d12 0%, #2d5a1b 50%, #3d7a25 100%); padding: 56px 60px 48px; position: relative; overflow: hidden; }
+    .cover::after { content: ''; position: absolute; right: -60px; top: -60px; width: 300px; height: 300px; background: rgba(255,255,255,.04); border-radius: 50%; }
+    .cover-tag { display: inline-block; background: rgba(139,195,74,.25); border: 1px solid #8bc34a; color: #8bc34a; font-size: 12px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; padding: 5px 14px; border-radius: 20px; margin-bottom: 20px; }
+    .cover h1 { font-size: 38px; font-weight: 900; color: white; line-height: 1.15; margin-bottom: 12px; }
+    .cover h1 span { color: #8bc34a; }
+    .cover .sub { font-size: 17px; color: rgba(255,255,255,.75); max-width: 480px; line-height: 1.6; margin-bottom: 32px; }
+    .cover-meta { display: flex; gap: 32px; }
+    .cover-meta div { text-align: center; }
+    .cover-meta .val { font-size: 26px; font-weight: 800; color: white; }
+    .cover-meta .lbl { font-size: 12px; color: rgba(255,255,255,.6); margin-top: 2px; text-transform: uppercase; letter-spacing: .5px; }
+    .cover-meta .divider { width: 1px; background: rgba(255,255,255,.15); }
+
+    /* BODY */
+    .body { padding: 48px 60px; }
+
+    /* INTRO */
+    .intro { font-size: 16px; line-height: 1.75; color: #444; margin-bottom: 40px; }
+    .intro strong { color: #2d5a1b; }
+
+    /* TOOLS */
+    .tool { display: flex; gap: 20px; padding: 28px 0; border-bottom: 1px solid #f0f0f0; }
+    .tool:last-of-type { border-bottom: none; }
+    .tool-icon { width: 56px; height: 56px; background: #f0f7ea; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 26px; flex-shrink: 0; }
+    .tool-body h3 { font-size: 18px; font-weight: 700; color: #2d5a1b; margin-bottom: 6px; }
+    .tool-body p { font-size: 14px; line-height: 1.65; color: #555; margin-bottom: 12px; }
+    .tool-body .url-btn { display: inline-block; background: #f0f7ea; border: 1.5px solid #c8e6a0; color: #2d5a1b; font-size: 13px; font-weight: 600; padding: 6px 16px; border-radius: 8px; text-decoration: none; }
+    .tool-body .url-btn:hover { background: #2d5a1b; color: white; }
+    .tool-wins { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 12px; }
+    .win { background: #f4f7f0; border-radius: 6px; padding: 4px 10px; font-size: 12px; color: #2d5a1b; font-weight: 500; }
+
+    /* PRICING */
+    .pricing-section { background: #f4f7f0; border-radius: 16px; padding: 32px; margin: 40px 0; }
+    .pricing-section h2 { font-size: 20px; font-weight: 700; color: #2d5a1b; margin-bottom: 20px; text-align: center; }
+    .pricing-table { width: 100%; border-collapse: collapse; }
+    .pricing-table th { text-align: left; font-size: 11px; text-transform: uppercase; color: #888; letter-spacing: .5px; padding: 8px 12px; border-bottom: 2px solid #ddd; }
+    .pricing-table td { padding: 14px 12px; border-bottom: 1px solid #e8e8e8; font-size: 15px; }
+    .pricing-table tr:last-child td { border-bottom: none; background: #e8f5e0; font-weight: 800; font-size: 17px; border-radius: 0 0 10px 10px; }
+    .pricing-table .price { text-align: right; font-weight: 700; color: #2d5a1b; }
+    .pricing-note { text-align: center; font-size: 13px; color: #888; margin-top: 12px; }
+
+    /* TIMELINE */
+    .timeline-section { margin: 0 0 40px; }
+    .timeline-section h2 { font-size: 20px; font-weight: 700; color: #2d5a1b; margin-bottom: 20px; }
+    .timeline { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; position: relative; }
+    .timeline::before { content: ''; position: absolute; top: 20px; left: 10%; right: 10%; height: 2px; background: linear-gradient(90deg, #8bc34a, #2d5a1b); z-index: 0; }
+    .tl-item { text-align: center; position: relative; z-index: 1; }
+    .tl-dot { width: 40px; height: 40px; border-radius: 50%; background: #2d5a1b; color: white; font-size: 14px; font-weight: 700; display: flex; align-items: center; justify-content: center; margin: 0 auto 10px; box-shadow: 0 2px 8px rgba(45,90,27,.3); }
+    .tl-item h4 { font-size: 12px; font-weight: 700; color: #2d5a1b; margin-bottom: 4px; }
+    .tl-item p { font-size: 11px; color: #888; line-height: 1.4; }
+
+    /* WHY NOW */
+    .why-now { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 40px 0; }
+    .why-card { background: #f4f7f0; border-radius: 12px; padding: 20px; border-left: 4px solid #2d5a1b; }
+    .why-card .why-icon { font-size: 22px; margin-bottom: 8px; }
+    .why-card h4 { font-size: 14px; font-weight: 700; color: #2d5a1b; margin-bottom: 6px; }
+    .why-card p { font-size: 13px; color: #555; line-height: 1.5; }
+
+    /* CLOSING */
+    .closing { background: linear-gradient(135deg, #2d5a1b, #3d7a25); border-radius: 16px; padding: 36px; text-align: center; margin-top: 40px; }
+    .closing h2 { font-size: 22px; font-weight: 800; color: white; margin-bottom: 10px; }
+    .closing p { font-size: 15px; color: rgba(255,255,255,.8); margin-bottom: 24px; }
+    .cta-btn { display: inline-block; background: #8bc34a; color: #1a2e1a; font-size: 16px; font-weight: 800; padding: 14px 36px; border-radius: 10px; text-decoration: none; }
+
+    /* FOOTER */
+    .footer { padding: 24px 60px; border-top: 1px solid #f0f0f0; text-align: center; font-size: 12px; color: #bbb; line-height: 1.8; }
+
+    /* PRINT BTN */
+    .no-print { text-align: center; padding: 16px; }
+    .no-print button { background: #2d5a1b; color: white; border: none; padding: 10px 24px; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; }
+  </style>
+</head>
+<body>
+
+<div class="no-print" style="padding-top:24px;">
+  <button onclick="window.print()">🖨️ Print / Save as PDF</button>
+</div>
+
+<div class="page">
+
+  <!-- COVER -->
+  <div class="cover">
+    <div class="cover-tag">Digital Member Experience — Proposal</div>
+    <h1>Three Tools That Make<br/><span>Farm Credit SEMO</span><br/>Unforgettable.</h1>
+    <p class="sub">Working demos built and live. No mockups — tap any link and see the real thing.</p>
+    <div class="cover-meta">
+      <div><div class="val">$25K</div><div class="lbl">Total Investment</div></div>
+      <div class="divider"></div>
+      <div><div class="val">60 Days</div><div class="lbl">To Delivery</div></div>
+      <div class="divider"></div>
+      <div><div class="val">3 Tools</div><div class="lbl">Live & Working</div></div>
+      <div class="divider"></div>
+      <div><div class="val">$9.1M</div><div class="lbl">Record Patronage</div></div>
+    </div>
+  </div>
+
+  <div class="body">
+
+    <!-- INTRO -->
+    <p class="intro">
+      Farm Credit SEMO just paid out a <strong>record $9.1 million patronage refund</strong> — the largest in the organization's history. That's real money going back to real farmers because they chose to bank with SEMO instead of a commercial bank. It's the ultimate competitive advantage.<br/><br/>
+      The question is: <strong>are your members experiencing that advantage every day, or just once a year when a check arrives?</strong> The three tools below are designed to make SEMO's greatest strengths visible, accessible, and felt — 365 days a year.
+    </p>
+
+    <!-- TOOLS -->
+    <div class="tool">
+      <div class="tool-icon">💰</div>
+      <div class="tool-body">
+        <h3>Live Patronage Dividend Tracker</h3>
+        <div class="tool-wins">
+          <span class="win">Member retention</span>
+          <span class="win">Loan volume driver</span>
+          <span class="win">Competitive differentiation</span>
+        </div>
+        <p>A web tool where any member can enter their loan balance and instantly see their projected year-end patronage refund — with a history going back three years. The 2025 record is front and center. Members who understand and visualize their patronage borrow more through SEMO because a higher balance means a bigger check.</p>
+        <a class="url-btn" href="patronage/index.html">Open Live Demo → 167.88.43.179:8765/patronage</a>
+      </div>
+    </div>
+
+    <div class="tool">
+      <div class="tool-icon">📨</div>
+      <div class="tool-body">
+        <h3>Automated Payment Reminder System</h3>
+        <div class="tool-wins">
+          <span class="win">Reduces late payments</span>
+          <span class="win">Saves staff time</span>
+          <span class="win">Member goodwill</span>
+        </div>
+        <p>Automated SMS and email reminders sent 7 days, 3 days, and the day a loan payment is due. Includes a staff admin dashboard to manage borrowers, view send history, and test reminders. Borrowers who feel looked after stay loyal — and they tell their neighbors.</p>
+        <a class="url-btn" href="reminders/index.html">Open Live Demo → 167.88.43.179:8765/reminders</a>
+      </div>
+    </div>
+
+    <div class="tool">
+      <div class="tool-icon">🌱</div>
+      <div class="tool-body">
+        <h3>AgSunrise Digital Application</h3>
+        <div class="tool-wins">
+          <span class="win">Mobile-first</span>
+          <span class="win">Next-gen borrowers</span>
+          <span class="win">Replaces PDF process</span>
+        </div>
+        <p>A beautiful 5-step mobile application replacing the current downloadable PDF. Applicants upload documents from their phone, track their status in real time, and get email updates at every stage. Staff get a full review dashboard to approve, decline, request more info — and applicants are notified automatically at every step.</p>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;">
+          <a class="url-btn" href="agsunrise/index.html">Applicant View → 167.88.43.179:8765/agsunrise</a>
+          <a class="url-btn" href="agsunrise/admin.html">Staff Admin → 167.88.43.179:8765/agsunrise/admin</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- WHY NOW -->
+    <div class="why-now">
+      <div class="why-card">
+        <div class="why-icon">🏆</div>
+        <h4>Record Year = Right Moment</h4>
+        <p>A $9.1M patronage record is a legacy moment. These tools make that legacy visible and tangible to every member, every day.</p>
+      </div>
+      <div class="why-card">
+        <div class="why-icon">📱</div>
+        <h4>Young Farmers Are Digital</h4>
+        <p>The AgSunrise generation grew up on smartphones. A PDF application in 2026 is a trust signal — these tools meet them where they are.</p>
+      </div>
+      <div class="why-card">
+        <div class="why-icon">🏦</div>
+        <h4>Banks Can't Offer This</h4>
+        <p>No bank offers patronage dividends. These tools make that advantage impossible to ignore — not just at signing, but every time a member logs in.</p>
+      </div>
+      <div class="why-card">
+        <div class="why-icon">🔌</div>
+        <h4>No IT Disruption</h4>
+        <p>All three tools are standalone — no changes to existing systems required. They layer on top of what SEMO already has.</p>
+      </div>
+    </div>
+
+    <!-- PRICING -->
+    <div class="pricing-section">
+      <h2>Investment Summary</h2>
+      <table class="pricing-table">
+        <thead><tr><th>Project</th><th>Timeline</th><th class="price">Investment</th></tr></thead>
+        <tbody>
+          <tr><td>💰 Patronage Dividend Tracker</td><td style="color:#888;font-size:13px">3–4 weeks</td><td class="price">$12,000</td></tr>
+          <tr><td>📨 Automated Payment Reminders</td><td style="color:#888;font-size:13px">2 weeks</td><td class="price">$5,000</td></tr>
+          <tr><td>🌱 AgSunrise Digital Application</td><td style="color:#888;font-size:13px">3–4 weeks</td><td class="price">$8,000</td></tr>
+          <tr><td>All Three Projects</td><td style="color:#2d5a1b;font-size:13px;font-weight:600">60 days total</td><td class="price">$25,000</td></tr>
+        </tbody>
+      </table>
+      <p class="pricing-note">Payment terms: 50% to start ($12,500) · 50% on delivery · Optional $400/month for hosting & maintenance</p>
+    </div>
+
+    <!-- TIMELINE -->
+    <div class="timeline-section">
+      <h2>Delivery Timeline</h2>
+      <div class="timeline">
+        <div class="tl-item"><div class="tl-dot">1–2</div><h4>Weeks 1–2</h4><p>Payment Reminder System live & tested</p></div>
+        <div class="tl-item"><div class="tl-dot">2–4</div><h4>Weeks 2–4</h4><p>Patronage Tracker built & ready to embed</p></div>
+        <div class="tl-item"><div class="tl-dot">3–6</div><h4>Weeks 3–6</h4><p>AgSunrise Digital App built & tested</p></div>
+        <div class="tl-item"><div class="tl-dot">7–8</div><h4>Weeks 7–8</h4><p>Integration, QA, training & launch</p></div>
+      </div>
+    </div>
+
+    <!-- CLOSING CTA -->
+    <div class="closing">
+      <h2>Ready to take a look?</h2>
+      <p>All three demos are live right now. No setup needed — just click and explore.</p>
+      <a class="cta-btn" href="index.html">Open the Full Demo Suite →</a>
+      <p style="margin-top:16px;font-size:13px;color:rgba(255,255,255,.6);">167.88.43.179:8765</p>
+    </div>
+
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    Farm Credit Southeast Missouri · farmcreditsemo.com · (877) 730-7327 · Sikeston, MO<br/>
+    Prepared by Krispy Cunningham · February 2026<br/>
+    Equal Housing Lender · Equal Credit Opportunity · Equal Opportunity Provider
+  </div>
+
+</div>
+
+</body>
+</html>

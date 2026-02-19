@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Payment Reminder System — Farm Credit SEMO</title>
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#f4f7f0;color:#1a2e1a}
+    header{background:#2d5a1b;color:white;padding:16px 24px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px}
+    header .logo{font-size:20px;font-weight:700}header .logo span{color:#8bc34a}
+    header small{opacity:.7;font-size:13px;display:block;margin-top:2px}
+    .container{max-width:1100px;margin:0 auto;padding:24px 16px}
+    .demo-banner{background:linear-gradient(90deg,#fff8e1,#fffde7);border:1.5px solid #ffc107;border-radius:10px;padding:12px 16px;margin-bottom:20px;font-size:13px;color:#856404;display:flex;align-items:center;gap:10px}
+    .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:24px}
+    .stat{background:white;border-radius:12px;padding:18px;box-shadow:0 2px 12px rgba(0,0,0,.07);text-align:center}
+    .stat .num{font-size:34px;font-weight:800;color:#2d5a1b}
+    .stat .lbl{font-size:12px;color:#888;margin-top:3px}
+    .card{background:white;border-radius:12px;box-shadow:0 2px 12px rgba(0,0,0,.07);margin-bottom:20px}
+    .card-head{padding:16px 20px;border-bottom:1px solid #f0f0f0;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px}
+    .card-head h2{font-size:16px;font-weight:700;color:#2d5a1b}
+    table{width:100%;border-collapse:collapse}
+    th{text-align:left;font-size:11px;text-transform:uppercase;color:#999;padding:10px 14px;border-bottom:2px solid #f0f0f0;letter-spacing:.5px}
+    td{padding:12px 14px;border-bottom:1px solid #f5f5f5;font-size:14px;vertical-align:middle}
+    tr:last-child td{border-bottom:none}
+    .badge{display:inline-block;padding:3px 10px;border-radius:10px;font-size:11px;font-weight:600}
+    .badge.ok{background:#d4edda;color:#155724}
+    .badge.soon{background:#fff3cd;color:#856404}
+    .badge.today{background:#f8d7da;color:#721c24}
+    input[type=text],input[type=email],input[type=tel],input[type=number]{width:100%;padding:8px 12px;border:1.5px solid #ddd;border-radius:8px;font-size:14px;outline:none}
+    input:focus{border-color:#2d5a1b}
+    .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+    .field{margin-bottom:10px}
+    .field label{display:block;font-size:12px;font-weight:500;color:#666;margin-bottom:4px}
+    .btn{padding:8px 16px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;border:none}
+    .btn-primary{background:#2d5a1b;color:white;width:100%;padding:10px;margin-top:4px}
+    .btn-primary:hover{background:#3d7a25}
+    .btn-sm{background:none;border:1.5px solid #2d5a1b;color:#2d5a1b;padding:4px 10px;font-size:12px;border-radius:6px;cursor:pointer}
+    .btn-sm:hover{background:#2d5a1b;color:white}
+    .btn-danger{border-color:#dc3545;color:#dc3545}
+    .btn-danger:hover{background:#dc3545;color:white}
+    .btn-green{background:#8bc34a;color:#1a2e1a;border:none;padding:8px 16px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer}
+    .grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+    .log-item{padding:9px 0;border-bottom:1px solid #f5f5f5;font-size:13px}
+    .log-item:last-child{border-bottom:none}
+    .toast{position:fixed;bottom:24px;right:24px;background:#2d5a1b;color:white;padding:14px 20px;border-radius:10px;font-size:14px;font-weight:600;box-shadow:0 4px 20px rgba(0,0,0,.2);transform:translateY(100px);transition:transform .3s;z-index:999}
+    .toast.show{transform:translateY(0)}
+    @media(max-width:700px){.stats{grid-template-columns:1fr}.grid{grid-template-columns:1fr}.grid-2{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+<header>
+  <div><div class="logo">Farm Credit <span>SEMO</span></div><small>Payment Reminder System — Admin Dashboard</small></div>
+  <button class="btn-green" onclick="runCheck()">▶ Run Daily Check</button>
+</header>
+<div class="container">
+  <div class="demo-banner">⚡ <strong>Demo Mode</strong> — This is a live preview. In production, reminders are sent via SMS (Twilio) and email (SMTP) automatically at 9 AM daily.</div>
+
+  <div class="stats">
+    <div class="stat"><div class="num" id="statActive">3</div><div class="lbl">Active Borrowers</div></div>
+    <div class="stat"><div class="num" id="statToday">0</div><div class="lbl">Reminders Sent Today</div></div>
+    <div class="stat"><div class="num" id="statTotal">0</div><div class="lbl">Total Reminders Sent</div></div>
+  </div>
+
+  <div class="card" style="grid-column:1/-1">
+    <div class="card-head"><h2>👥 Borrowers</h2></div>
+    <table>
+      <thead><tr><th>Name</th><th>Loan #</th><th>Balance</th><th>Payment</th><th>Due Day</th><th>Status</th><th>Actions</th></tr></thead>
+      <tbody id="borrowerTable"></tbody>
+    </table>
+  </div>
+
+  <div class="grid">
+    <div class="card" style="padding:20px">
+      <h2 style="font-size:16px;font-weight:700;color:#2d5a1b;margin-bottom:16px">➕ Add Borrower</h2>
+      <div class="grid-2">
+        <div class="field"><label>First & Last Name *</label><input type="text" id="aName" placeholder="John Farmer"/></div>
+        <div class="field"><label>Loan Number</label><input type="text" id="aLoan" placeholder="FC-2025-001"/></div>
+      </div>
+      <div class="grid-2">
+        <div class="field"><label>Email</label><input type="email" id="aEmail" placeholder="farmer@email.com"/></div>
+        <div class="field"><label>Phone</label><input type="tel" id="aPhone" placeholder="+1 573 555 0000"/></div>
+      </div>
+      <div class="grid-2">
+        <div class="field"><label>Loan Balance ($)</label><input type="number" id="aBal" placeholder="350000"/></div>
+        <div class="field"><label>Payment Amount ($)</label><input type="number" id="aPay" placeholder="1850"/></div>
+      </div>
+      <div class="field"><label>Payment Due Day of Month (1–28) *</label><input type="number" id="aDay" placeholder="15" min="1" max="28"/></div>
+      <button class="btn btn-primary" onclick="addBorrower()">Add Borrower</button>
+    </div>
+
+    <div class="card" style="padding:20px">
+      <h2 style="font-size:16px;font-weight:700;color:#2d5a1b;margin-bottom:12px">📋 Activity Log</h2>
+      <div id="logList"><div style="color:#aaa;font-size:13px">No activity yet. Click "Run Daily Check" to simulate.</div></div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+  const TODAY = new Date().getDate();
+  let borrowers = JSON.parse(localStorage.getItem('fc_borrowers') || 'null');
+  let logs = JSON.parse(localStorage.getItem('fc_logs') || '[]');
+  let sentToday = parseInt(localStorage.getItem('fc_sent_today') || '0');
+
+  if (!borrowers) {
+    const d = TODAY;
+    borrowers = [
+      {id:1,name:'John & Mary Farmer',email:'john@farmersemo.com',phone:'+15735550001',loan_number:'FC-2024-001',loan_balance:425000,payment_day:(d+10)%28||15,payment_amount:2187.50,active:true},
+      {id:2,name:'Robert Tillman',email:'rob@tillmanfarms.com',phone:'+15735550002',loan_number:'FC-2024-042',loan_balance:780000,payment_day:(d+4)%28||20,payment_amount:3945.00,active:true},
+      {id:3,name:'Emily Chen (AgSunrise)',email:'emily@chenfarm.com',phone:'+15735550003',loan_number:'AS-2025-008',loan_balance:120000,payment_day:(d+2)%28||22,payment_amount:612.00,active:true}
+    ];
+    save();
+  }
+
+  function save(){localStorage.setItem('fc_borrowers',JSON.stringify(borrowers));localStorage.setItem('fc_logs',JSON.stringify(logs));}
+
+  function getDaysUntil(day){ return day - TODAY; }
+
+  function statusBadge(d){
+    if(d===0)return'<span class="badge today">DUE TODAY</span>';
+    if(d>0&&d<=7)return`<span class="badge soon">${d}d away</span>`;
+    if(d<0)return'<span class="badge ok">Paid ✓</span>';
+    return`<span class="badge ok">${d}d away</span>`;
+  }
+
+  function render(){
+    const active = borrowers.filter(b=>b.active);
+    document.getElementById('statActive').textContent = active.length;
+    document.getElementById('statToday').textContent = sentToday;
+    document.getElementById('statTotal').textContent = logs.length;
+
+    document.getElementById('borrowerTable').innerHTML = active.map(b=>{
+      const d = getDaysUntil(b.payment_day);
+      return `<tr>
+        <td><strong>${b.name}</strong></td>
+        <td style="color:#888">${b.loan_number||'—'}</td>
+        <td>$${(b.loan_balance||0).toLocaleString()}</td>
+        <td>$${(b.payment_amount||0).toFixed(2)}</td>
+        <td style="font-weight:600;color:#2d5a1b">Day ${b.payment_day}</td>
+        <td>${statusBadge(d)}</td>
+        <td style="display:flex;gap:6px">
+          <button class="btn-sm" onclick="testReminder(${b.id})">📨 Test</button>
+          <button class="btn-sm btn-danger" onclick="remove(${b.id})">✕</button>
+        </td>
+      </tr>`;
+    }).join('');
+
+    const logEl = document.getElementById('logList');
+    if(!logs.length){logEl.innerHTML='<div style="color:#aaa;font-size:13px">No activity yet.</div>';return;}
+    logEl.innerHTML = logs.slice(-8).reverse().map(l=>`
+      <div class="log-item">
+        <strong>${l.name}</strong> <span style="color:#aaa">— ${l.type} via ${l.channel}</span><br/>
+        <span style="color:#2d5a1b;font-size:12px">${l.status}</span> <span style="color:#bbb;font-size:11px">· ${l.time}</span>
+      </div>`).join('');
+  }
+
+  function addBorrower(){
+    const name=document.getElementById('aName').value.trim();
+    const day=parseInt(document.getElementById('aDay').value);
+    if(!name||!day){alert('Name and Payment Day are required');return;}
+    const b={id:Date.now(),name,email:document.getElementById('aEmail').value,phone:document.getElementById('aPhone').value,loan_number:document.getElementById('aLoan').value,loan_balance:parseFloat(document.getElementById('aBal').value)||0,payment_day:day,payment_amount:parseFloat(document.getElementById('aPay').value)||0,active:true};
+    borrowers.push(b);save();
+    ['aName','aEmail','aPhone','aLoan','aBal','aPay','aDay'].forEach(id=>document.getElementById(id).value='');
+    render();toast('✅ Borrower added');
+  }
+
+  function remove(id){if(!confirm('Remove this borrower?'))return;borrowers=borrowers.map(b=>b.id===id?{...b,active:false}:b);save();render();}
+
+  function testReminder(id){
+    const b=borrowers.find(x=>x.id===id);
+    const days=prompt('Simulate reminder for how many days out? (0, 3, or 7)','7');
+    if(!days)return;
+    const urgency=parseInt(days)===0?'TODAY':`in ${days} days`;
+    logReminder(b,`${days}d_reminder`,`📱 SMS sent to ${b.phone}: "Payment of $${b.payment_amount?.toFixed(2)} due ${urgency}" ✅\n📧 Email sent to ${b.email} ✅`);
+    render();
+    alert(`✅ Demo reminder sent!\n\n📱 SMS → ${b.phone}\n"Farm Credit SEMO: Your payment of $${b.payment_amount?.toFixed(2)} is due ${urgency}. Loan #${b.loan_number}."\n\n📧 Email → ${b.email}\nSubject: Farm Credit SEMO — Payment Due ${urgency}`);
+  }
+
+  function logReminder(b,type,status){
+    logs.push({name:b.name,type,channel:'sms+email',status:'✅ Delivered',time:new Date().toLocaleTimeString()});
+    sentToday++;
+    localStorage.setItem('fc_sent_today',sentToday);
+    save();
+  }
+
+  function runCheck(){
+    const active=borrowers.filter(b=>b.active);
+    let sent=0;
+    active.forEach(b=>{
+      const d=getDaysUntil(b.payment_day);
+      if([0,3,7].includes(d)){logReminder(b,`${d}d_reminder`,'✅ Delivered');sent++;}
+    });
+    render();
+    toast(sent>0?`✅ ${sent} reminder${sent>1?'s':''} sent!`:'No reminders due today');
+  }
+
+  function toast(msg){const el=document.getElementById('toast');el.textContent=msg;el.classList.add('show');setTimeout(()=>el.classList.remove('show'),3000);}
+
+  render();
+</script>
+</body>
+</html>

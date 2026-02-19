@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>AgSunrise Program — Farm Credit SEMO</title>
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#f4f7f0;color:#1a2e1a}
+    header{background:#2d5a1b;color:white;padding:16px 24px}
+    header .logo{font-size:20px;font-weight:700}header .logo span{color:#8bc34a}
+    header small{font-size:13px;opacity:.75}
+    .hero{background:linear-gradient(135deg,#2d5a1b,#3d7a25);color:white;padding:40px 24px;text-align:center}
+    .hero .tag{background:rgba(139,195,74,.25);border:1px solid #8bc34a;display:inline-block;padding:4px 14px;border-radius:20px;font-size:13px;font-weight:600;margin-bottom:12px;color:#8bc34a}
+    .hero h1{font-size:26px;font-weight:800;margin-bottom:8px}
+    .hero p{font-size:15px;opacity:.85;max-width:440px;margin:0 auto}
+    .main{max-width:700px;margin:-24px auto 40px;padding:0 16px}
+    .progress-wrap{background:white;border-radius:12px 12px 0 0;padding:20px 24px 0;box-shadow:0 4px 24px rgba(0,0,0,.1)}
+    .steps{display:flex}
+    .step{flex:1;text-align:center;padding:8px 4px;position:relative}
+    .step::after{content:'';position:absolute;top:17px;left:58%;width:84%;height:2px;background:#e0e0e0}
+    .step:last-child::after{display:none}
+    .step.done::after{background:#8bc34a}
+    .dot{width:28px;height:28px;border-radius:50%;background:#e0e0e0;display:inline-flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#999;position:relative;z-index:1;transition:all .3s}
+    .step.active .dot{background:#2d5a1b;color:white}
+    .step.done .dot{background:#8bc34a;color:white}
+    .step-lbl{font-size:11px;color:#aaa;margin-top:4px}
+    .step.active .step-lbl{color:#2d5a1b;font-weight:600}
+    .form-card{background:white;border-radius:0 0 16px 16px;box-shadow:0 4px 24px rgba(0,0,0,.1);padding:28px 24px 32px}
+    .sec{display:none}.sec.active{display:block}
+    .sec h3{font-size:18px;font-weight:700;color:#2d5a1b;margin-bottom:6px}
+    .sec .desc{font-size:14px;color:#666;margin-bottom:20px}
+    .field{margin-bottom:12px}
+    .field label{display:block;font-size:13px;font-weight:500;color:#555;margin-bottom:5px}
+    .req{color:#e74c3c}
+    input[type=text],input[type=email],input[type=tel],input[type=number],input[type=date],select,textarea{width:100%;padding:10px 14px;border:1.5px solid #ddd;border-radius:8px;font-size:14px;outline:none;font-family:inherit;transition:border-color .2s}
+    input:focus,select:focus,textarea:focus{border-color:#2d5a1b}
+    textarea{min-height:100px;resize:vertical}
+    .g2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    .g3{display:grid;grid-template-columns:2fr 1fr 1fr;gap:12px}
+    .nav{display:flex;gap:12px;margin-top:24px}
+    .btn{flex:1;padding:12px;border-radius:10px;font-size:15px;font-weight:600;cursor:pointer;border:none;transition:all .2s}
+    .btn-p{background:#2d5a1b;color:white}.btn-p:hover{background:#3d7a25}
+    .btn-s{background:#f0f7ea;color:#2d5a1b;border:1.5px solid #c8e6a0}.btn-s:hover{background:#e0f0d0}
+    .success{display:none;background:white;border-radius:16px;box-shadow:0 4px 24px rgba(0,0,0,.1);padding:48px 32px;text-align:center}
+    .success .icon{font-size:64px;margin-bottom:16px}
+    .success h2{font-size:24px;font-weight:800;color:#2d5a1b;margin-bottom:8px}
+    .success p{color:#666;font-size:15px;margin-bottom:8px}
+    .ref{background:#f0f7ea;border:2px solid #8bc34a;border-radius:10px;padding:12px 24px;display:inline-block;margin:16px 0;font-size:22px;font-weight:800;color:#2d5a1b;letter-spacing:1px}
+    .success-btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:20px}
+    .success-btns a{padding:10px 20px;border-radius:8px;font-weight:600;font-size:14px;text-decoration:none}
+    .upload-zone{border:2px dashed #c8e6a0;border-radius:10px;padding:24px;text-align:center;cursor:pointer;background:#f9fdf5;margin-top:8px;transition:all .2s}
+    .upload-zone:hover{border-color:#2d5a1b;background:#f0f7ea}
+    .upload-zone p{color:#888;font-size:14px}
+    .file-list{margin-top:10px}
+    .file-item{display:flex;align-items:center;gap:8px;padding:6px 10px;background:#f0f7ea;border-radius:6px;margin-bottom:6px;font-size:13px}
+    .review-box{background:#f4f7f0;border-radius:10px;padding:16px;font-size:14px;line-height:2;margin-bottom:20px}
+    .demo-note{background:#fff8e1;border:1px solid #ffc107;border-radius:8px;padding:10px 14px;font-size:12px;color:#856404;margin-bottom:16px}
+    @media(max-width:520px){.g2,.g3{grid-template-columns:1fr}.step-lbl{display:none}}
+  </style>
+</head>
+<body>
+<header><div class="logo">Farm Credit <span>SEMO</span></div><small>AgSunrise Young Farmer Program</small></header>
+<div class="hero">
+  <div class="tag">🌱 Next Generation Agriculture</div>
+  <h1>AgSunrise Application</h1>
+  <p>Financing built for young farmers. Apply in minutes from your phone — no printing, no faxing.</p>
+</div>
+
+<div class="main">
+  <div class="progress-wrap">
+    <div class="steps">
+      <div class="step active" id="s1"><div class="dot">1</div><div class="step-lbl">Personal</div></div>
+      <div class="step" id="s2"><div class="dot">2</div><div class="step-lbl">Farm</div></div>
+      <div class="step" id="s3"><div class="dot">3</div><div class="step-lbl">Loan</div></div>
+      <div class="step" id="s4"><div class="dot">4</div><div class="step-lbl">Docs</div></div>
+      <div class="step" id="s5"><div class="dot">5</div><div class="step-lbl">Review</div></div>
+    </div>
+  </div>
+
+  <div class="form-card" id="formCard">
+    <!-- Step 1 -->
+    <div class="sec active" id="step1">
+      <h3>Personal Information</h3><div class="desc">Fields marked <span class="req">*</span> are required.</div>
+      <div class="g2">
+        <div class="field"><label>First Name <span class="req">*</span></label><input type="text" id="f_first" placeholder="John"/></div>
+        <div class="field"><label>Last Name <span class="req">*</span></label><input type="text" id="f_last" placeholder="Farmer"/></div>
+      </div>
+      <div class="g2">
+        <div class="field"><label>Email <span class="req">*</span></label><input type="email" id="f_email" placeholder="you@example.com"/></div>
+        <div class="field"><label>Phone <span class="req">*</span></label><input type="tel" id="f_phone" placeholder="(573) 555-0000"/></div>
+      </div>
+      <div class="field"><label>Date of Birth <span class="req">*</span></label><input type="date" id="f_dob"/></div>
+      <div class="field"><label>Street Address <span class="req">*</span></label><input type="text" id="f_addr" placeholder="123 Farm Road"/></div>
+      <div class="g3">
+        <div class="field"><label>City <span class="req">*</span></label><input type="text" id="f_city" placeholder="Sikeston"/></div>
+        <div class="field"><label>State</label><input type="text" id="f_state" value="MO"/></div>
+        <div class="field"><label>ZIP <span class="req">*</span></label><input type="text" id="f_zip" placeholder="63801"/></div>
+      </div>
+      <div class="nav"><button class="btn btn-p" onclick="go(2)">Next: Farm Info →</button></div>
+    </div>
+
+    <!-- Step 2 -->
+    <div class="sec" id="step2">
+      <h3>About Your Farm</h3><div class="desc">Help us understand your operation.</div>
+      <div class="field"><label>Farm / Operation Name <span class="req">*</span></label><input type="text" id="f_farm" placeholder="Cunningham Family Farm"/></div>
+      <div class="g2">
+        <div class="field"><label>Primary Farm Type <span class="req">*</span></label>
+          <select id="f_type"><option value="">Select type...</option><option>Row Crops (corn, soybeans)</option><option>Cotton</option><option>Rice</option><option>Livestock / Cattle</option><option>Hogs / Swine</option><option>Poultry</option><option>Specialty Crops</option><option>Mixed / Diversified</option><option>Beginning / Starting Out</option></select>
+        </div>
+        <div class="field"><label>Total Acres <span class="req">*</span></label><input type="number" id="f_acres" placeholder="250"/></div>
+      </div>
+      <div class="g2">
+        <div class="field"><label>Years Farming <span class="req">*</span></label><input type="number" id="f_years" placeholder="3" min="0" max="10"/><small style="color:#aaa;font-size:11px">AgSunrise is for farmers with 10 or fewer years experience</small></div>
+        <div class="field"><label>Est. Annual Farm Income ($)</label><input type="number" id="f_income" placeholder="85000"/></div>
+      </div>
+      <div class="nav"><button class="btn btn-s" onclick="go(1)">← Back</button><button class="btn btn-p" onclick="go(3)">Next: Loan Details →</button></div>
+    </div>
+
+    <!-- Step 3 -->
+    <div class="sec" id="step3">
+      <h3>Loan Information</h3><div class="desc">What do you need financing for?</div>
+      <div class="g2">
+        <div class="field"><label>Loan Purpose <span class="req">*</span></label>
+          <select id="f_purpose"><option value="">Select purpose...</option><option>Farm Real Estate Purchase</option><option>Land Purchase</option><option>Equipment Purchase</option><option>Operating / Input Costs</option><option>Livestock Purchase</option><option>Farm Improvements</option><option>Refinance Existing Debt</option><option>Starting My Farm</option><option>Other</option></select>
+        </div>
+        <div class="field"><label>Requested Amount ($) <span class="req">*</span></label><input type="number" id="f_amount" placeholder="150000"/></div>
+      </div>
+      <div class="field"><label>Tell us your story <span class="req">*</span></label>
+        <textarea id="f_essay" placeholder="Share your farming story, your goals, and how this loan would help your operation grow. Why farming? What does the future look like? (200–500 words recommended)"></textarea>
+      </div>
+      <div class="nav"><button class="btn btn-s" onclick="go(2)">← Back</button><button class="btn btn-p" onclick="go(4)">Next: Documents →</button></div>
+    </div>
+
+    <!-- Step 4 -->
+    <div class="sec" id="step4">
+      <h3>Document Upload</h3><div class="desc">Optional — you can bring documents to your branch instead.</div>
+      <p style="font-size:13px;color:#666;margin-bottom:14px"><strong>Helpful documents:</strong> Government-issued ID · Last 2 years of tax returns · Farm income/expense records · Equipment list</p>
+      <div class="upload-zone" onclick="document.getElementById('fileInput').click()">
+        <p>📎 Tap to upload documents<br/><span style="font-size:12px">PDF, JPG, PNG — up to 10MB each</span></p>
+      </div>
+      <input type="file" id="fileInput" multiple accept=".pdf,.jpg,.jpeg,.png" style="display:none" onchange="addFiles(this.files)"/>
+      <div class="file-list" id="fileList"></div>
+      <div class="nav"><button class="btn btn-s" onclick="go(3)">← Back</button><button class="btn btn-p" onclick="go(5)">Next: Review →</button></div>
+    </div>
+
+    <!-- Step 5 -->
+    <div class="sec" id="step5">
+      <h3>Review & Submit</h3><div class="desc">Take a moment to review before submitting.</div>
+      <div class="review-box" id="reviewBox"></div>
+      <div class="field">
+        <label style="display:flex;align-items:flex-start;gap:10px;cursor:pointer;font-size:14px;font-weight:normal">
+          <input type="checkbox" id="agree" style="width:auto;margin-top:3px"/>
+          <span>I certify all information is accurate. I understand this is an application, not a commitment. I consent to Farm Credit SEMO contacting me about my application.</span>
+        </label>
+      </div>
+      <div class="nav"><button class="btn btn-s" onclick="go(4)">← Back</button><button class="btn btn-p" id="submitBtn" onclick="submitApp()">🌱 Submit Application</button></div>
+    </div>
+  </div>
+
+  <!-- Success -->
+  <div class="success" id="successCard">
+    <div class="icon">🌱</div>
+    <h2>Application Submitted!</h2>
+    <p>Welcome to the AgSunrise Program. Your application is in good hands.</p>
+    <div class="ref" id="refNum">AS-2025-0000</div>
+    <p>Save this reference number to check your status.</p>
+    <p style="font-size:13px;color:#aaa;margin-top:10px">A confirmation email has been sent. Your <span id="branchName">local</span> branch will be in touch within 5 business days.</p>
+    <div class="success-btns">
+      <a id="statusLink" href="status.html" style="background:#2d5a1b;color:white;">Track My Application →</a>
+      <a href="https://farmcreditsemo.com" style="background:#f0f7ea;color:#2d5a1b;border:1.5px solid #c8e6a0;">farmcreditsemo.com</a>
+    </div>
+  </div>
+</div>
+
+<script>
+  let cur=1; const files=[];
+  function v(id){return document.getElementById(id)?.value||'';}
+  function branch(zip){const z=parseInt(zip);if(z>=63730&&z<=63740)return'Dexter';if(z>=63755&&z<=63760)return'Jackson';if(z>=63857&&z<=63860)return'Kennett';return'Sikeston';}
+  function ref(){return'AS-'+new Date().getFullYear()+'-'+Math.floor(1000+Math.random()*9000);}
+
+  function go(n){
+    if(n>cur&&!validate(cur))return;
+    document.getElementById('step'+cur).classList.remove('active');
+    document.getElementById('s'+cur).classList.remove('active');
+    document.getElementById('s'+cur).classList.add('done');
+    cur=n;
+    document.getElementById('step'+cur).classList.add('active');
+    document.getElementById('s'+cur).classList.add('active');
+    if(n===5)buildReview();
+    window.scrollTo({top:0,behavior:'smooth'});
+  }
+
+  function validate(n){
+    const reqs={1:['f_first','f_last','f_email','f_phone','f_dob','f_addr','f_city','f_zip'],2:['f_farm','f_type','f_acres','f_years'],3:['f_purpose','f_amount','f_essay']};
+    if(!reqs[n])return true;
+    for(const id of reqs[n]){const el=document.getElementById(id);if(!el?.value?.trim()){el?.focus();alert('Please fill in all required fields.');return false;}}
+    return true;
+  }
+
+  function addFiles(fl){
+    for(const f of fl)files.push(f);
+    document.getElementById('fileList').innerHTML=files.map(f=>`<div class="file-item">📄 ${f.name} <span style="color:#aaa;margin-left:auto">${(f.size/1024).toFixed(0)}KB</span></div>`).join('');
+  }
+
+  function buildReview(){
+    document.getElementById('reviewBox').innerHTML=`
+      <strong>👤 Personal</strong><br/>${v('f_first')} ${v('f_last')} · ${v('f_email')} · ${v('f_phone')}<br/>${v('f_addr')}, ${v('f_city')}, ${v('f_state')} ${v('f_zip')}<br/><br/>
+      <strong>🚜 Farm</strong><br/>${v('f_farm')} · ${v('f_type')}<br/>${v('f_acres')} acres · ${v('f_years')} years farming<br/><br/>
+      <strong>💰 Loan</strong><br/>${v('f_purpose')} · $${parseFloat(v('f_amount')||0).toLocaleString()}<br/><br/>
+      <strong>📎 Documents</strong><br/>${files.length} file(s) attached`;
+  }
+
+  function submitApp(){
+    if(!document.getElementById('agree').checked){alert('Please check the agreement box.');return;}
+    const r=ref(); const br=branch(v('f_zip'));
+    // Save to localStorage for status/admin pages
+    const apps=JSON.parse(localStorage.getItem('fc_apps')||'[]');
+    apps.push({ref_number:r,status:'submitted',first_name:v('f_first'),last_name:v('f_last'),email:v('f_email'),phone:v('f_phone'),farm_name:v('f_farm'),farm_type:v('f_type'),farm_acres:v('f_acres'),loan_purpose:v('f_purpose'),loan_amount:v('f_amount'),branch:br,submitted_at:new Date().toISOString(),essay:v('f_essay'),admin_notes:''});
+    localStorage.setItem('fc_apps',JSON.stringify(apps));
+    document.getElementById('formCard').style.display='none';
+    document.querySelector('.progress-wrap').style.display='none';
+    document.getElementById('successCard').style.display='block';
+    document.getElementById('refNum').textContent=r;
+    document.getElementById('branchName').textContent=br;
+    document.getElementById('statusLink').href='status.html?ref='+r;
+  }
+</script>
+</body>
+</html>

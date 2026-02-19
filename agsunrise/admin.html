@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>AgSunrise Admin — Farm Credit SEMO</title>
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#f4f7f0;color:#1a2e1a}
+    header{background:#2d5a1b;color:white;padding:16px 24px;display:flex;align-items:center;justify-content:space-between}
+    .logo{font-size:20px;font-weight:700}.logo span{color:#8bc34a}small{opacity:.7;font-size:13px}
+    .container{max-width:1100px;margin:0 auto;padding:24px 16px}
+    .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:24px}
+    .stat{background:white;border-radius:12px;padding:18px;box-shadow:0 2px 12px rgba(0,0,0,.07);text-align:center}
+    .stat .num{font-size:30px;font-weight:800;color:#2d5a1b}.stat .lbl{font-size:12px;color:#888;margin-top:2px}
+    .card{background:white;border-radius:12px;box-shadow:0 2px 12px rgba(0,0,0,.07);margin-bottom:20px}
+    .card-head{padding:16px 20px;border-bottom:1px solid #f0f0f0;display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+    .card-head h2{font-size:16px;font-weight:700;color:#2d5a1b}
+    table{width:100%;border-collapse:collapse}
+    th{text-align:left;font-size:11px;text-transform:uppercase;color:#999;padding:10px 14px;border-bottom:2px solid #f0f0f0;letter-spacing:.5px}
+    td{padding:12px 14px;border-bottom:1px solid #f5f5f5;font-size:14px;vertical-align:middle}
+    tr:last-child td{border-bottom:none}tr:hover td{background:#fafafa}
+    .badge{display:inline-block;padding:3px 10px;border-radius:10px;font-size:11px;font-weight:600}
+    .b-submitted{background:#cce5ff;color:#004085}.b-under_review{background:#fff3cd;color:#856404}
+    .b-approved{background:#d4edda;color:#155724}.b-declined{background:#f8d7da;color:#721c24}.b-more_info{background:#f8d7da;color:#721c24}
+    .btn-sm{padding:4px 12px;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;border:1.5px solid #2d5a1b;color:#2d5a1b;background:none}
+    .btn-sm:hover{background:#2d5a1b;color:white}
+    .empty{text-align:center;color:#aaa;padding:40px;font-size:14px}
+    .modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:100;align-items:center;justify-content:center}
+    .modal.open{display:flex}
+    .mbox{background:white;border-radius:16px;padding:28px;max-width:580px;width:90%;max-height:85vh;overflow-y:auto}
+    .mbox h3{font-size:18px;font-weight:700;color:#2d5a1b;margin-bottom:16px}
+    .dr{display:flex;gap:8px;margin-bottom:8px;font-size:14px}.dr .lbl{color:#888;width:130px;flex-shrink:0}.dr .val{font-weight:500}
+    .essay{background:#f4f7f0;border-radius:8px;padding:12px;font-size:13px;line-height:1.6;margin:10px 0;max-height:160px;overflow-y:auto}
+    select.ss{padding:5px 8px;border:1.5px solid #ddd;border-radius:6px;font-size:13px}
+    textarea.notes{width:100%;min-height:70px;padding:8px;border:1.5px solid #ddd;border-radius:8px;font-size:13px;font-family:inherit;margin-top:6px}
+    .mbtns{display:flex;gap:10px;margin-top:16px}
+    .mbtns button{flex:1;padding:10px;border-radius:8px;font-weight:600;cursor:pointer;border:none;font-size:14px}
+    .save-btn{background:#2d5a1b;color:white}.close-btn{background:#f0f0f0;color:#666}
+    input.search{padding:7px 12px;border:1.5px solid #ddd;border-radius:8px;font-size:13px;width:200px}
+    .demo-banner{background:linear-gradient(90deg,#fff8e1,#fffde7);border:1.5px solid #ffc107;border-radius:10px;padding:10px 14px;margin-bottom:16px;font-size:12px;color:#856404}
+    @media(max-width:700px){.stats{grid-template-columns:1fr 1fr}}
+  </style>
+</head>
+<body>
+<header><div><div class="logo">Farm Credit <span>SEMO</span></div><small>AgSunrise — Staff Admin</small></div></header>
+<div class="container">
+  <div class="demo-banner">⚡ <strong>Demo Mode</strong> — Applications submitted in this browser session appear here. In production, this connects to a live database.</div>
+  <div class="stats">
+    <div class="stat"><div class="num" id="sTotal">0</div><div class="lbl">Total Applications</div></div>
+    <div class="stat"><div class="num" id="sPending">0</div><div class="lbl">Awaiting Review</div></div>
+    <div class="stat"><div class="num" id="sApproved">0</div><div class="lbl">Approved</div></div>
+    <div class="stat"><div class="num" id="sBranches">0</div><div class="lbl">Branches Active</div></div>
+  </div>
+  <div class="card">
+    <div class="card-head">
+      <h2>📋 All Applications</h2>
+      <input class="search" type="text" id="searchBox" placeholder="Search name or ref..." oninput="render()"/>
+    </div>
+    <div id="tableWrap"></div>
+  </div>
+</div>
+<div class="modal" id="modal">
+  <div class="mbox">
+    <h3 id="mTitle">Application</h3>
+    <div id="mContent"></div>
+    <div class="mbtns"><button class="close-btn" onclick="closeModal()">Close</button><button class="save-btn" onclick="saveModal()">Save Changes</button></div>
+  </div>
+</div>
+<script>
+  let apps=[]; let currentRef=null;
+  const labels={submitted:'Submitted',under_review:'Under Review',more_info:'More Info Needed',approved:'Approved',declined:'Declined'};
+  const cls={submitted:'b-submitted',under_review:'b-under_review',more_info:'b-more_info',approved:'b-approved',declined:'b-declined'};
+
+  function load(){
+    apps=JSON.parse(localStorage.getItem('fc_apps')||'[]');
+    const pending=apps.filter(a=>['submitted','under_review','more_info'].includes(a.status)).length;
+    const approved=apps.filter(a=>a.status==='approved').length;
+    const branches=new Set(apps.map(a=>a.branch)).size;
+    document.getElementById('sTotal').textContent=apps.length;
+    document.getElementById('sPending').textContent=pending;
+    document.getElementById('sApproved').textContent=approved;
+    document.getElementById('sBranches').textContent=branches;
+    render();
+  }
+
+  function render(){
+    const q=document.getElementById('searchBox').value.toLowerCase();
+    const filtered=apps.filter(a=>(a.first_name+' '+a.last_name+' '+a.ref_number).toLowerCase().includes(q));
+    const wrap=document.getElementById('tableWrap');
+    if(!filtered.length){wrap.innerHTML=`<div class="empty">${apps.length?'No results match your search.':'No applications yet. <a href="index.html" style="color:#2d5a1b">Submit a test application →</a>'}</div>`;return;}
+    wrap.innerHTML=`<table><thead><tr><th>Ref</th><th>Applicant</th><th>Farm</th><th>Loan Ask</th><th>Branch</th><th>Status</th><th>Date</th><th>Action</th></tr></thead><tbody>${
+      filtered.map(a=>`<tr>
+        <td style="font-weight:700;color:#2d5a1b">${a.ref_number}</td>
+        <td>${a.first_name} ${a.last_name}</td>
+        <td style="color:#666">${a.farm_name}</td>
+        <td>$${parseFloat(a.loan_amount||0).toLocaleString()}</td>
+        <td>${a.branch}</td>
+        <td><span class="badge ${cls[a.status]||''}">${labels[a.status]||a.status}</span></td>
+        <td style="color:#aaa;font-size:12px">${new Date(a.submitted_at).toLocaleDateString()}</td>
+        <td><button class="btn-sm" onclick="openModal('${a.ref_number}')">Review</button></td>
+      </tr>`).join('')
+    }</tbody></table>`;
+  }
+
+  function openModal(ref){
+    currentRef=ref;
+    const a=apps.find(x=>x.ref_number===ref);
+    document.getElementById('mTitle').textContent=`Application — ${ref}`;
+    document.getElementById('mContent').innerHTML=`
+      <div class="dr"><span class="lbl">Name</span><span class="val">${a.first_name} ${a.last_name}</span></div>
+      <div class="dr"><span class="lbl">Email</span><span class="val"><a href="mailto:${a.email}" style="color:#2d5a1b">${a.email}</a></span></div>
+      <div class="dr"><span class="lbl">Phone</span><span class="val">${a.phone}</span></div>
+      <div class="dr"><span class="lbl">Farm</span><span class="val">${a.farm_name} · ${a.farm_acres} acres · ${a.farm_type}</span></div>
+      <div class="dr"><span class="lbl">Loan Request</span><span class="val">$${parseFloat(a.loan_amount||0).toLocaleString()} for ${a.loan_purpose}</span></div>
+      <div class="dr"><span class="lbl">Branch</span><span class="val">${a.branch}</span></div>
+      ${a.essay?`<div style="font-size:12px;color:#888;margin-top:12px;margin-bottom:4px">Applicant Essay:</div><div class="essay">${a.essay}</div>`:''}
+      <div class="dr" style="margin-top:14px"><span class="lbl">Update Status</span>
+        <select class="ss" id="mStatus">
+          <option value="submitted" ${a.status==='submitted'?'selected':''}>Submitted</option>
+          <option value="under_review" ${a.status==='under_review'?'selected':''}>Under Review</option>
+          <option value="more_info" ${a.status==='more_info'?'selected':''}>More Info Needed</option>
+          <option value="approved" ${a.status==='approved'?'selected':''}>Approved</option>
+          <option value="declined" ${a.status==='declined'?'selected':''}>Declined</option>
+        </select>
+      </div>
+      <div style="font-size:12px;color:#888;margin-top:10px">Internal Notes:</div>
+      <textarea class="notes" id="mNotes">${a.admin_notes||''}</textarea>`;
+    document.getElementById('modal').classList.add('open');
+  }
+
+  function closeModal(){document.getElementById('modal').classList.remove('open');}
+
+  function saveModal(){
+    const status=document.getElementById('mStatus').value;
+    const notes=document.getElementById('mNotes').value;
+    apps=apps.map(a=>a.ref_number===currentRef?{...a,status,admin_notes:notes}:a);
+    localStorage.setItem('fc_apps',JSON.stringify(apps));
+    closeModal();load();
+  }
+
+  load();
+  setInterval(load,15000);
+</script>
+</body>
+</html>
