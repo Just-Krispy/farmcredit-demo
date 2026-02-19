@@ -1,24 +1,27 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Payment Reminder System — Farm Credit SEMO</title>
   <style>
     *{box-sizing:border-box;margin:0;padding:0}
-    body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#f4f7f0;color:#1a2e1a}
-    header{background:#2d5a1b;color:white;padding:16px 24px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px}
+    body{font-family:'Inter',system-ui,sans-serif;background:#f4f7f0;color:#1e3013}
+    header{background:#52812c;color:white;padding:16px 24px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px}
     header .logo{font-size:20px;font-weight:700}header .logo span{color:#8bc34a}
     header small{opacity:.7;font-size:13px;display:block;margin-top:2px}
     .container{max-width:1100px;margin:0 auto;padding:24px 16px}
     .demo-banner{background:linear-gradient(90deg,#fff8e1,#fffde7);border:1.5px solid #ffc107;border-radius:10px;padding:12px 16px;margin-bottom:20px;font-size:13px;color:#856404;display:flex;align-items:center;gap:10px}
     .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:24px}
     .stat{background:white;border-radius:12px;padding:18px;box-shadow:0 2px 12px rgba(0,0,0,.07);text-align:center}
-    .stat .num{font-size:34px;font-weight:800;color:#2d5a1b}
+    .stat .num{font-size:34px;font-weight:800;color:#52812c}
     .stat .lbl{font-size:12px;color:#888;margin-top:3px}
     .card{background:white;border-radius:12px;box-shadow:0 2px 12px rgba(0,0,0,.07);margin-bottom:20px}
     .card-head{padding:16px 20px;border-bottom:1px solid #f0f0f0;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px}
-    .card-head h2{font-size:16px;font-weight:700;color:#2d5a1b}
+    .card-head h2{font-size:16px;font-weight:700;color:#52812c}
     table{width:100%;border-collapse:collapse}
     th{text-align:left;font-size:11px;text-transform:uppercase;color:#999;padding:10px 14px;border-bottom:2px solid #f0f0f0;letter-spacing:.5px}
     td{padding:12px 14px;border-bottom:1px solid #f5f5f5;font-size:14px;vertical-align:middle}
@@ -28,22 +31,22 @@
     .badge.soon{background:#fff3cd;color:#856404}
     .badge.today{background:#f8d7da;color:#721c24}
     input[type=text],input[type=email],input[type=tel],input[type=number]{width:100%;padding:8px 12px;border:1.5px solid #ddd;border-radius:8px;font-size:14px;outline:none}
-    input:focus{border-color:#2d5a1b}
+    input:focus{border-color:#52812c}
     .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
     .field{margin-bottom:10px}
     .field label{display:block;font-size:12px;font-weight:500;color:#666;margin-bottom:4px}
     .btn{padding:8px 16px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;border:none}
-    .btn-primary{background:#2d5a1b;color:white;width:100%;padding:10px;margin-top:4px}
-    .btn-primary:hover{background:#3d7a25}
-    .btn-sm{background:none;border:1.5px solid #2d5a1b;color:#2d5a1b;padding:4px 10px;font-size:12px;border-radius:6px;cursor:pointer}
-    .btn-sm:hover{background:#2d5a1b;color:white}
+    .btn-primary{background:#52812c;color:white;width:100%;padding:10px;margin-top:4px}
+    .btn-primary:hover{background:#426824}
+    .btn-sm{background:none;border:1.5px solid #52812c;color:#52812c;padding:4px 10px;font-size:12px;border-radius:6px;cursor:pointer}
+    .btn-sm:hover{background:#52812c;color:white}
     .btn-danger{border-color:#dc3545;color:#dc3545}
     .btn-danger:hover{background:#dc3545;color:white}
-    .btn-green{background:#8bc34a;color:#1a2e1a;border:none;padding:8px 16px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer}
+    .btn-green{background:#8bc34a;color:#1e3013;border:none;padding:8px 16px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer}
     .grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}
     .log-item{padding:9px 0;border-bottom:1px solid #f5f5f5;font-size:13px}
     .log-item:last-child{border-bottom:none}
-    .toast{position:fixed;bottom:24px;right:24px;background:#2d5a1b;color:white;padding:14px 20px;border-radius:10px;font-size:14px;font-weight:600;box-shadow:0 4px 20px rgba(0,0,0,.2);transform:translateY(100px);transition:transform .3s;z-index:999}
+    .toast{position:fixed;bottom:24px;right:24px;background:#52812c;color:white;padding:14px 20px;border-radius:10px;font-size:14px;font-weight:600;box-shadow:0 4px 20px rgba(0,0,0,.2);transform:translateY(100px);transition:transform .3s;z-index:999}
     .toast.show{transform:translateY(0)}
     @media(max-width:700px){.stats{grid-template-columns:1fr}.grid{grid-template-columns:1fr}.grid-2{grid-template-columns:1fr}}
   </style>
@@ -72,7 +75,7 @@
 
   <div class="grid">
     <div class="card" style="padding:20px">
-      <h2 style="font-size:16px;font-weight:700;color:#2d5a1b;margin-bottom:16px">➕ Add Borrower</h2>
+      <h2 style="font-size:16px;font-weight:700;color:#52812c;margin-bottom:16px">➕ Add Borrower</h2>
       <div class="grid-2">
         <div class="field"><label>First & Last Name *</label><input type="text" id="aName" placeholder="John Farmer"/></div>
         <div class="field"><label>Loan Number</label><input type="text" id="aLoan" placeholder="FC-2025-001"/></div>
@@ -90,7 +93,7 @@
     </div>
 
     <div class="card" style="padding:20px">
-      <h2 style="font-size:16px;font-weight:700;color:#2d5a1b;margin-bottom:12px">📋 Activity Log</h2>
+      <h2 style="font-size:16px;font-weight:700;color:#52812c;margin-bottom:12px">📋 Activity Log</h2>
       <div id="logList"><div style="color:#aaa;font-size:13px">No activity yet. Click "Run Daily Check" to simulate.</div></div>
     </div>
   </div>
@@ -138,7 +141,7 @@
         <td style="color:#888">${b.loan_number||'—'}</td>
         <td>$${(b.loan_balance||0).toLocaleString()}</td>
         <td>$${(b.payment_amount||0).toFixed(2)}</td>
-        <td style="font-weight:600;color:#2d5a1b">Day ${b.payment_day}</td>
+        <td style="font-weight:600;color:#52812c">Day ${b.payment_day}</td>
         <td>${statusBadge(d)}</td>
         <td style="display:flex;gap:6px">
           <button class="btn-sm" onclick="testReminder(${b.id})">📨 Test</button>
@@ -152,7 +155,7 @@
     logEl.innerHTML = logs.slice(-8).reverse().map(l=>`
       <div class="log-item">
         <strong>${l.name}</strong> <span style="color:#aaa">— ${l.type} via ${l.channel}</span><br/>
-        <span style="color:#2d5a1b;font-size:12px">${l.status}</span> <span style="color:#bbb;font-size:11px">· ${l.time}</span>
+        <span style="color:#52812c;font-size:12px">${l.status}</span> <span style="color:#bbb;font-size:11px">· ${l.time}</span>
       </div>`).join('');
   }
 

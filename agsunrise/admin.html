@@ -4,16 +4,16 @@
   <meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>AgSunrise Admin — Farm Credit SEMO</title>
   <style>
-    *{box-sizing:border-box;margin:0;padding:0}body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#f4f7f0;color:#1a2e1a}
-    header{background:#2d5a1b;color:white;padding:16px 24px;display:flex;align-items:center;justify-content:space-between}
+    *{box-sizing:border-box;margin:0;padding:0}body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#f4f7f0;color:#1e3013}
+    header{background:#52812c;color:white;padding:16px 24px;display:flex;align-items:center;justify-content:space-between}
     .logo{font-size:20px;font-weight:700}.logo span{color:#8bc34a}small{opacity:.7;font-size:13px}
     .container{max-width:1100px;margin:0 auto;padding:24px 16px}
     .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:24px}
     .stat{background:white;border-radius:12px;padding:18px;box-shadow:0 2px 12px rgba(0,0,0,.07);text-align:center}
-    .stat .num{font-size:30px;font-weight:800;color:#2d5a1b}.stat .lbl{font-size:12px;color:#888;margin-top:2px}
+    .stat .num{font-size:30px;font-weight:800;color:#52812c}.stat .lbl{font-size:12px;color:#888;margin-top:2px}
     .card{background:white;border-radius:12px;box-shadow:0 2px 12px rgba(0,0,0,.07);margin-bottom:20px}
     .card-head{padding:16px 20px;border-bottom:1px solid #f0f0f0;display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
-    .card-head h2{font-size:16px;font-weight:700;color:#2d5a1b}
+    .card-head h2{font-size:16px;font-weight:700;color:#52812c}
     table{width:100%;border-collapse:collapse}
     th{text-align:left;font-size:11px;text-transform:uppercase;color:#999;padding:10px 14px;border-bottom:2px solid #f0f0f0;letter-spacing:.5px}
     td{padding:12px 14px;border-bottom:1px solid #f5f5f5;font-size:14px;vertical-align:middle}
@@ -21,20 +21,20 @@
     .badge{display:inline-block;padding:3px 10px;border-radius:10px;font-size:11px;font-weight:600}
     .b-submitted{background:#cce5ff;color:#004085}.b-under_review{background:#fff3cd;color:#856404}
     .b-approved{background:#d4edda;color:#155724}.b-declined{background:#f8d7da;color:#721c24}.b-more_info{background:#f8d7da;color:#721c24}
-    .btn-sm{padding:4px 12px;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;border:1.5px solid #2d5a1b;color:#2d5a1b;background:none}
-    .btn-sm:hover{background:#2d5a1b;color:white}
+    .btn-sm{padding:4px 12px;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;border:1.5px solid #52812c;color:#52812c;background:none}
+    .btn-sm:hover{background:#52812c;color:white}
     .empty{text-align:center;color:#aaa;padding:40px;font-size:14px}
     .modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:100;align-items:center;justify-content:center}
     .modal.open{display:flex}
     .mbox{background:white;border-radius:16px;padding:28px;max-width:580px;width:90%;max-height:85vh;overflow-y:auto}
-    .mbox h3{font-size:18px;font-weight:700;color:#2d5a1b;margin-bottom:16px}
+    .mbox h3{font-size:18px;font-weight:700;color:#52812c;margin-bottom:16px}
     .dr{display:flex;gap:8px;margin-bottom:8px;font-size:14px}.dr .lbl{color:#888;width:130px;flex-shrink:0}.dr .val{font-weight:500}
     .essay{background:#f4f7f0;border-radius:8px;padding:12px;font-size:13px;line-height:1.6;margin:10px 0;max-height:160px;overflow-y:auto}
     select.ss{padding:5px 8px;border:1.5px solid #ddd;border-radius:6px;font-size:13px}
     textarea.notes{width:100%;min-height:70px;padding:8px;border:1.5px solid #ddd;border-radius:8px;font-size:13px;font-family:inherit;margin-top:6px}
     .mbtns{display:flex;gap:10px;margin-top:16px}
     .mbtns button{flex:1;padding:10px;border-radius:8px;font-weight:600;cursor:pointer;border:none;font-size:14px}
-    .save-btn{background:#2d5a1b;color:white}.close-btn{background:#f0f0f0;color:#666}
+    .save-btn{background:#52812c;color:white}.close-btn{background:#f0f0f0;color:#666}
     input.search{padding:7px 12px;border:1.5px solid #ddd;border-radius:8px;font-size:13px;width:200px}
     .demo-banner{background:linear-gradient(90deg,#fff8e1,#fffde7);border:1.5px solid #ffc107;border-radius:10px;padding:10px 14px;margin-bottom:16px;font-size:12px;color:#856404}
     @media(max-width:700px){.stats{grid-template-columns:1fr 1fr}}
@@ -86,10 +86,10 @@
     const q=document.getElementById('searchBox').value.toLowerCase();
     const filtered=apps.filter(a=>(a.first_name+' '+a.last_name+' '+a.ref_number).toLowerCase().includes(q));
     const wrap=document.getElementById('tableWrap');
-    if(!filtered.length){wrap.innerHTML=`<div class="empty">${apps.length?'No results match your search.':'No applications yet. <a href="index.html" style="color:#2d5a1b">Submit a test application →</a>'}</div>`;return;}
+    if(!filtered.length){wrap.innerHTML=`<div class="empty">${apps.length?'No results match your search.':'No applications yet. <a href="index.html" style="color:#52812c">Submit a test application →</a>'}</div>`;return;}
     wrap.innerHTML=`<table><thead><tr><th>Ref</th><th>Applicant</th><th>Farm</th><th>Loan Ask</th><th>Branch</th><th>Status</th><th>Date</th><th>Action</th></tr></thead><tbody>${
       filtered.map(a=>`<tr>
-        <td style="font-weight:700;color:#2d5a1b">${a.ref_number}</td>
+        <td style="font-weight:700;color:#52812c">${a.ref_number}</td>
         <td>${a.first_name} ${a.last_name}</td>
         <td style="color:#666">${a.farm_name}</td>
         <td>$${parseFloat(a.loan_amount||0).toLocaleString()}</td>
@@ -107,7 +107,7 @@
     document.getElementById('mTitle').textContent=`Application — ${ref}`;
     document.getElementById('mContent').innerHTML=`
       <div class="dr"><span class="lbl">Name</span><span class="val">${a.first_name} ${a.last_name}</span></div>
-      <div class="dr"><span class="lbl">Email</span><span class="val"><a href="mailto:${a.email}" style="color:#2d5a1b">${a.email}</a></span></div>
+      <div class="dr"><span class="lbl">Email</span><span class="val"><a href="mailto:${a.email}" style="color:#52812c">${a.email}</a></span></div>
       <div class="dr"><span class="lbl">Phone</span><span class="val">${a.phone}</span></div>
       <div class="dr"><span class="lbl">Farm</span><span class="val">${a.farm_name} · ${a.farm_acres} acres · ${a.farm_type}</span></div>
       <div class="dr"><span class="lbl">Loan Request</span><span class="val">$${parseFloat(a.loan_amount||0).toLocaleString()} for ${a.loan_purpose}</span></div>
