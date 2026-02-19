@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>FC Platform — Phase 2 Roadmap | Farm Credit SEMO</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:'Inter',sans-serif;background:#f4f7f0;color:#1e3013}
+    header{background:linear-gradient(135deg,#1a2e0d,#345220 60%,#52812c);padding:36px 24px 32px;text-align:center}
+    header .back{display:inline-block;color:rgba(255,255,255,.7);font-size:13px;text-decoration:none;margin-bottom:12px}
+    header .back:hover{color:white}
+    header .tag{background:rgba(139,195,74,.2);border:1px solid rgba(139,195,74,.5);display:inline-block;padding:4px 14px;border-radius:20px;font-size:11px;font-weight:700;color:#8bc34a;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:14px}
+    header h1{font-size:28px;font-weight:900;color:white;line-height:1.2;margin-bottom:10px}
+    header h1 span{color:#8bc34a}
+    header p{font-size:14px;color:rgba(255,255,255,.7);max-width:480px;margin:0 auto;line-height:1.6}
+    .wrap{max-width:680px;margin:0 auto;padding:24px 16px 48px}
+    .intro{background:white;border-radius:16px;padding:22px;margin-bottom:24px;box-shadow:0 4px 20px rgba(0,0,0,.07);border-left:5px solid #8bc34a;font-size:14px;line-height:1.7;color:#444}
+    .intro strong{color:#52812c}
+
+    /* PHASE HEADER */
+    .phase-header{margin-bottom:16px}
+    .phase-label{display:inline-flex;align-items:center;gap:8px;background:#345220;color:#8bc34a;font-size:12px;font-weight:800;letter-spacing:1px;text-transform:uppercase;padding:6px 16px;border-radius:8px;margin-bottom:14px}
+    .phase-header h2{font-size:20px;font-weight:900;color:#1e3013;margin-bottom:6px}
+    .phase-header p{font-size:14px;color:#666;line-height:1.6}
+    .phase-meta{display:flex;gap:16px;margin-top:12px;flex-wrap:wrap}
+    .phase-meta-item{background:white;border-radius:8px;padding:8px 14px;font-size:12px;box-shadow:0 2px 8px rgba(0,0,0,.06)}
+    .phase-meta-item .label{color:#999;display:block;font-size:10px;text-transform:uppercase;letter-spacing:.5px}
+    .phase-meta-item .val{font-weight:700;color:#345220;font-size:14px;margin-top:2px}
+
+    /* FEATURE CARDS */
+    .features{display:flex;flex-direction:column;gap:14px;margin-bottom:28px}
+    .feature{background:white;border-radius:14px;padding:20px;box-shadow:0 4px 16px rgba(0,0,0,.07);display:flex;gap:16px;align-items:flex-start}
+    .feature-icon{width:48px;height:48px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0}
+    .icon-green{background:#f2f7ed}
+    .icon-blue{background:#eff8ff}
+    .icon-amber{background:#fffbeb}
+    .feature-body h3{font-size:15px;font-weight:700;color:#1e3013;margin-bottom:5px}
+    .feature-body p{font-size:13px;color:#555;line-height:1.6}
+    .feature-body .tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+    .ftag{font-size:11px;font-weight:600;padding:3px 9px;border-radius:5px}
+    .ftag-green{background:#f2f7ed;color:#52812c}
+    .ftag-blue{background:#eff8ff;color:#2563eb}
+    .ftag-amber{background:#fffbeb;color:#92400e}
+
+    /* VALUE ROW */
+    .value-row{background:linear-gradient(135deg,#52812c,#345220);border-radius:16px;padding:24px;margin-bottom:28px;box-shadow:0 8px 32px rgba(52,129,44,.3)}
+    .value-row h3{font-size:14px;font-weight:800;color:#8bc34a;text-transform:uppercase;letter-spacing:1px;margin-bottom:16px}
+    .value-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+    @media(max-width:480px){.value-grid{grid-template-columns:1fr 1fr}}
+    .value-item{background:rgba(255,255,255,.1);border-radius:10px;padding:14px;text-align:center;border:1px solid rgba(255,255,255,.12)}
+    .value-item .vval{font-size:22px;font-weight:900;color:white}
+    .value-item .vlbl{font-size:11px;color:rgba(255,255,255,.6);margin-top:4px;line-height:1.4}
+
+    /* SAAS EXPANSION */
+    .saas{background:white;border-radius:16px;padding:24px;margin-bottom:28px;box-shadow:0 4px 20px rgba(0,0,0,.07)}
+    .saas h2{font-size:17px;font-weight:800;color:#52812c;margin-bottom:14px}
+    .saas p{font-size:14px;line-height:1.7;color:#444;margin-bottom:14px}
+    .assoc-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:14px}
+    @media(max-width:480px){.assoc-grid{grid-template-columns:1fr 1fr}}
+    .assoc-item{background:#f4f7f0;border-radius:8px;padding:10px;text-align:center;font-size:12px;color:#555;font-weight:500}
+    .assoc-item .state{font-size:10px;color:#999;display:block;margin-top:2px}
+
+    /* CTA */
+    .cta{background:linear-gradient(135deg,#1a2e0d,#345220);border-radius:16px;padding:28px;text-align:center;color:white}
+    .cta h2{font-size:20px;font-weight:900;margin-bottom:8px}
+    .cta p{font-size:14px;color:rgba(255,255,255,.75);margin-bottom:20px;line-height:1.6}
+    .cta-btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+    .btn-primary{display:inline-block;background:#8bc34a;color:#1e3013;font-size:14px;font-weight:800;padding:12px 28px;border-radius:10px;text-decoration:none}
+    .btn-secondary{display:inline-block;background:rgba(255,255,255,.1);color:white;font-size:14px;font-weight:700;padding:12px 28px;border-radius:10px;text-decoration:none;border:1px solid rgba(255,255,255,.2)}
+  </style>
+</head>
+<body>
+
+<header>
+  <a class="back" href="../index.html">← Back to Demo Suite</a>
+  <div class="tag">Strategic Vision</div>
+  <h1>What Comes After <span>Phase 1</span></h1>
+  <p>Phase 1 is the foundation. Phase 2 turns SEMO into the most digitally advanced Farm Credit association in the country.</p>
+</header>
+
+<div class="wrap">
+
+  <div class="intro">
+    <p>Phase 1 ($25K, 60 days) establishes the core platform. <strong>Phase 2 ($130K)</strong> layers in the intelligence tools that make FC Platform a genuine competitive moat — and positions SEMO to license the platform to other Farm Credit associations as a SaaS product.</p>
+  </div>
+
+  <!-- PHASE 1 RECAP -->
+  <div class="phase-header">
+    <div class="phase-label">✅ Phase 1 — Foundation (Delivered)</div>
+    <h2>Core Digital Platform</h2>
+    <p>Borrower portal, digital loan applications, AI underwriting, staff loan desk, patronage tracker, payment reminders, executive dashboard.</p>
+    <div class="phase-meta">
+      <div class="phase-meta-item"><span class="label">Investment</span><span class="val">$25,000</span></div>
+      <div class="phase-meta-item"><span class="label">Timeline</span><span class="val">60 days</span></div>
+      <div class="phase-meta-item"><span class="label">Features</span><span class="val">22 built</span></div>
+    </div>
+  </div>
+
+  <!-- PHASE 2 FEATURES -->
+  <div class="phase-header" style="margin-top:28px">
+    <div class="phase-label">🚀 Phase 2 — Intelligence Layer</div>
+    <h2>Farm Intelligence, AI Advisor & SaaS Expansion</h2>
+    <p>Six high-value additions that turn the platform into an indispensable tool for every SEMO borrower.</p>
+    <div class="phase-meta">
+      <div class="phase-meta-item"><span class="label">Investment</span><span class="val">~$130K</span></div>
+      <div class="phase-meta-item"><span class="label">Timeline</span><span class="val">90 days</span></div>
+      <div class="phase-meta-item"><span class="label">SaaS Potential</span><span class="val">55 Associations</span></div>
+    </div>
+  </div>
+
+  <div class="features" style="margin-top:16px">
+
+    <div class="feature">
+      <div class="feature-icon icon-green">🗺️</div>
+      <div class="feature-body">
+        <h3>Farm Intelligence Dashboard</h3>
+        <p>Interactive map of SEMO's entire loan portfolio overlaid with weather forecasts, soil moisture data, USDA crop reports, and commodity price alerts. Loan officers see portfolio health at a glance — geographically.</p>
+        <div class="tags">
+          <span class="ftag ftag-green">Portfolio Map</span>
+          <span class="ftag ftag-green">Weather Integration</span>
+          <span class="ftag ftag-green">USDA NASS Live Feed</span>
+          <span class="ftag ftag-amber">High Impact</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="feature">
+      <div class="feature-icon icon-blue">🤖</div>
+      <div class="feature-body">
+        <h3>AI Loan Advisor Chatbot</h3>
+        <p>24/7 conversational AI for borrowers. Answers questions about loan status, required documents, patronage calculations, payment schedules, and AgSunrise eligibility — without a phone call. Escalates to a human officer when needed.</p>
+        <div class="tags">
+          <span class="ftag ftag-blue">Claude AI</span>
+          <span class="ftag ftag-blue">24/7 Self-Service</span>
+          <span class="ftag ftag-green">Reduces Call Volume 40%</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="feature">
+      <div class="feature-icon icon-green">📊</div>
+      <div class="feature-body">
+        <h3>Portfolio Intelligence & Risk Heat Map</h3>
+        <p>AI-powered analysis of the entire loan portfolio. Flags concentration risk by crop type, county, or borrower segment. Predicts delinquency risk 90 days out using commodity price trends and historical patterns. Board-ready risk reporting.</p>
+        <div class="tags">
+          <span class="ftag ftag-green">Predictive Analytics</span>
+          <span class="ftag ftag-amber">Risk Management</span>
+          <span class="ftag ftag-blue">Board Reporting</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="feature">
+      <div class="feature-icon icon-amber">🌱</div>
+      <div class="feature-body">
+        <h3>Crop Insurance Integration</h3>
+        <p>Borrowers can view their USDA RMA crop insurance policies, coverage levels, and claim history alongside their loans. Staff can identify underinsured borrowers — turning a risk flag into an advisory conversation.</p>
+        <div class="tags">
+          <span class="ftag ftag-amber">USDA RMA API</span>
+          <span class="ftag ftag-green">Revenue Opportunity</span>
+          <span class="ftag ftag-green">Risk Reduction</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="feature">
+      <div class="feature-icon icon-blue">📱</div>
+      <div class="feature-body">
+        <h3>Native Mobile App (iOS + Android)</h3>
+        <p>Full-featured borrower app with push notifications, document capture (take a photo of a tax return), biometric login, and offline access to loan summaries. Farmers want to check their patronage from the tractor.</p>
+        <div class="tags">
+          <span class="ftag ftag-blue">React Native</span>
+          <span class="ftag ftag-blue">Push Notifications</span>
+          <span class="ftag ftag-green">Camera Doc Upload</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="feature">
+      <div class="feature-icon icon-green">🔗</div>
+      <div class="feature-body">
+        <h3>Core Banking API Integration</h3>
+        <p>Two-way sync with SEMO's core banking system (FIS, Fiserv, or Jack Henry). Loan balances, payment history, and account data flow automatically — no double-entry, no manual exports, real-time accuracy.</p>
+        <div class="tags">
+          <span class="ftag ftag-green">Live Data Sync</span>
+          <span class="ftag ftag-amber">Eliminates Manual Entry</span>
+          <span class="ftag ftag-blue">FIS / Fiserv / JH</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- VALUE -->
+  <div class="value-row">
+    <h3>Phase 2 Value Unlock</h3>
+    <div class="value-grid">
+      <div class="value-item">
+        <div class="vval">55</div>
+        <div class="vlbl">Farm Credit associations eligible for SaaS licensing</div>
+      </div>
+      <div class="value-item">
+        <div class="vval">$2.4M</div>
+        <div class="vlbl">Potential annual SaaS ARR at $3.5K/mo per association</div>
+      </div>
+      <div class="value-item">
+        <div class="vval">90 days</div>
+        <div class="vlbl">Phase 2 delivery timeline from kickoff</div>
+      </div>
+      <div class="value-item">
+        <div class="vval">40%</div>
+        <div class="vlbl">Borrower call volume reduction with AI advisor</div>
+      </div>
+      <div class="value-item">
+        <div class="vval">1st</div>
+        <div class="vlbl">SEMO becomes first FC association with AI-powered farm intelligence</div>
+      </div>
+      <div class="value-item">
+        <div class="vval">$0</div>
+        <div class="vlbl">Additional infrastructure cost — Phase 2 runs on Phase 1's foundation</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SAAS EXPANSION -->
+  <div class="saas">
+    <h2>🌐 The SaaS Opportunity</h2>
+    <p>Farm Credit has <strong>54 other associations</strong> across the country — every single one faces the same digital gap SEMO is solving right now. Once FC Platform is live and proven at SEMO, we can license it to other associations as a multi-tenant SaaS product.</p>
+    <p>SEMO doesn't just modernize its own operation. It becomes the <strong>technology partner for the entire Farm Credit network</strong> — a new revenue stream that turns a $25K investment into a self-sustaining business.</p>
+    <div class="assoc-grid">
+      <div class="assoc-item">AgTexas FCS<span class="state">Texas</span></div>
+      <div class="assoc-item">Farm Credit Mid-America<span class="state">Kentucky / Multi</span></div>
+      <div class="assoc-item">AgGeorgia Farm Credit<span class="state">Georgia</span></div>
+      <div class="assoc-item">Farm Credit Illinois<span class="state">Illinois</span></div>
+      <div class="assoc-item">Carolina Farm Credit<span class="state">North Carolina</span></div>
+      <div class="assoc-item">+ 49 more<span class="state">Nationwide</span></div>
+    </div>
+  </div>
+
+  <!-- CTA -->
+  <div class="cta">
+    <h2>Start with Phase 1. Own Phase 2.</h2>
+    <p>Phase 1 gets SEMO live in 60 days. Phase 2 makes SEMO the Farm Credit technology benchmark. Both start with one conversation.</p>
+    <div class="cta-btns">
+      <a class="btn-primary" href="../proposal/index.html">View Phase 1 Proposal</a>
+      <a class="btn-secondary" href="../roi/index.html">Calculate Your ROI</a>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>

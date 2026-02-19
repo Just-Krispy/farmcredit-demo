@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>FC Platform — Member Email Templates | Farm Credit SEMO</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:'Inter',sans-serif;background:#f4f7f0;color:#1e3013}
+    header{background:linear-gradient(135deg,#345220,#52812c);padding:28px 24px 24px;text-align:center}
+    header .back{display:inline-block;color:rgba(255,255,255,.7);font-size:13px;text-decoration:none;margin-bottom:12px}
+    header .back:hover{color:white}
+    header h1{font-size:26px;font-weight:900;color:white;line-height:1.2}
+    header h1 span{color:#8bc34a}
+    header p{font-size:14px;color:rgba(255,255,255,.7);margin-top:8px}
+    .wrap{max-width:700px;margin:0 auto;padding:24px 16px 48px}
+    .intro{background:white;border-radius:16px;padding:22px;margin-bottom:24px;box-shadow:0 4px 20px rgba(0,0,0,.07);border-left:5px solid #8bc34a;font-size:14px;line-height:1.7;color:#444}
+    .intro strong{color:#52812c}
+    .tab-bar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px}
+    .tab{padding:8px 16px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;background:white;color:#52812c;border:2px solid #d4e8c2;transition:all .15s}
+    .tab.active{background:#52812c;color:white;border-color:#52812c}
+    .email-wrap{display:none}
+    .email-wrap.active{display:block}
+
+    /* EMAIL CLIENT CHROME */
+    .email-chrome{background:#fff;border-radius:16px;overflow:hidden;box-shadow:0 8px 40px rgba(0,0,0,.12)}
+    .email-chrome-top{background:#f1f3f4;padding:14px 18px;display:flex;align-items:center;gap:10px;border-bottom:1px solid #e0e0e0}
+    .dot{width:12px;height:12px;border-radius:50%}
+    .dot-red{background:#ff5f57}
+    .dot-yellow{background:#febc2e}
+    .dot-green{background:#28c840}
+    .chrome-title{font-size:12px;color:#666;margin-left:8px;font-family:monospace}
+    .email-meta{background:#fafafa;padding:14px 20px;border-bottom:1px solid #eee}
+    .email-meta .row{display:flex;gap:8px;margin-bottom:4px;font-size:12px}
+    .email-meta .row:last-child{margin-bottom:0}
+    .email-meta .key{color:#888;min-width:50px}
+    .email-meta .val{color:#333;font-weight:500}
+    .email-body{padding:0}
+
+    /* ACTUAL EMAIL STYLES (scoped inside .email-body) */
+    .email-body .eb-outer{background:#f4f7f0;padding:24px 16px}
+    .email-body .eb-container{max-width:540px;margin:0 auto}
+    .email-body .eb-header{background:linear-gradient(135deg,#345220,#52812c);border-radius:12px 12px 0 0;padding:24px 28px;display:flex;align-items:center;gap:14px}
+    .email-body .eb-logo{width:42px;height:42px;background:rgba(255,255,255,.15);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0}
+    .email-body .eb-brand{color:white}
+    .email-body .eb-brand .name{font-size:15px;font-weight:800}
+    .email-body .eb-brand .tagline{font-size:11px;color:rgba(255,255,255,.6);margin-top:2px}
+    .email-body .eb-content{background:white;padding:28px;border-radius:0 0 12px 12px}
+    .email-body .eb-greeting{font-size:16px;font-weight:700;color:#1e3013;margin-bottom:8px}
+    .email-body .eb-text{font-size:14px;line-height:1.7;color:#444;margin-bottom:16px}
+    .email-body .eb-divider{height:1px;background:#f4f7f0;margin:20px 0}
+    .email-body .eb-detail-box{background:#f4f7f0;border-radius:10px;padding:16px;margin-bottom:16px}
+    .email-body .eb-detail-row{display:flex;justify-content:space-between;font-size:13px;margin-bottom:7px}
+    .email-body .eb-detail-row:last-child{margin-bottom:0}
+    .email-body .eb-detail-row .dk{color:#666}
+    .email-body .eb-detail-row .dv{font-weight:600;color:#1e3013}
+    .email-body .eb-badge{display:inline-block;padding:6px 14px;border-radius:20px;font-size:12px;font-weight:700;margin-bottom:16px}
+    .email-body .badge-approved{background:#d4edda;color:#155724}
+    .email-body .badge-review{background:#fff3cd;color:#856404}
+    .email-body .badge-due{background:#f8d7da;color:#721c24}
+    .email-body .badge-patronage{background:#d4edda;color:#155724}
+    .email-body .eb-cta{display:block;background:#52812c;color:white;text-align:center;padding:14px;border-radius:10px;font-size:14px;font-weight:700;text-decoration:none;margin-bottom:16px}
+    .email-body .eb-footer{text-align:center;font-size:11px;color:#999;margin-top:16px;line-height:1.7}
+    .email-body .eb-footer a{color:#52812c;text-decoration:none}
+    .email-body .eb-amount{font-size:28px;font-weight:900;color:#52812c;margin-bottom:4px}
+    .email-body .eb-amount-label{font-size:12px;color:#888;margin-bottom:16px}
+    .email-body .highlight-row{background:#f2f7ed;border-radius:8px;padding:12px 16px;display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+    .email-body .hl-label{font-size:13px;color:#555}
+    .email-body .hl-val{font-size:15px;font-weight:800;color:#52812c}
+  </style>
+</head>
+<body>
+
+<header>
+  <a class="back" href="../index.html">← Back to Demo Suite</a>
+  <h1>Member <span>Email Templates</span></h1>
+  <p>Branded, automated notifications sent directly to your borrowers</p>
+</header>
+
+<div class="wrap">
+  <div class="intro">
+    <p>Every touchpoint with your members is an opportunity to build trust. FC Platform sends <strong>beautiful, branded emails</strong> automatically — application updates, payment reminders, patronage announcements, and more. No manual follow-up needed.</p>
+  </div>
+
+  <div class="tab-bar">
+    <div class="tab active" onclick="show('approved')">✅ Loan Approved</div>
+    <div class="tab" onclick="show('reminder')">📅 Payment Reminder</div>
+    <div class="tab" onclick="show('submitted')">📬 App Received</div>
+    <div class="tab" onclick="show('patronage')">💰 Patronage Distribution</div>
+    <div class="tab" onclick="show('docs')">📎 Docs Requested</div>
+  </div>
+
+  <!-- LOAN APPROVED -->
+  <div class="email-wrap active" id="email-approved">
+    <div class="email-chrome">
+      <div class="email-chrome-top">
+        <div class="dot dot-red"></div><div class="dot dot-yellow"></div><div class="dot dot-green"></div>
+        <span class="chrome-title">notifications@farmcreditsemo.com</span>
+      </div>
+      <div class="email-meta">
+        <div class="row"><span class="key">From:</span><span class="val">Farm Credit SEMO &lt;notifications@farmcreditsemo.com&gt;</span></div>
+        <div class="row"><span class="key">To:</span><span class="val">James Holloway &lt;jholloway@gmail.com&gt;</span></div>
+        <div class="row"><span class="key">Subject:</span><span class="val">🎉 Congratulations — Your Loan Has Been Approved</span></div>
+      </div>
+      <div class="email-body">
+        <div class="eb-outer">
+          <div class="eb-container">
+            <div class="eb-header">
+              <div class="eb-logo">🌾</div>
+              <div class="eb-brand">
+                <div class="name">Farm Credit SEMO</div>
+                <div class="tagline">Southeast Missouri's Agricultural Lender</div>
+              </div>
+            </div>
+            <div class="eb-content">
+              <div class="eb-greeting">James, great news!</div>
+              <p class="eb-text">Your loan application has been reviewed and <strong>approved</strong>. We're excited to support your farming operation and look forward to a long partnership.</p>
+              <span class="eb-badge badge-approved">✓ APPROVED</span>
+              <div class="eb-detail-box">
+                <div class="eb-detail-row"><span class="dk">Loan Amount</span><span class="dv">$185,000</span></div>
+                <div class="eb-detail-row"><span class="dk">Purpose</span><span class="dv">Operating — Soybean Production</span></div>
+                <div class="eb-detail-row"><span class="dk">Property</span><span class="dv">Stoddard County, MO</span></div>
+                <div class="eb-detail-row"><span class="dk">Interest Rate</span><span class="dv">7.25% variable</span></div>
+                <div class="eb-detail-row"><span class="dk">Loan Officer</span><span class="dv">Mike Rhoades</span></div>
+              </div>
+              <p class="eb-text">Next step: we'll send your DocuSign documents within 24 hours. You'll receive an email to review and sign your loan agreement electronically.</p>
+              <a class="eb-cta" href="#">View Your Application →</a>
+              <div class="eb-divider"></div>
+              <p class="eb-text" style="font-size:13px">Questions? Reply to this email or call Mike Rhoades directly at (573) 555-0182.</p>
+              <div class="eb-footer">
+                Farm Credit Southeast Missouri<br/>
+                1020 N. Kingshighway, Cape Girardeau, MO 63701<br/>
+                <a href="#">Unsubscribe</a> · <a href="#">View in Browser</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PAYMENT REMINDER -->
+  <div class="email-wrap" id="email-reminder">
+    <div class="email-chrome">
+      <div class="email-chrome-top">
+        <div class="dot dot-red"></div><div class="dot dot-yellow"></div><div class="dot dot-green"></div>
+        <span class="chrome-title">notifications@farmcreditsemo.com</span>
+      </div>
+      <div class="email-meta">
+        <div class="row"><span class="key">From:</span><span class="val">Farm Credit SEMO &lt;notifications@farmcreditsemo.com&gt;</span></div>
+        <div class="row"><span class="key">To:</span><span class="val">Carol Whitfield &lt;carol.whitfield@farmemail.com&gt;</span></div>
+        <div class="row"><span class="key">Subject:</span><span class="val">📅 Reminder: Your payment of $3,420 is due in 7 days</span></div>
+      </div>
+      <div class="email-body">
+        <div class="eb-outer">
+          <div class="eb-container">
+            <div class="eb-header">
+              <div class="eb-logo">🌾</div>
+              <div class="eb-brand">
+                <div class="name">Farm Credit SEMO</div>
+                <div class="tagline">Southeast Missouri's Agricultural Lender</div>
+              </div>
+            </div>
+            <div class="eb-content">
+              <div class="eb-greeting">Hi Carol,</div>
+              <p class="eb-text">This is a friendly reminder that your upcoming loan payment is due in <strong>7 days</strong>.</p>
+              <span class="eb-badge badge-due">📅 DUE IN 7 DAYS</span>
+              <div class="eb-detail-box">
+                <div class="eb-detail-row"><span class="dk">Payment Amount</span><span class="dv">$3,420.00</span></div>
+                <div class="eb-detail-row"><span class="dk">Due Date</span><span class="dv">March 1, 2026</span></div>
+                <div class="eb-detail-row"><span class="dk">Loan</span><span class="dv">Equipment — Scott County</span></div>
+                <div class="eb-detail-row"><span class="dk">Remaining Balance</span><span class="dv">$87,240.00</span></div>
+              </div>
+              <a class="eb-cta" href="#">Make a Payment →</a>
+              <p class="eb-text" style="font-size:13px">You're also enrolled in our patronage program. Every on-time payment counts toward your year-end dividend — keep it up!</p>
+              <div class="eb-footer">
+                Farm Credit Southeast Missouri · (877) 730-7327<br/>
+                <a href="#">Manage Notifications</a> · <a href="#">View in Browser</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- APP SUBMITTED -->
+  <div class="email-wrap" id="email-submitted">
+    <div class="email-chrome">
+      <div class="email-chrome-top">
+        <div class="dot dot-red"></div><div class="dot dot-yellow"></div><div class="dot dot-green"></div>
+        <span class="chrome-title">notifications@farmcreditsemo.com</span>
+      </div>
+      <div class="email-meta">
+        <div class="row"><span class="key">From:</span><span class="val">Farm Credit SEMO &lt;notifications@farmcreditsemo.com&gt;</span></div>
+        <div class="row"><span class="key">To:</span><span class="val">Tyler Mason &lt;tyler.mason22@gmail.com&gt;</span></div>
+        <div class="row"><span class="key">Subject:</span><span class="val">📬 We received your AgSunrise application — here's what happens next</span></div>
+      </div>
+      <div class="email-body">
+        <div class="eb-outer">
+          <div class="eb-container">
+            <div class="eb-header">
+              <div class="eb-logo">🌱</div>
+              <div class="eb-brand">
+                <div class="name">Farm Credit SEMO — AgSunrise</div>
+                <div class="tagline">Supporting the Next Generation of Missouri Farmers</div>
+              </div>
+            </div>
+            <div class="eb-content">
+              <div class="eb-greeting">Tyler, you're on your way! 🎉</div>
+              <p class="eb-text">We received your AgSunrise loan application. Our team will review it and be in touch within <strong>2 business days</strong>.</p>
+              <span class="eb-badge badge-review">📋 UNDER REVIEW</span>
+              <div class="eb-detail-box">
+                <div class="eb-detail-row"><span class="dk">Reference #</span><span class="dv">AGS-2026-0847</span></div>
+                <div class="eb-detail-row"><span class="dk">Application Type</span><span class="dv">AgSunrise — Beginning Farmer</span></div>
+                <div class="eb-detail-row"><span class="dk">Requested Amount</span><span class="dv">$45,000</span></div>
+                <div class="eb-detail-row"><span class="dk">Purpose</span><span class="dv">Operating — Row Crop Production</span></div>
+                <div class="eb-detail-row"><span class="dk">Submitted</span><span class="dv">Feb 19, 2026 at 3:44 PM</span></div>
+              </div>
+              <p class="eb-text"><strong>What happens next:</strong></p>
+              <p class="eb-text" style="font-size:13px">1. Our team reviews your application (1–2 days)<br/>2. We may request additional documents<br/>3. A loan officer will contact you to schedule a call<br/>4. Decision typically within 5–7 business days</p>
+              <a class="eb-cta" href="#">Track Your Application →</a>
+              <div class="eb-footer">
+                Farm Credit Southeast Missouri<br/>
+                Questions? Call us at (877) 730-7327<br/>
+                <a href="#">Unsubscribe</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PATRONAGE -->
+  <div class="email-wrap" id="email-patronage">
+    <div class="email-chrome">
+      <div class="email-chrome-top">
+        <div class="dot dot-red"></div><div class="dot dot-yellow"></div><div class="dot dot-green"></div>
+        <span class="chrome-title">notifications@farmcreditsemo.com</span>
+      </div>
+      <div class="email-meta">
+        <div class="row"><span class="key">From:</span><span class="val">Farm Credit SEMO &lt;notifications@farmcreditsemo.com&gt;</span></div>
+        <div class="row"><span class="key">To:</span><span class="val">Robert Tanner &lt;rtanner.farms@gmail.com&gt;</span></div>
+        <div class="row"><span class="key">Subject:</span><span class="val">💰 Your 2024 Patronage Dividend: $2,841.20 — RECORD Year!</span></div>
+      </div>
+      <div class="email-body">
+        <div class="eb-outer">
+          <div class="eb-container">
+            <div class="eb-header">
+              <div class="eb-logo">💰</div>
+              <div class="eb-brand">
+                <div class="name">Farm Credit SEMO</div>
+                <div class="tagline">2024 Patronage Distribution</div>
+              </div>
+            </div>
+            <div class="eb-content">
+              <div class="eb-greeting">Robert, your dividend is ready!</div>
+              <p class="eb-text">We're proud to announce a <strong>record $9.1 million</strong> total patronage distribution for 2024 — and here's your share:</p>
+              <div style="text-align:center;margin:20px 0">
+                <div class="eb-amount">$2,841.20</div>
+                <div class="eb-amount-label">Your 2024 Patronage Dividend</div>
+              </div>
+              <span class="eb-badge badge-patronage">🌟 RECORD DISTRIBUTION YEAR</span>
+              <div class="eb-detail-box">
+                <div class="eb-detail-row"><span class="dk">Distribution Rate</span><span class="dv">3.12¢ per $1 borrowed</span></div>
+                <div class="eb-detail-row"><span class="dk">Your Avg. Loan Balance</span><span class="dv">$91,064</span></div>
+                <div class="eb-detail-row"><span class="dk">Cash Portion (60%)</span><span class="dv">$1,704.72</span></div>
+                <div class="eb-detail-row"><span class="dk">Stock Portion (40%)</span><span class="dv">$1,136.48</span></div>
+                <div class="eb-detail-row"><span class="dk">Payment Date</span><span class="dv">March 15, 2026</span></div>
+              </div>
+              <p class="eb-text" style="font-size:13px">This is what it means to borrow from a cooperative — your business creates real returns. As a member-owner, you benefit from SEMO's success directly.</p>
+              <a class="eb-cta" href="#">View Your Patronage History →</a>
+              <div class="eb-footer">
+                Farm Credit Southeast Missouri · (877) 730-7327<br/>
+                <a href="#">Unsubscribe</a> · <a href="#">View in Browser</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DOCS REQUESTED -->
+  <div class="email-wrap" id="email-docs">
+    <div class="email-chrome">
+      <div class="email-chrome-top">
+        <div class="dot dot-red"></div><div class="dot dot-yellow"></div><div class="dot dot-green"></div>
+        <span class="chrome-title">notifications@farmcreditsemo.com</span>
+      </div>
+      <div class="email-meta">
+        <div class="row"><span class="key">From:</span><span class="val">Farm Credit SEMO &lt;notifications@farmcreditsemo.com&gt;</span></div>
+        <div class="row"><span class="key">To:</span><span class="val">Dawn Hendricks &lt;dhendricks@semofarmer.com&gt;</span></div>
+        <div class="row"><span class="key">Subject:</span><span class="val">📎 Action needed: 3 documents requested for your loan application</span></div>
+      </div>
+      <div class="email-body">
+        <div class="eb-outer">
+          <div class="eb-container">
+            <div class="eb-header">
+              <div class="eb-logo">📎</div>
+              <div class="eb-brand">
+                <div class="name">Farm Credit SEMO</div>
+                <div class="tagline">Southeast Missouri's Agricultural Lender</div>
+              </div>
+            </div>
+            <div class="eb-content">
+              <div class="eb-greeting">Hi Dawn,</div>
+              <p class="eb-text">To continue processing your loan application, your loan officer <strong>Sarah Tillman</strong> needs the following documents:</p>
+              <div class="eb-detail-box">
+                <div class="highlight-row"><span class="hl-label">📄 2023 & 2024 Federal Tax Returns</span><span class="hl-val">Required</span></div>
+                <div class="highlight-row"><span class="hl-label">🗺️ Current Farm Lease Agreement</span><span class="hl-val">Required</span></div>
+                <div class="highlight-row"><span class="hl-label">💳 Last 3 months bank statements</span><span class="hl-val">Required</span></div>
+              </div>
+              <p class="eb-text">Upload directly through your secure borrower portal — no faxing, no driving to the office.</p>
+              <a class="eb-cta" href="#">Upload Documents Now →</a>
+              <p class="eb-text" style="font-size:13px">⏰ Please upload within 5 business days to keep your application moving. Contact Sarah at (573) 555-0219 with any questions.</p>
+              <div class="eb-footer">
+                Farm Credit Southeast Missouri · (877) 730-7327<br/>
+                <a href="#">Manage Notifications</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+function show(id) {
+  document.querySelectorAll('.email-wrap').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(el => el.classList.remove('active'));
+  document.getElementById('email-' + id).classList.add('active');
+  event.target.classList.add('active');
+}
+</script>
+</body>
+</html>
