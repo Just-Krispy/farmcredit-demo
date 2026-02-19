@@ -9,96 +9,150 @@
   <style>
     *{box-sizing:border-box;margin:0;padding:0}
     body{font-family:'Inter',system-ui,sans-serif;background:#f4f7f0;min-height:100vh}
-    header{background:linear-gradient(135deg,#52812c,#426824);color:white;padding:48px 24px;text-align:center}
-    header .tag{background:rgba(139,195,74,.25);border:1px solid #8bc34a;display:inline-block;padding:5px 16px;border-radius:20px;font-size:13px;font-weight:600;color:#8bc34a;margin-bottom:16px;letter-spacing:1px;text-transform:uppercase}
-    header h1{font-size:30px;font-weight:900;line-height:1.2;margin-bottom:8px}
+    header{background:linear-gradient(135deg,#345220 0%,#52812c 60%,#426824 100%);color:white;padding:48px 24px 40px;text-align:center;position:relative;overflow:hidden}
+    header::before{content:'';position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")}
+    header .tag{background:rgba(139,195,74,.2);border:1px solid rgba(139,195,74,.6);display:inline-block;padding:5px 16px;border-radius:20px;font-size:12px;font-weight:700;color:#8bc34a;margin-bottom:16px;letter-spacing:1.5px;text-transform:uppercase;position:relative}
+    header h1{font-size:32px;font-weight:900;line-height:1.2;margin-bottom:10px;position:relative}
     header h1 span{color:#8bc34a}
-    header p{font-size:16px;opacity:.8;max-width:460px;margin:0 auto}
-    .cards{max-width:640px;margin:32px auto 48px;padding:0 16px;display:flex;flex-direction:column;gap:16px}
-    a.card{background:white;border-radius:16px;box-shadow:0 4px 20px rgba(0,0,0,.09);padding:24px;text-decoration:none;color:#1e3013;display:block;transition:transform .2s,box-shadow .2s;border-left:5px solid #52812c}
+    header p{font-size:15px;opacity:.8;max-width:500px;margin:0 auto 24px;line-height:1.6;position:relative}
+    .stats-row{display:flex;justify-content:center;gap:32px;margin-top:4px;flex-wrap:wrap}
+    .stat-item{text-align:center}
+    .stat-item .val{font-size:22px;font-weight:900;color:white}
+    .stat-item .lbl{font-size:11px;color:rgba(255,255,255,.55);margin-top:2px;text-transform:uppercase;letter-spacing:.5px}
+    .divider-v{width:1px;background:rgba(255,255,255,.15);align-self:stretch}
+    .cards{max-width:660px;margin:28px auto 0;padding:0 16px 48px;display:flex;flex-direction:column;gap:14px}
+    a.card{background:white;border-radius:16px;box-shadow:0 4px 20px rgba(0,0,0,.09);padding:22px 24px;text-decoration:none;color:#1e3013;display:block;transition:transform .2s,box-shadow .2s;border-left:5px solid #52812c}
     a.card:hover{transform:translateY(-3px);box-shadow:0 8px 32px rgba(0,0,0,.14)}
     a.card.secondary{border-left-color:#8bc34a}
+    a.card.sales{border-left-color:#345220;background:linear-gradient(135deg,#ffffff,#f9fdf6)}
     .card-inner{display:flex;align-items:flex-start;gap:16px}
-    .card-icon{font-size:32px;flex-shrink:0;margin-top:2px}
-    .card h2{font-size:18px;font-weight:700;color:#52812c;margin-bottom:5px}
+    .card-icon{font-size:30px;flex-shrink:0;margin-top:2px;width:44px;text-align:center}
+    .card h2{font-size:17px;font-weight:700;color:#52812c;margin-bottom:5px}
     a.card.secondary h2{color:#426824}
-    .card p{font-size:14px;color:#666;line-height:1.55}
-    .card .arrow{font-size:18px;color:#8bc34a;margin-left:auto;margin-top:4px;flex-shrink:0}
+    a.card.sales h2{color:#345220}
+    .card p{font-size:13px;color:#666;line-height:1.6}
+    .card .arrow{font-size:18px;color:#8bc34a;margin-left:auto;margin-top:2px;flex-shrink:0}
+    .card-badge{display:inline-block;font-size:10px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;padding:2px 8px;border-radius:4px;margin-left:8px;vertical-align:middle}
+    .badge-new{background:#fff3cd;color:#856404}
+    .badge-live{background:#d4edda;color:#155724}
     .section-label{font-size:11px;text-transform:uppercase;letter-spacing:1.5px;color:#aaa;font-weight:600;margin:8px 0 4px 4px}
     footer{text-align:center;padding:24px;font-size:12px;color:#aaa;line-height:1.8}
   </style>
 </head>
 <body>
 <header>
-  <div class="tag">Live Demo Suite</div>
+  <div class="tag">🌾 Live Demo Suite</div>
   <h1>Farm Credit <span>SEMO</span><br/>Digital Experience</h1>
-  <p>Three working tools built to make membership more visible, valuable, and modern.</p>
+  <p>A purpose-built digital platform for Farm Credit's unique member model — patronage, AgSunrise, AI underwriting, and more. Ready in 60 days.</p>
+  <div class="stats-row">
+    <div class="stat-item"><div class="val">$9.1M</div><div class="lbl">Record Patronage</div></div>
+    <div class="divider-v"></div>
+    <div class="stat-item"><div class="val">60 days</div><div class="lbl">To Deploy</div></div>
+    <div class="divider-v"></div>
+    <div class="stat-item"><div class="val">$25K</div><div class="lbl">All-In Investment</div></div>
+    <div class="divider-v"></div>
+    <div class="stat-item"><div class="val">22/22</div><div class="lbl">Features vs. Alternatives</div></div>
+  </div>
 </header>
+
 <div class="cards">
+
   <div class="section-label">Member-Facing Tools</div>
+
   <a class="card" href="patronage/index.html">
     <div class="card-inner">
       <div class="card-icon">💰</div>
       <div>
-        <h2>Patronage Dividend Tracker</h2>
+        <h2>Patronage Dividend Tracker <span class="card-badge badge-live">Live</span></h2>
         <p>Members see their projected year-end cash refund in real time. Makes your record $9.1M patronage impossible to ignore — every single day.</p>
       </div>
       <div class="arrow">→</div>
     </div>
   </a>
+
   <a class="card" href="agsunrise/index.html">
     <div class="card-inner">
       <div class="card-icon">🌱</div>
       <div>
-        <h2>AgSunrise Digital Application</h2>
-        <p>Mobile-first 5-step application for young farmers. Document upload, real-time status tracking, and email updates at every step — no PDFs.</p>
+        <h2>AgSunrise Digital Application <span class="card-badge badge-live">Live</span></h2>
+        <p>Mobile-first 5-step application for young &amp; beginning farmers. Document upload, real-time status, email updates at every step — no PDFs.</p>
       </div>
       <div class="arrow">→</div>
     </div>
   </a>
+
   <a class="card" href="agsunrise/status.html">
     <div class="card-inner">
       <div class="card-icon">🔍</div>
       <div>
-        <h2>Application Status Tracker</h2>
+        <h2>Application Status Tracker <span class="card-badge badge-live">Live</span></h2>
         <p>Applicants check their status anytime with just a reference number. Full step-by-step timeline.</p>
       </div>
       <div class="arrow">→</div>
     </div>
   </a>
-  <div class="section-label">Staff Tools</div>
+
+  <div class="section-label">Staff &amp; Operations Tools</div>
+
   <a class="card secondary" href="reminders/index.html">
     <div class="card-inner">
       <div class="card-icon">📨</div>
       <div>
-        <h2>Payment Reminder System</h2>
-        <p>Admin dashboard to manage borrowers. Auto-sends SMS & email reminders 7, 3, and 0 days before each loan payment is due.</p>
+        <h2>Payment Reminder System <span class="card-badge badge-live">Live</span></h2>
+        <p>Admin dashboard to manage borrowers. Auto-sends SMS &amp; email reminders 7, 3, and 0 days before each payment — with deduplication.</p>
       </div>
       <div class="arrow">→</div>
     </div>
   </a>
+
   <a class="card secondary" href="agsunrise/admin.html">
     <div class="card-inner">
       <div class="card-icon">🗂️</div>
       <div>
-        <h2>AgSunrise Staff Admin</h2>
-        <p>Review applications, update status, add internal notes. Applicants are automatically notified by email on every status change.</p>
+        <h2>AgSunrise Staff Admin <span class="card-badge badge-live">Live</span></h2>
+        <p>Review applications, update status, add internal notes. Applicants auto-notified by email on every status change.</p>
       </div>
       <div class="arrow">→</div>
     </div>
   </a>
-  <div class="section-label">Proposal</div>
-  <a class="card secondary" href="proposal/index.html">
+
+  <div class="section-label">Sales Resources</div>
+
+  <a class="card sales" href="roi/index.html">
+    <div class="card-inner">
+      <div class="card-icon">📊</div>
+      <div>
+        <h2>ROI Calculator <span class="card-badge badge-new">New</span></h2>
+        <p>Interactive calculator: enter SEMO's loan volume, staff count, and processing time — see exact hours saved, dollar return, and payback period on the $25K investment.</p>
+      </div>
+      <div class="arrow">→</div>
+    </div>
+  </a>
+
+  <a class="card sales" href="compare/index.html">
+    <div class="card-inner">
+      <div class="card-icon">⚡</div>
+      <div>
+        <h2>FC Platform vs. Alternatives <span class="card-badge badge-new">New</span></h2>
+        <p>Side-by-side: FC Platform vs. AgLender, FCS Financial, and building in-house. 22-feature matrix. Why this is the only option that makes sense for SEMO.</p>
+      </div>
+      <div class="arrow">→</div>
+    </div>
+  </a>
+
+  <a class="card sales" href="proposal/index.html">
     <div class="card-inner">
       <div class="card-icon">📄</div>
       <div>
-        <h2>Full Proposal & Pricing</h2>
-        <p>Complete one-pager with project descriptions, investment summary, and delivery timeline. Print-to-PDF ready.</p>
+        <h2>Full Proposal &amp; Pricing</h2>
+        <p>Complete one-pager with project descriptions, investment summary, and 60-day delivery timeline. Print-to-PDF ready.</p>
       </div>
       <div class="arrow">→</div>
     </div>
   </a>
+
 </div>
+
 <footer>
   Farm Credit Southeast Missouri · farmcreditsemo.com · (877) 730-7327<br/>
   Equal Housing Lender · Equal Credit Opportunity · Equal Opportunity Provider

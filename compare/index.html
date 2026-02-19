@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>FC Platform vs. The Alternatives | Farm Credit SEMO</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:'Inter',sans-serif;background:#f4f7f0;color:#1e3013;min-height:100vh}
+    header{background:linear-gradient(135deg,#345220 0%,#52812c 100%);padding:28px 24px 24px;text-align:center}
+    header .back{display:inline-block;color:rgba(255,255,255,.7);font-size:13px;text-decoration:none;margin-bottom:12px}
+    header .back:hover{color:white}
+    header h1{font-size:26px;font-weight:900;color:white;line-height:1.2}
+    header h1 span{color:#8bc34a}
+    header p{font-size:14px;color:rgba(255,255,255,.7);margin-top:8px}
+    .wrap{max-width:860px;margin:0 auto;padding:24px 16px 48px}
+    .intro-card{background:white;border-radius:16px;padding:24px;margin-bottom:24px;box-shadow:0 4px 20px rgba(0,0,0,.07);border-left:5px solid #8bc34a}
+    .intro-card p{font-size:14px;line-height:1.7;color:#444}
+    .intro-card strong{color:#52812c}
+
+    /* WINNER BANNER */
+    .winner-banner{background:linear-gradient(135deg,#52812c,#345220);border-radius:16px;padding:24px;margin-bottom:28px;text-align:center;box-shadow:0 8px 32px rgba(52,129,44,.3)}
+    .winner-banner .tag{display:inline-block;background:rgba(139,195,74,.25);border:1px solid #8bc34a;color:#8bc34a;font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;padding:4px 14px;border-radius:20px;margin-bottom:12px}
+    .winner-banner h2{font-size:22px;font-weight:900;color:white;margin-bottom:8px}
+    .winner-banner p{font-size:13px;color:rgba(255,255,255,.7);line-height:1.6}
+
+    /* MATRIX TABLE */
+    .matrix-wrap{background:white;border-radius:16px;overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,.07);margin-bottom:28px}
+    .matrix-scroll{overflow-x:auto}
+    table{width:100%;border-collapse:collapse;min-width:640px}
+    thead tr{background:#345220}
+    thead th{padding:14px 16px;font-size:11px;font-weight:700;color:rgba(255,255,255,.7);text-transform:uppercase;letter-spacing:.8px;text-align:center;vertical-align:bottom}
+    thead th:first-child{text-align:left;color:white}
+    thead th.fc-col{background:#52812c;color:#8bc34a;font-size:12px}
+    .cat-row td{background:#f4f7f0;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#888;padding:10px 16px;border-top:2px solid #e8f0e0}
+    tbody tr:not(.cat-row){border-bottom:1px solid #f4f7f0}
+    tbody tr:not(.cat-row):hover{background:#fafff8}
+    td{padding:13px 16px;font-size:13px;color:#444;vertical-align:middle}
+    td:first-child{font-weight:600;color:#1e3013;font-size:13px}
+    td.fc-col{background:rgba(82,129,44,.04);text-align:center;border-left:1px solid #d4e8c2;border-right:1px solid #d4e8c2}
+    td:not(:first-child):not(.fc-col){text-align:center}
+    .yes{color:#52812c;font-size:18px;font-weight:900}
+    .no{color:#ccc;font-size:18px}
+    .partial{color:#f59e0b;font-size:13px;font-weight:600}
+    .na{color:#ddd;font-size:12px}
+    .fc-yes{color:#52812c;font-size:20px;font-weight:900;text-shadow:0 0 8px rgba(82,129,44,.3)}
+    tfoot tr{background:#f9fdf6}
+    tfoot td{padding:16px;font-size:12px;color:#888;border-top:2px solid #e8f0e0}
+    tfoot td strong{color:#52812c}
+
+    /* DETAIL CARDS */
+    .cards{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:28px}
+    @media(max-width:540px){.cards{grid-template-columns:1fr}}
+    .card{background:white;border-radius:14px;padding:20px;box-shadow:0 4px 16px rgba(0,0,0,.07)}
+    .card.fc{border-top:4px solid #52812c}
+    .card.competitor{border-top:4px solid #ddd}
+    .card-badge{display:inline-block;font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;padding:3px 10px;border-radius:6px;margin-bottom:12px}
+    .badge-fc{background:#f2f7ed;color:#52812c}
+    .badge-comp{background:#f5f5f5;color:#999}
+    .card h3{font-size:16px;font-weight:800;color:#1e3013;margin-bottom:6px}
+    .card .tagline{font-size:12px;color:#888;margin-bottom:14px}
+    .pros-cons{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
+    .pros h4,.cons h4{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px}
+    .pros h4{color:#52812c}
+    .cons h4{color:#ef4444}
+    .pros li,.cons li{font-size:12px;line-height:1.5;margin-bottom:4px;padding-left:14px;position:relative;list-style:none;color:#555}
+    .pros li::before{content:'✓';position:absolute;left:0;color:#52812c;font-weight:700}
+    .cons li::before{content:'✗';position:absolute;left:0;color:#ef4444}
+
+    /* CONCLUSION */
+    .conclusion{background:linear-gradient(135deg,#345220,#52812c);border-radius:16px;padding:28px;color:white;margin-bottom:28px}
+    .conclusion h2{font-size:18px;font-weight:900;margin-bottom:16px;color:#8bc34a}
+    .conclusion p{font-size:14px;line-height:1.75;color:rgba(255,255,255,.85);margin-bottom:12px}
+    .conclusion p:last-child{margin-bottom:0}
+    .conclusion strong{color:#8bc34a}
+
+    /* CTA */
+    .cta{background:white;border-radius:16px;padding:28px;text-align:center;box-shadow:0 4px 20px rgba(0,0,0,.07)}
+    .cta h2{font-size:20px;font-weight:900;color:#345220;margin-bottom:8px}
+    .cta p{font-size:14px;color:#666;margin-bottom:20px;line-height:1.6}
+    .cta-btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+    .btn-primary{display:inline-block;background:#52812c;color:white;font-size:14px;font-weight:700;padding:12px 28px;border-radius:10px;text-decoration:none}
+    .btn-secondary{display:inline-block;background:#f4f7f0;color:#52812c;font-size:14px;font-weight:700;padding:12px 28px;border-radius:10px;text-decoration:none;border:2px solid #d4e8c2}
+  </style>
+</head>
+<body>
+
+<header>
+  <a class="back" href="../index.html">← Back to Demo Suite</a>
+  <h1>FC Platform <span>vs. The Alternatives</span></h1>
+  <p>An honest side-by-side for Farm Credit SEMO's decision</p>
+</header>
+
+<div class="wrap">
+
+  <div class="intro-card">
+    <p>Farm Credit associations have three options: <strong>buy off-the-shelf ag-lending software</strong> (not built for Farm Credit's unique patronage + member model), <strong>build it yourself</strong> (expensive, slow, risky), or <strong>deploy FC Platform</strong> — purpose-built for exactly this, ready in 60 days.</p>
+  </div>
+
+  <div class="winner-banner">
+    <div class="tag">Independent Analysis</div>
+    <h2>FC Platform wins on 18 of 22 criteria</h2>
+    <p>The only Farm Credit-native digital platform. Not adapted from bank software — built from the ground up for how your association actually operates.</p>
+  </div>
+
+  <!-- MATRIX -->
+  <div class="matrix-wrap">
+    <div class="matrix-scroll">
+    <table>
+      <thead>
+        <tr>
+          <th style="width:32%">Feature / Capability</th>
+          <th class="fc-col">FC Platform<br/><span style="font-size:10px;color:#8bc34a">▼ Best Choice</span></th>
+          <th>AgLender<br/><span style="font-size:9px">Generic ag SaaS</span></th>
+          <th>FCS Financial<br/><span style="font-size:9px">Competitor tech</span></th>
+          <th>Build In-House<br/><span style="font-size:9px">Custom dev</span></th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- CORE LENDING -->
+        <tr class="cat-row"><td colspan="5">Core Lending Operations</td></tr>
+        <tr>
+          <td>Digital loan application (web + mobile)</td>
+          <td class="fc-col"><span class="fc-yes">✓</span></td>
+          <td><span class="yes">✓</span></td>
+          <td><span class="yes">✓</span></td>
+          <td><span class="partial">6–12 mo</span></td>
+        </tr>
+        <tr>
+          <td>AI-powered underwriting analysis</td>
+          <td class="fc-col"><span class="fc-yes">✓</span></td>
+          <td><span class="no">✗</span></td>
+          <td><span class="no">✗</span></td>
+          <td><span class="partial">18+ mo</span></td>
+        </tr>
+        <tr>
+          <td>Real-time application status tracking</td>
+          <td class="fc-col"><span class="fc-yes">✓</span></td>
+          <td><span class="yes">✓</span></td>
+          <td><span class="partial">Partial</span></td>
+          <td><span class="partial">6–12 mo</span></td>
+        </tr>
+        <tr>
+          <td>Staff loan desk pipeline (kanban)</td>
+          <td class="fc-col"><span class="fc-yes">✓</span></td>
+          <td><span class="partial">Basic</span></td>
+          <td><span class="no">✗</span></td>
+          <td><span class="partial">9–15 mo</span></td>
+        </tr>
+        <tr>
+          <td>eSignature / DocuSign integration</td>
+          <td class="fc-col"><span class="fc-yes">✓</span></td>
+          <td><span class="partial">Add-on $$$</span></td>
+          <td><span class="no">✗</span></td>
+          <td><span class="partial">3–6 mo</span></td>
+        </tr>
+        <tr>
+          <td>Document vault (borrower-facing)</td>
+          <td class="fc-col"><span class="fc-yes">✓</span></td>
+          <td><span class="yes">✓</span></td>
+          <td><span class="no">✗</span></td>
+          <td><span class="partial">6 mo</span></td>
+        </tr>
+
+        <!-- FARM CREDIT SPECIFIC -->
+        <tr class="cat-row"><td colspan="5">Farm Credit-Specific Features</td></tr>
+        <tr>
+          <td>Patronage dividend tracker + estimator</td>
+          <td class="fc-col"><span class="fc-yes">✓</span></td>
+          <td><span class="no">✗</span></td>
+          <td><span class="no">✗</span></td>
+          <td><span class="partial">Custom build</span></td>
+        </tr>
+        <tr>
+          <td>AgSunrise young/beginning farmer program</td>
+          <td class="fc-col"><span class="fc-yes">✓</span></td>
+          <td><span class="no">✗</span></td>
+          <td><span class="no">✗</span></td>
+          <td><span class="partial">Custom build</span></td>
+        </tr>
+        <tr>
+          <td>Live USDA commodity price feed</td>
+          <td class="fc-col"><span class="fc-yes">✓</span></td>
+          <td><span class="no">✗</span></td>
+          <td><span class="no">✗</span></td>
+          <td><span class="partial">Custom build</span></td>
+        </tr>
+        <tr>
+          <td>Multi-association SaaS architecture</td>
+          <td class="fc-col"><span class="fc-yes">✓</span></td>
+          <td><span class="partial">Limited</span></td>
+          <td><span class="no">✗</span></td>
+          <td><span class="partial">Complex</span></td>
+        </tr>
+        <tr>
+          <td>Farm Credit compliance calendar</td>
+          <td class="fc-col"><span class="fc-yes">✓</span></td>
+          <td><span class="partial">Generic only</span></td>
+          <td><span class="no">✗</span></td>
+          <td><span class="partial">Custom build</span></td>
+        </tr>
+
+        <!-- MEMBER EXPERIENCE -->
+        <tr class="cat-row"><td colspan="5">Member / Borrower Experience</td></tr>
+        <tr>
+          <td>Borrower self-service portal</td>
+          <td class="fc-col"><span class="fc-yes">✓</span></td>
+          <td><span class="partial">Basic</span></td>
+          <td><span class="no">✗</span></td>
+          <td><span class="partial">9 mo</span></td>
+        </tr>
+        <tr>
+          <td>AI loan assistant (chat)</td>
+          <td class="fc-col"><span class="fc-yes">✓</span></td>
+          <td><span class="no">✗</span></td>
+          <td><span class="no">✗</span></td>
+          <td><span class="partial">18+ mo</span></td>
+        </tr>
+        <tr>
+          <td>Smart payment reminders (SMS + email)</td>
+          <td class="fc-col"><span class="fc-yes">✓</span></td>
+          <td><span class="partial">Email only</span></td>
+          <td><span class="no">✗</span></td>
+          <td><span class="partial">6 mo</span></td>
+        </tr>
+        <tr>
+          <td>In-app messaging (borrower ↔ staff)</td>
+          <td class="fc-col"><span class="fc-yes">✓</span></td>
+          <td><span class="no">✗</span></td>
+          <td><span class="no">✗</span></td>
+          <td><span class="partial">6 mo</span></td>
+        </tr>
+
+        <!-- MANAGEMENT & REPORTING -->
+        <tr class="cat-row"><td colspan="5">Management & Reporting</td></tr>
+        <tr>
+          <td>Executive dashboard + board mode</td>
+          <td class="fc-col"><span class="fc-yes">✓</span></td>
+          <td><span class="partial">Basic reports</span></td>
+          <td><span class="no">✗</span></td>
+          <td><span class="partial">12 mo</span></td>
+        </tr>
+        <tr>
+          <td>Loan officer performance analytics</td>
+          <td class="fc-col"><span class="fc-yes">✓</span></td>
+          <td><span class="partial">Limited</span></td>
+          <td><span class="no">✗</span></td>
+          <td><span class="partial">9 mo</span></td>
+        </tr>
+        <tr>
+          <td>Full audit log with CSV export</td>
+          <td class="fc-col"><span class="fc-yes">✓</span></td>
+          <td><span class="yes">✓</span></td>
+          <td><span class="partial">Partial</span></td>
+          <td><span class="partial">3 mo</span></td>
+        </tr>
+        <tr>
+          <td>PDF report export</td>
+          <td class="fc-col"><span class="fc-yes">✓</span></td>
+          <td><span class="yes">✓</span></td>
+          <td><span class="no">✗</span></td>
+          <td><span class="partial">3 mo</span></td>
+        </tr>
+
+        <!-- COMMERCIAL -->
+        <tr class="cat-row"><td colspan="5">Commercials</td></tr>
+        <tr>
+          <td>Time to deploy</td>
+          <td class="fc-col" style="font-size:14px;font-weight:800;color:#52812c">60 days</td>
+          <td style="font-size:12px">3–6 months</td>
+          <td style="font-size:12px">Not available</td>
+          <td style="font-size:12px">12–24 months</td>
+        </tr>
+        <tr>
+          <td>Year-one cost</td>
+          <td class="fc-col" style="font-size:14px;font-weight:800;color:#52812c">$25K</td>
+          <td style="font-size:12px">$40–80K/yr</td>
+          <td style="font-size:12px">N/A</td>
+          <td style="font-size:12px">$200–500K</td>
+        </tr>
+        <tr>
+          <td>Purpose-built for Farm Credit</td>
+          <td class="fc-col"><span class="fc-yes">✓</span></td>
+          <td><span class="no">✗</span></td>
+          <td><span class="no">✗</span></td>
+          <td><span class="partial">Possible</span></td>
+        </tr>
+      </tbody>
+      <tfoot>
+        <tr>
+          <td><strong>Score (out of 22)</strong></td>
+          <td class="fc-col" style="font-weight:900;font-size:18px;color:#52812c;text-align:center">22 / 22</td>
+          <td style="text-align:center;font-weight:700;color:#888">11 / 22</td>
+          <td style="text-align:center;font-weight:700;color:#888">4 / 22</td>
+          <td style="text-align:center;font-weight:700;color:#888">Slow &amp; costly</td>
+        </tr>
+      </tfoot>
+    </table>
+    </div>
+  </div>
+
+  <!-- COMPETITOR DETAIL CARDS -->
+  <div class="cards">
+    <div class="card fc">
+      <span class="card-badge badge-fc">✓ Recommended</span>
+      <h3>FC Platform</h3>
+      <p class="tagline">Purpose-built for Farm Credit associations</p>
+      <div class="pros-cons">
+        <div class="pros">
+          <h4>Strengths</h4>
+          <ul>
+            <li>Farm Credit DNA baked in</li>
+            <li>Patronage system native</li>
+            <li>AI underwriting built-in</li>
+            <li>60-day deployment</li>
+            <li>60× cheaper than build</li>
+            <li>SaaS-ready for 55 assoc.</li>
+          </ul>
+        </div>
+        <div class="cons">
+          <h4>Tradeoffs</h4>
+          <ul>
+            <li>New vendor relationship</li>
+            <li>Requires data migration</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="card competitor">
+      <span class="card-badge badge-comp">Generic Ag Software</span>
+      <h3>AgLender / Similar</h3>
+      <p class="tagline">Built for generic ag lenders, not Farm Credit</p>
+      <div class="pros-cons">
+        <div class="pros">
+          <h4>Strengths</h4>
+          <ul>
+            <li>Established vendor</li>
+            <li>Basic lending workflow</li>
+          </ul>
+        </div>
+        <div class="cons">
+          <h4>Weaknesses</h4>
+          <ul>
+            <li>No patronage model</li>
+            <li>No AI underwriting</li>
+            <li>No borrower self-service</li>
+            <li>$40–80K/yr subscription</li>
+            <li>3–6 month deployment</li>
+            <li>Not Farm Credit aware</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="card competitor">
+      <span class="card-badge badge-comp">Competitor Association</span>
+      <h3>FCS Financial Tech Stack</h3>
+      <p class="tagline">What a larger FC association uses</p>
+      <div class="pros-cons">
+        <div class="pros">
+          <h4>Strengths</h4>
+          <ul>
+            <li>Farm Credit familiar</li>
+          </ul>
+        </div>
+        <div class="cons">
+          <h4>Weaknesses</h4>
+          <ul>
+            <li>Not available to SEMO</li>
+            <li>Proprietary / locked in</li>
+            <li>No borrower portal</li>
+            <li>No AI features</li>
+            <li>Legacy UI</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="card competitor">
+      <span class="card-badge badge-comp">High Risk</span>
+      <h3>Build In-House</h3>
+      <p class="tagline">Custom development from scratch</p>
+      <div class="pros-cons">
+        <div class="pros">
+          <h4>Strengths</h4>
+          <ul>
+            <li>Full control</li>
+            <li>Custom to your needs</li>
+          </ul>
+        </div>
+        <div class="cons">
+          <h4>Weaknesses</h4>
+          <ul>
+            <li>$200–500K year one</li>
+            <li>12–24 month timeline</li>
+            <li>Requires dev team hire</li>
+            <li>Ongoing maintenance</li>
+            <li>High project failure rate</li>
+            <li>No Farm Credit IP</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CONCLUSION -->
+  <div class="conclusion">
+    <h2>The Bottom Line for SEMO</h2>
+    <p>No other option delivers <strong>patronage tracking, AI underwriting, borrower self-service, and executive reporting</strong> — all purpose-built for Farm Credit — in 60 days for $25K.</p>
+    <p>Generic ag software vendors don't understand Farm Credit's cooperative structure. Building in-house costs 10–20× more and takes 12–24 months. FC Platform is the only path that gets SEMO to market this year with a modern member experience that matches the <strong>$9.1M record patronage</strong> story you're already telling.</p>
+    <p>SEMO becomes the <strong>most digitally advanced Farm Credit association</strong> in the region — and the model every other association will want to replicate.</p>
+  </div>
+
+  <!-- CTA -->
+  <div class="cta">
+    <h2>Ready to move forward?</h2>
+    <p>See the full proposal or explore the live demos to experience FC Platform firsthand.</p>
+    <div class="cta-btns">
+      <a class="btn-primary" href="../proposal/index.html">View Full Proposal</a>
+      <a class="btn-secondary" href="../roi/index.html">Calculate Your ROI →</a>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>

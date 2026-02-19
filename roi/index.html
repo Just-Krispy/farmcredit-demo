@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>FC Platform — ROI Calculator | Farm Credit SEMO</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:'Inter',sans-serif;background:#f4f7f0;color:#1e3013;min-height:100vh}
+    header{background:linear-gradient(135deg,#345220 0%,#52812c 100%);padding:28px 24px 24px;text-align:center}
+    header .back{display:inline-block;color:rgba(255,255,255,.7);font-size:13px;text-decoration:none;margin-bottom:12px;letter-spacing:.3px}
+    header .back:hover{color:white}
+    header h1{font-size:26px;font-weight:900;color:white;line-height:1.2}
+    header h1 span{color:#8bc34a}
+    header p{font-size:14px;color:rgba(255,255,255,.7);margin-top:8px}
+    .wrap{max-width:700px;margin:0 auto;padding:24px 16px 48px}
+    .intro-card{background:white;border-radius:16px;padding:24px;margin-bottom:24px;box-shadow:0 4px 20px rgba(0,0,0,.07);border-left:5px solid #8bc34a}
+    .intro-card p{font-size:14px;line-height:1.7;color:#444}
+    .intro-card strong{color:#52812c}
+    .section{background:white;border-radius:16px;padding:28px;margin-bottom:24px;box-shadow:0 4px 20px rgba(0,0,0,.07)}
+    .section h2{font-size:16px;font-weight:800;color:#52812c;margin-bottom:20px;display:flex;align-items:center;gap:8px}
+    .field{margin-bottom:18px}
+    .field label{display:block;font-size:13px;font-weight:600;color:#345220;margin-bottom:7px}
+    .field .hint{font-size:11px;color:#999;margin-top:4px}
+    .input-row{display:flex;align-items:center;gap:10px}
+    .input-row input[type=range]{flex:1;accent-color:#52812c}
+    .input-row .val{min-width:72px;text-align:right;font-size:16px;font-weight:700;color:#52812c}
+    input[type=range]{-webkit-appearance:none;height:6px;background:#d4e8c2;border-radius:3px;outline:none}
+    input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;height:20px;background:#52812c;border-radius:50%;cursor:pointer;box-shadow:0 2px 6px rgba(82,129,44,.4)}
+    .results{background:linear-gradient(135deg,#52812c,#345220);border-radius:16px;padding:28px;margin-bottom:24px;box-shadow:0 8px 32px rgba(52,82,32,.3)}
+    .results h2{font-size:16px;font-weight:800;color:#8bc34a;margin-bottom:24px;text-transform:uppercase;letter-spacing:1px}
+    .results-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+    .result-card{background:rgba(255,255,255,.1);border-radius:12px;padding:18px;border:1px solid rgba(255,255,255,.15)}
+    .result-card .label{font-size:11px;color:rgba(255,255,255,.6);text-transform:uppercase;letter-spacing:.8px;margin-bottom:6px}
+    .result-card .amount{font-size:28px;font-weight:900;color:white;line-height:1}
+    .result-card .sub{font-size:12px;color:rgba(255,255,255,.6);margin-top:4px}
+    .result-card.highlight{background:rgba(139,195,74,.2);border-color:#8bc34a}
+    .result-card.highlight .amount{color:#8bc34a}
+    .payback{background:rgba(255,255,255,.08);border-radius:10px;padding:16px;margin-top:16px;display:flex;justify-content:space-between;align-items:center;border:1px solid rgba(255,255,255,.1)}
+    .payback .pb-label{font-size:13px;color:rgba(255,255,255,.7)}
+    .payback .pb-val{font-size:20px;font-weight:800;color:#8bc34a}
+    .assumptions{background:white;border-radius:16px;padding:24px;margin-bottom:24px;box-shadow:0 4px 20px rgba(0,0,0,.07)}
+    .assumptions h3{font-size:14px;font-weight:700;color:#52812c;margin-bottom:14px}
+    .assumption-item{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid #f4f7f0;font-size:13px}
+    .assumption-item:last-child{border-bottom:none}
+    .assumption-item .key{color:#555}
+    .assumption-item .value{font-weight:600;color:#345220}
+    .breakdown{background:white;border-radius:16px;padding:24px;box-shadow:0 4px 20px rgba(0,0,0,.07);margin-bottom:24px}
+    .breakdown h3{font-size:14px;font-weight:700;color:#52812c;margin-bottom:16px}
+    .bar-item{margin-bottom:14px}
+    .bar-label{display:flex;justify-content:space-between;font-size:12px;margin-bottom:5px}
+    .bar-label .name{color:#555;font-weight:500}
+    .bar-label .saving{font-weight:700;color:#52812c}
+    .bar-track{background:#f4f7f0;border-radius:4px;height:10px;overflow:hidden}
+    .bar-fill{height:100%;background:linear-gradient(90deg,#8bc34a,#52812c);border-radius:4px;transition:width .8s ease}
+    .cta{background:linear-gradient(135deg,#345220,#52812c);border-radius:16px;padding:28px;text-align:center;color:white}
+    .cta h2{font-size:20px;font-weight:900;margin-bottom:8px}
+    .cta p{font-size:14px;color:rgba(255,255,255,.75);margin-bottom:20px;line-height:1.6}
+    .cta a{display:inline-block;background:#8bc34a;color:#1e3013;font-size:15px;font-weight:800;padding:13px 32px;border-radius:10px;text-decoration:none}
+    .roi-multiplier{text-align:center;margin-top:16px}
+    .roi-multiplier .big{font-size:48px;font-weight:900;color:#8bc34a;line-height:1}
+    .roi-multiplier .label{font-size:14px;color:rgba(255,255,255,.7);margin-top:4px}
+    @media(max-width:500px){.results-grid{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+
+<header>
+  <a class="back" href="../index.html">← Back to Demo Suite</a>
+  <h1>FC Platform <span>ROI Calculator</span></h1>
+  <p>See your investment payback in real numbers</p>
+</header>
+
+<div class="wrap">
+
+  <div class="intro-card">
+    <p>Adjust the sliders to match <strong>Farm Credit SEMO's</strong> current operation. FC Platform calculates exactly how much time and money you reclaim in year one — and beyond.</p>
+  </div>
+
+  <!-- INPUTS -->
+  <div class="section">
+    <h2>📊 Your Association's Numbers</h2>
+
+    <div class="field">
+      <label>Annual loan applications processed</label>
+      <div class="input-row">
+        <input type="range" id="loansPerYear" min="100" max="2000" value="650" step="50"/>
+        <span class="val" id="loansPerYearVal">650</span>
+      </div>
+      <div class="hint">SEMO avg: ~650/yr based on portfolio size</div>
+    </div>
+
+    <div class="field">
+      <label>Avg. hours to process one application (today)</label>
+      <div class="input-row">
+        <input type="range" id="hoursPerLoan" min="2" max="24" value="8" step="0.5"/>
+        <span class="val" id="hoursPerLoanVal">8 hrs</span>
+      </div>
+      <div class="hint">Industry avg: 6–12 hrs with manual/PDF workflows</div>
+    </div>
+
+    <div class="field">
+      <label>Number of loan officers / processors</label>
+      <div class="input-row">
+        <input type="range" id="staffCount" min="2" max="30" value="8" step="1"/>
+        <span class="val" id="staffCountVal">8</span>
+      </div>
+    </div>
+
+    <div class="field">
+      <label>Average loan officer fully-loaded hourly cost ($)</label>
+      <div class="input-row">
+        <input type="range" id="hourlyRate" min="30" max="100" value="55" step="5"/>
+        <span class="val" id="hourlyRateVal">$55</span>
+      </div>
+      <div class="hint">Salary + benefits + overhead</div>
+    </div>
+
+    <div class="field">
+      <label>Compliance / audit prep hours per year</label>
+      <div class="input-row">
+        <input type="range" id="complianceHours" min="40" max="500" value="160" step="10"/>
+        <span class="val" id="complianceHoursVal">160 hrs</span>
+      </div>
+    </div>
+
+    <div class="field">
+      <label>Avg. days from application to decision (today)</label>
+      <div class="input-row">
+        <input type="range" id="daysToDecision" min="5" max="45" value="18" step="1"/>
+        <span class="val" id="daysToDecisionVal">18 days</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- RESULTS -->
+  <div class="results" id="results">
+    <h2>💰 Year-One Value</h2>
+    <div class="results-grid">
+      <div class="result-card highlight">
+        <div class="label">Staff Time Reclaimed</div>
+        <div class="amount" id="r-hours">0 hrs</div>
+        <div class="sub">freed for member relationships</div>
+      </div>
+      <div class="result-card highlight">
+        <div class="label">Direct Cost Savings</div>
+        <div class="amount" id="r-savings">$0</div>
+        <div class="sub">labor + compliance hours</div>
+      </div>
+      <div class="result-card">
+        <div class="label">Decision Speed</div>
+        <div class="amount" id="r-speed">0 days</div>
+        <div class="sub" id="r-speed-sub">faster turnaround</div>
+      </div>
+      <div class="result-card">
+        <div class="label">Applications / Staff / Day</div>
+        <div class="amount" id="r-throughput">0×</div>
+        <div class="sub">throughput improvement</div>
+      </div>
+    </div>
+    <div class="payback">
+      <span class="pb-label">Payback on $25K investment</span>
+      <span class="pb-val" id="r-payback">0 weeks</span>
+    </div>
+    <div class="roi-multiplier">
+      <div class="big" id="r-roi">0×</div>
+      <div class="label">Year-one ROI on investment</div>
+    </div>
+  </div>
+
+  <!-- SAVINGS BREAKDOWN -->
+  <div class="breakdown">
+    <h3>Where the savings come from</h3>
+    <div class="bar-item">
+      <div class="bar-label">
+        <span class="name">⏱️ Loan processing automation</span>
+        <span class="saving" id="b-processing">$0</span>
+      </div>
+      <div class="bar-track"><div class="bar-fill" id="bfill-processing" style="width:0%"></div></div>
+    </div>
+    <div class="bar-item">
+      <div class="bar-label">
+        <span class="name">📋 Compliance & audit prep</span>
+        <span class="saving" id="b-compliance">$0</span>
+      </div>
+      <div class="bar-track"><div class="bar-fill" id="bfill-compliance" style="width:0%"></div></div>
+    </div>
+    <div class="bar-item">
+      <div class="bar-label">
+        <span class="name">📱 Borrower self-service (fewer calls)</span>
+        <span class="saving" id="b-selfservice">$0</span>
+      </div>
+      <div class="bar-track"><div class="bar-fill" id="bfill-selfservice" style="width:0%"></div></div>
+    </div>
+    <div class="bar-item">
+      <div class="bar-label">
+        <span class="name">🤖 AI underwriting (error reduction)</span>
+        <span class="saving" id="b-ai">$0</span>
+      </div>
+      <div class="bar-track"><div class="bar-fill" id="bfill-ai" style="width:0%"></div></div>
+    </div>
+    <div class="bar-item">
+      <div class="bar-label">
+        <span class="name">📨 Payment reminders (delinquency reduction)</span>
+        <span class="saving" id="b-reminders">$0</span>
+      </div>
+      <div class="bar-track"><div class="bar-fill" id="bfill-reminders" style="width:0%"></div></div>
+    </div>
+  </div>
+
+  <!-- ASSUMPTIONS -->
+  <div class="assumptions">
+    <h3>FC Platform Efficiency Assumptions (conservative)</h3>
+    <div class="assumption-item">
+      <span class="key">Processing time reduction (AI-assisted)</span>
+      <span class="value">65%</span>
+    </div>
+    <div class="assumption-item">
+      <span class="key">Compliance prep time reduction (auto audit log)</span>
+      <span class="value">70%</span>
+    </div>
+    <div class="assumption-item">
+      <span class="key">Borrower call volume reduction (self-service portal)</span>
+      <span class="value">40%</span>
+    </div>
+    <div class="assumption-item">
+      <span class="key">Decision turnaround time improvement</span>
+      <span class="value">60%</span>
+    </div>
+    <div class="assumption-item">
+      <span class="key">Payment delinquency reduction (smart reminders)</span>
+      <span class="value">35%</span>
+    </div>
+    <div class="assumption-item">
+      <span class="key">Avg. borrower support calls per loan (current)</span>
+      <span class="value">3.2 calls @ 15 min each</span>
+    </div>
+  </div>
+
+  <!-- CTA -->
+  <div class="cta">
+    <h2>Ready to capture this ROI?</h2>
+    <p>FC Platform delivers all of this in 60 days — purpose-built for Farm Credit associations, not adapted from generic bank software.</p>
+    <a href="../proposal/index.html">View Full Proposal →</a>
+  </div>
+
+</div>
+
+<script>
+const fmt = (n) => n >= 1000 ? '$' + (n/1000).toFixed(0) + 'K' : '$' + n.toLocaleString();
+const fmtHrs = (n) => n >= 1000 ? (n/1000).toFixed(1) + 'K hrs' : n.toLocaleString() + ' hrs';
+
+function calc() {
+  const loans = +document.getElementById('loansPerYear').value;
+  const hrs = +document.getElementById('hoursPerLoan').value;
+  const staff = +document.getElementById('staffCount').value;
+  const rate = +document.getElementById('hourlyRate').value;
+  const compHrs = +document.getElementById('complianceHours').value;
+  const days = +document.getElementById('daysToDecision').value;
+
+  // Processing savings: 65% reduction in processing time
+  const processingHrsSaved = loans * hrs * 0.65;
+  const processingSavings = processingHrsSaved * rate;
+
+  // Compliance savings: 70% reduction
+  const complianceSavings = compHrs * 0.70 * rate * (staff * 0.3);
+
+  // Self-service: 3.2 calls/loan × 15min × 40% reduction
+  const callHrsSaved = loans * 3.2 * (15/60) * 0.40;
+  const selfServiceSavings = callHrsSaved * rate;
+
+  // AI underwriting error reduction: assume 2% error rate, $800 avg rework cost
+  const aiSavings = loans * 0.02 * 800;
+
+  // Payment reminders: 35% delinquency reduction × avg portfolio impact
+  const reminderSavings = loans * 0.08 * 0.35 * 450; // 8% delinquency rate, $450 avg collection cost
+
+  const totalSavings = processingSavings + complianceSavings + selfServiceSavings + aiSavings + reminderSavings;
+  const totalHrs = processingHrsSaved + callHrsSaved;
+  const newDays = Math.round(days * 0.40);
+  const throughput = (hrs / (hrs * 0.35)).toFixed(1);
+  const paybackWeeks = Math.round((25000 / totalSavings) * 52);
+  const roi = (totalSavings / 25000).toFixed(1);
+
+  // Update results
+  document.getElementById('r-hours').textContent = fmtHrs(Math.round(totalHrs));
+  document.getElementById('r-savings').textContent = fmt(Math.round(totalSavings));
+  document.getElementById('r-speed').textContent = newDays + ' days';
+  document.getElementById('r-speed-sub').textContent = `down from ${days} days`;
+  document.getElementById('r-throughput').textContent = throughput + '×';
+  document.getElementById('r-payback').textContent = paybackWeeks < 52 ? paybackWeeks + ' weeks' : (paybackWeeks/52).toFixed(1) + ' years';
+  document.getElementById('r-roi').textContent = roi + '×';
+
+  // Update breakdown bars
+  const items = [
+    {id:'processing', val: processingSavings},
+    {id:'compliance', val: complianceSavings},
+    {id:'selfservice', val: selfServiceSavings},
+    {id:'ai', val: aiSavings},
+    {id:'reminders', val: reminderSavings},
+  ];
+  const maxVal = Math.max(...items.map(i => i.val));
+  items.forEach(item => {
+    document.getElementById('b-' + item.id).textContent = fmt(Math.round(item.val));
+    document.getElementById('bfill-' + item.id).style.width = Math.round((item.val / maxVal) * 100) + '%';
+  });
+}
+
+// Wire sliders
+['loansPerYear','hoursPerLoan','staffCount','hourlyRate','complianceHours','daysToDecision'].forEach(id => {
+  const el = document.getElementById(id);
+  const valEl = document.getElementById(id + 'Val');
+  el.addEventListener('input', () => {
+    if(id === 'hourlyRate') valEl.textContent = '$' + el.value;
+    else if(id === 'hoursPerLoan') valEl.textContent = el.value + ' hrs';
+    else if(id === 'complianceHours') valEl.textContent = el.value + ' hrs';
+    else if(id === 'daysToDecision') valEl.textContent = el.value + ' days';
+    else valEl.textContent = el.value;
+    calc();
+  });
+});
+
+calc();
+</script>
+
+</body>
+</html>
