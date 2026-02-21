@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Farm Financial Health Score — Farm Credit SEMO</title>
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#f4f7f0;color:#1a2e1a;min-height:100vh}
+    header{background:linear-gradient(135deg,#2d5a1b,#3d7a25);color:white;padding:40px 24px;text-align:center}
+    header h1{font-size:28px;font-weight:900;margin-bottom:8px}
+    header p{font-size:15px;opacity:.85;max-width:500px;margin:0 auto}
+    .main{max-width:700px;margin:-24px auto 48px;padding:0 16px}
+    .card{background:white;border-radius:16px;box-shadow:0 4px 24px rgba(0,0,0,.1);padding:32px;margin-bottom:20px}
+    .card h2{font-size:20px;font-weight:700;color:#2d5a1b;margin-bottom:6px}
+    .card p{font-size:14px;color:#666;margin-bottom:20px;line-height:1.6}
+    .field{margin-bottom:16px}
+    .field label{display:block;font-size:13px;font-weight:500;color:#555;margin-bottom:6px}
+    input[type=text],input[type=number],select{width:100%;padding:10px 14px;border:1.5px solid #ddd;border-radius:8px;font-size:14px;outline:none}
+    input:focus,select:focus{border-color:#2d5a1b}
+    .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    .btn{background:#2d5a1b;color:white;border:none;width:100%;padding:14px;border-radius:10px;font-size:15px;font-weight:600;cursor:pointer;margin-top:8px}
+    .btn:hover{background:#3d7a25}
+    .result{display:none;margin-top:24px}
+    .score-display{text-align:center;padding:32px;background:linear-gradient(135deg,#2d5a1b,#3d7a25);border-radius:16px;margin-bottom:24px}
+    .score-num{font-size:72px;font-weight:900;color:white;line-height:1}
+    .score-label{font-size:14px;color:rgba(255,255,255,.75);text-transform:uppercase;letter-spacing:1px;margin-top:8px}
+    .score-tag{display:inline-block;background:rgba(139,195,74,.3);border:1px solid #8bc34a;color:#8bc34a;padding:6px 16px;border-radius:20px;font-size:13px;font-weight:600;margin-top:12px}
+    .metric{background:#f4f7f0;border-radius:10px;padding:16px;margin-bottom:12px;display:flex;justify-content:space-between;align-items:center}
+    .metric .label{font-size:14px;color:#666}
+    .metric .value{font-size:18px;font-weight:700;color:#2d5a1b}
+    .insights{background:#fff8e1;border:1.5px solid #ffc107;border-radius:10px;padding:16px;margin-bottom:16px}
+    .insights h3{font-size:16px;font-weight:700;color:#856404;margin-bottom:8px}
+    .insights ul{margin-left:20px;color:#856404;font-size:14px;line-height:1.8}
+    .benchmark{background:#e8f5e0;border-radius:10px;padding:12px 16px;font-size:13px;color:#2d5a1b;margin-top:12px}
+    .reset-btn{background:#f0f0f0;color:#666;border:none;padding:8px 16px;border-radius:8px;font-size:13px;cursor:pointer;margin-top:12px}
+    @media(max-width:520px){.grid-2{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+<header>
+  <h1>🌾 Farm Financial Health Score</h1>
+  <p>Get a comprehensive health check for your farm operation in under 2 minutes.</p>
+</header>
+
+<div class="main">
+  <div class="card" id="formCard">
+    <h2>Your Farm Information</h2>
+    <p>All information is confidential and used only to calculate your score. Nothing is stored or shared.</p>
+
+    <div class="field">
+      <label>Farm Name (optional)</label>
+      <input type="text" id="farmName" placeholder="Smith Family Farm"/>
+    </div>
+
+    <div class="grid-2">
+      <div class="field">
+        <label>Primary Crop/Livestock</label>
+        <select id="farmType">
+          <option value="">Select type...</option>
+          <option>Row Crops (corn, soybeans)</option>
+          <option>Cotton</option>
+          <option>Rice</option>
+          <option>Livestock / Cattle</option>
+          <option>Hogs / Swine</option>
+          <option>Poultry</option>
+          <option>Dairy</option>
+          <option>Mixed / Diversified</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Total Farm Acres</label>
+        <input type="number" id="acres" placeholder="500"/>
+      </div>
+    </div>
+
+    <div class="grid-2">
+      <div class="field">
+        <label>Annual Gross Revenue ($)</label>
+        <input type="number" id="revenue" placeholder="450000"/>
+      </div>
+      <div class="field">
+        <label>Annual Operating Expenses ($)</label>
+        <input type="number" id="expenses" placeholder="320000"/>
+      </div>
+    </div>
+
+    <div class="grid-2">
+      <div class="field">
+        <label>Total Farm Debt ($)</label>
+        <input type="number" id="debt" placeholder="275000"/>
+      </div>
+      <div class="field">
+        <label>Years Farming</label>
+        <input type="number" id="years" placeholder="12"/>
+      </div>
+    </div>
+
+    <button class="btn" onclick="calculate()">Calculate My Health Score</button>
+  </div>
+
+  <div class="result" id="resultCard">
+    <div class="score-display">
+      <div class="score-num" id="scoreNum">82</div>
+      <div class="score-label">Financial Health Score</div>
+      <div class="score-tag" id="scoreTag">Strong Position</div>
+    </div>
+
+    <div class="card">
+      <h2>Key Metrics</h2>
+      <div id="metrics"></div>
+    </div>
+
+    <div class="card">
+      <h2>Insights & Recommendations</h2>
+      <div id="insights"></div>
+      <div class="benchmark" id="benchmark"></div>
+    </div>
+
+    <button class="reset-btn" onclick="reset()">← Calculate Another Farm</button>
+  </div>
+</div>
+
+<script>
+function v(id){return parseFloat(document.getElementById(id).value)||0;}
+function vt(id){return document.getElementById(id).value.trim();}
+
+function calculate(){
+  const farmType=vt('farmType');
+  const acres=v('acres');
+  const revenue=v('revenue');
+  const expenses=v('expenses');
+  const debt=v('debt');
+  const years=v('years');
+
+  if(!farmType||!acres||!revenue){alert('Please fill in at least Farm Type, Acres, and Revenue');return;}
+
+  const netIncome=revenue-expenses;
+  const debtToIncome=debt/revenue;
+  const revenuePerAcre=revenue/acres;
+  const profitMargin=(netIncome/revenue)*100;
+  const debtPerAcre=debt/acres;
+
+  // Score calculation (0-100)
+  let score=50; // baseline
+
+  // Profit margin (0-30 points)
+  if(profitMargin>30)score+=30;
+  else if(profitMargin>20)score+=20;
+  else if(profitMargin>10)score+=10;
+  else if(profitMargin>0)score+=5;
+  else score-=10;
+
+  // Debt-to-income (0-25 points)
+  if(debtToIncome<0.3)score+=25;
+  else if(debtToIncome<0.5)score+=15;
+  else if(debtToIncome<0.7)score+=5;
+  else if(debtToIncome<1.0)score-=5;
+  else score-=15;
+
+  // Revenue per acre (0-20 points)
+  let benchmarkRev=1000; // default
+  if(farmType.includes('Row Crops'))benchmarkRev=900;
+  if(farmType.includes('Cotton'))benchmarkRev=1100;
+  if(farmType.includes('Rice'))benchmarkRev=1300;
+  if(farmType.includes('Livestock'))benchmarkRev=600;
+  if(farmType.includes('Dairy'))benchmarkRev=2500;
+
+  if(revenuePerAcre>benchmarkRev*1.5)score+=20;
+  else if(revenuePerAcre>benchmarkRev)score+=10;
+  else if(revenuePerAcre>benchmarkRev*0.7)score+=5;
+  else score-=5;
+
+  // Experience (0-10 points)
+  if(years>15)score+=10;
+  else if(years>10)score+=7;
+  else if(years>5)score+=4;
+  else score+=2;
+
+  // Cap at 100
+  score=Math.min(100,Math.max(0,score));
+
+  // Determine tag
+  let tag='Needs Attention';
+  if(score>=85)tag='Excellent';
+  else if(score>=75)tag='Strong Position';
+  else if(score>=60)tag='Stable';
+  else if(score>=45)tag='Moderate Risk';
+
+  // Display
+  document.getElementById('scoreNum').textContent=Math.round(score);
+  document.getElementById('scoreTag').textContent=tag;
+
+  // Metrics
+  document.getElementById('metrics').innerHTML=`
+    <div class="metric"><span class="label">Net Income</span><span class="value">$${netIncome.toLocaleString()}</span></div>
+    <div class="metric"><span class="label">Profit Margin</span><span class="value">${profitMargin.toFixed(1)}%</span></div>
+    <div class="metric"><span class="label">Debt-to-Income Ratio</span><span class="value">${(debtToIncome*100).toFixed(0)}%</span></div>
+    <div class="metric"><span class="label">Revenue per Acre</span><span class="value">$${Math.round(revenuePerAcre).toLocaleString()}</span></div>
+    <div class="metric"><span class="label">Debt per Acre</span><span class="value">$${Math.round(debtPerAcre).toLocaleString()}</span></div>
+  `;
+
+  // Insights
+  let recs=[];
+  if(profitMargin<15)recs.push('Your profit margin is below industry average. Consider reviewing input costs or exploring higher-value crops.');
+  if(debtToIncome>0.6)recs.push('Your debt load is above recommended levels. Talk to Farm Credit SEMO about refinancing or debt consolidation options.');
+  if(revenuePerAcre<benchmarkRev*0.8)recs.push(`Your revenue per acre ($${Math.round(revenuePerAcre)}) is below the regional benchmark for ${farmType}. Consider yield improvements or diversification.`);
+  if(years<5)recs.push('As a beginning farmer, you qualify for Farm Credit SEMO's AgSunrise program — lower rates and flexible terms designed for you.');
+  if(netIncome<0)recs.push('⚠️ Your operation is currently running at a loss. Schedule a consultation with Farm Credit SEMO to discuss short-term financing and operational improvements.');
+  if(score>=80)recs.push('Your farm is in strong financial health! Consider locking in your patronage refund potential by consolidating more of your borrowing through Farm Credit SEMO.');
+
+  if(!recs.length)recs.push('Your farm is performing well. Keep monitoring your metrics quarterly and consider talking to Farm Credit SEMO about growth opportunities.');
+
+  document.getElementById('insights').innerHTML=`<div class="insights"><h3>💡 Recommendations</h3><ul>${recs.map(r=>`<li>${r}</li>`).join('')}</ul></div>`;
+
+  document.getElementById('benchmark').innerHTML=`📊 <strong>SE Missouri ${farmType} Benchmark:</strong> $${benchmarkRev.toLocaleString()}/acre revenue · 18-25% profit margin typical · Debt-to-income under 50% recommended`;
+
+  document.getElementById('formCard').style.display='none';
+  document.getElementById('resultCard').style.display='block';
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function reset(){
+  document.getElementById('formCard').style.display='block';
+  document.getElementById('resultCard').style.display='none';
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+</script>
+</body>
+</html>
