@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cash Flow Simulator | Farm Credit SEMO</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #1e3a8a 0%, #10b981 100%);
+            padding: 40px 20px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+        }
+        
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+        
+        .card {
+            background: white;
+            border-radius: 16px;
+            padding: 40px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            margin-bottom: 24px;
+        }
+        
+        .input-group {
+            margin-bottom: 24px;
+        }
+        
+        .input-group label {
+            display: block;
+            font-weight: 600;
+            color: #1f2937;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+        
+        .input-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .input-row input {
+            flex: 1;
+            padding: 12px 16px;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: all 0.2s;
+        }
+        
+        .input-row input:focus {
+            outline: none;
+            border-color: #10b981;
+        }
+        
+        .input-row span {
+            font-weight: 600;
+            color: #6b7280;
+        }
+        
+        .slider {
+            width: 100%;
+            height: 8px;
+            border-radius: 4px;
+            background: #e5e7eb;
+            outline: none;
+            -webkit-appearance: none;
+        }
+        
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #10b981;
+            cursor: pointer;
+        }
+        
+        .slider::-moz-range-thumb {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #10b981;
+            cursor: pointer;
+            border: none;
+        }
+        
+        .results {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            border-radius: 12px;
+            padding: 32px;
+            color: white;
+            margin-top: 32px;
+        }
+        
+        .results h3 {
+            font-size: 1.5rem;
+            margin-bottom: 24px;
+        }
+        
+        .result-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.2);
+        }
+        
+        .result-row:last-child {
+            border-bottom: none;
+        }
+        
+        .result-label {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+        
+        .result-value {
+            font-size: 24px;
+            font-weight: 700;
+        }
+        
+        .result-value.large {
+            font-size: 32px;
+        }
+        
+        .chart {
+            background: rgba(255,255,255,0.1);
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 24px;
+        }
+        
+        .chart-bar {
+            background: rgba(255,255,255,0.3);
+            height: 40px;
+            border-radius: 6px;
+            margin-bottom: 12px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .chart-fill {
+            background: white;
+            height: 100%;
+            border-radius: 6px;
+            transition: width 0.3s ease;
+            display: flex;
+            align-items: center;
+            padding: 0 12px;
+            font-weight: 600;
+            font-size: 14px;
+        }
+        
+        .badge {
+            display: inline-block;
+            padding: 6px 12px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-top: 16px;
+        }
+        
+        .cta {
+            text-align: center;
+            margin-top: 32px;
+        }
+        
+        .cta a {
+            display: inline-block;
+            background: white;
+            color: #10b981;
+            padding: 16px 32px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 16px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            transition: all 0.2s;
+        }
+        
+        .cta a:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(0,0,0,0.2);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>💰 Cash Flow Simulator</h1>
+            <p>Model different scenarios for your farm operation</p>
+        </div>
+
+        <div class="card">
+            <div class="input-group">
+                <label>Annual Revenue</label>
+                <div class="input-row">
+                    <span>$</span>
+                    <input type="number" id="revenue" value="500000" min="0" step="10000">
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label>Operating Expenses</label>
+                <div class="input-row">
+                    <span>$</span>
+                    <input type="number" id="expenses" value="300000" min="0" step="10000">
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label>Loan Payment (Annual)</label>
+                <div class="input-row">
+                    <span>$</span>
+                    <input type="number" id="loanPayment" value="75000" min="0" step="5000">
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label>Commodity Price Change</label>
+                <input type="range" class="slider" id="commodityChange" min="-30" max="30" value="0" step="1">
+                <div style="text-align: center; margin-top: 8px;">
+                    <span id="commodityLabel" style="font-weight: 600; color: #10b981;">No Change (0%)</span>
+                </div>
+            </div>
+
+            <div class="results">
+                <h3>📊 Projected Cash Flow</h3>
+                
+                <div class="result-row">
+                    <span class="result-label">Net Income</span>
+                    <span class="result-value" id="netIncome">$125,000</span>
+                </div>
+                
+                <div class="result-row">
+                    <span class="result-label">Cash After Debt Service</span>
+                    <span class="result-value large" id="cashAfterDebt">$50,000</span>
+                </div>
+                
+                <div class="result-row">
+                    <span class="result-label">Debt Service Coverage Ratio</span>
+                    <span class="result-value" id="dscr">1.67x</span>
+                </div>
+
+                <div class="chart">
+                    <div class="chart-bar">
+                        <div class="chart-fill" id="revenueBar" style="width: 100%;">Revenue</div>
+                    </div>
+                    <div class="chart-bar">
+                        <div class="chart-fill" id="expensesBar" style="width: 60%; background: #fbbf24;">Expenses</div>
+                    </div>
+                    <div class="chart-bar">
+                        <div class="chart-fill" id="profitBar" style="width: 25%; background: #10b981;">Net Profit</div>
+                    </div>
+                </div>
+
+                <div class="badge" id="healthBadge">🟢 Healthy Cash Position</div>
+            </div>
+        </div>
+
+        <div class="cta">
+            <a href="../">← Back to Demo Home</a>
+        </div>
+    </div>
+
+    <script>
+        const revenue = document.getElementById('revenue');
+        const expenses = document.getElementById('expenses');
+        const loanPayment = document.getElementById('loanPayment');
+        const commodityChange = document.getElementById('commodityChange');
+        const commodityLabel = document.getElementById('commodityLabel');
+        const netIncome = document.getElementById('netIncome');
+        const cashAfterDebt = document.getElementById('cashAfterDebt');
+        const dscr = document.getElementById('dscr');
+        const healthBadge = document.getElementById('healthBadge');
+        const revenueBar = document.getElementById('revenueBar');
+        const expensesBar = document.getElementById('expensesBar');
+        const profitBar = document.getElementById('profitBar');
+
+        function formatCurrency(value) {
+            return new Intl.NumberFormat('en-US', {
+                style: 'currency',
+                currency: 'USD',
+                minimumFractionDigits: 0,
+                maximumFractionDigits: 0,
+            }).format(value);
+        }
+
+        function calculate() {
+            const rev = parseFloat(revenue.value) || 0;
+            const exp = parseFloat(expenses.value) || 0;
+            const loan = parseFloat(loanPayment.value) || 0;
+            const priceChange = parseFloat(commodityChange.value) || 0;
+
+            // Adjust revenue based on commodity price change
+            const adjustedRevenue = rev * (1 + priceChange / 100);
+            const net = adjustedRevenue - exp;
+            const cash = net - loan;
+            const dscrValue = loan > 0 ? net / loan : 0;
+
+            // Update values
+            netIncome.textContent = formatCurrency(net);
+            cashAfterDebt.textContent = formatCurrency(cash);
+            dscr.textContent = dscrValue.toFixed(2) + 'x';
+
+            // Update commodity label
+            if (priceChange > 0) {
+                commodityLabel.textContent = `↑ Price Increase (+${priceChange}%)`;
+                commodityLabel.style.color = '#10b981';
+            } else if (priceChange < 0) {
+                commodityLabel.textContent = `↓ Price Decrease (${priceChange}%)`;
+                commodityLabel.style.color = '#ef4444';
+            } else {
+                commodityLabel.textContent = 'No Change (0%)';
+                commodityLabel.style.color = '#6b7280';
+            }
+
+            // Update chart bars
+            const maxValue = adjustedRevenue;
+            revenueBar.style.width = '100%';
+            revenueBar.textContent = 'Revenue ' + formatCurrency(adjustedRevenue);
+            expensesBar.style.width = (exp / maxValue * 100) + '%';
+            expensesBar.textContent = 'Expenses ' + formatCurrency(exp);
+            profitBar.style.width = (Math.max(0, net) / maxValue * 100) + '%';
+            profitBar.textContent = 'Net ' + formatCurrency(net);
+
+            // Update health badge
+            if (dscrValue >= 1.25 && cash > 0) {
+                healthBadge.textContent = '🟢 Healthy Cash Position';
+                healthBadge.style.background = 'rgba(16, 185, 129, 0.3)';
+            } else if (dscrValue >= 1.0) {
+                healthBadge.textContent = '🟡 Adequate Coverage';
+                healthBadge.style.background = 'rgba(251, 191, 36, 0.3)';
+            } else {
+                healthBadge.textContent = '🔴 Cash Flow Concern';
+                healthBadge.style.background = 'rgba(239, 68, 68, 0.3)';
+            }
+        }
+
+        revenue.addEventListener('input', calculate);
+        expenses.addEventListener('input', calculate);
+        loanPayment.addEventListener('input', calculate);
+        commodityChange.addEventListener('input', calculate);
+
+        // Initialize
+        calculate();
+    </script>
+</body>
+</html>
