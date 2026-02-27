@@ -8,513 +8,201 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>AgSunrise Platform | Farm Credit SEMO</title>
   <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
-    body {
-      font-family: 'Inter', system-ui, sans-serif;
-      background: #f4f7f0;
-      color: #1e3013;
-    }
-
-    header {
-      background: linear-gradient(135deg, #345220 0%, #52812c 60%, #426824 100%);
-      color: white;
-      padding: 60px 24px;
-      text-align: center;
-      position: relative;
-      overflow: hidden;
-    }
-
-    header::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
-    }
-
-    .header-content {
-      max-width: 900px;
-      margin: 0 auto;
-      position: relative;
-    }
-
-    .platform-badge {
-      background: rgba(139, 195, 74, 0.2);
-      border: 1px solid rgba(139, 195, 74, 0.6);
-      display: inline-block;
-      padding: 8px 20px;
-      border-radius: 24px;
-      font-size: 13px;
-      font-weight: 700;
-      color: #8bc34a;
-      margin-bottom: 20px;
-      letter-spacing: 1.2px;
-      text-transform: uppercase;
-    }
-
-    header h1 {
-      font-size: 42px;
-      font-weight: 900;
-      margin-bottom: 16px;
-      line-height: 1.2;
-    }
-
-    header p {
-      font-size: 18px;
-      opacity: 0.9;
-      max-width: 700px;
-      margin: 0 auto 32px;
-      line-height: 1.7;
-    }
-
-    .stat-row {
-      display: flex;
-      justify-content: center;
-      gap: 40px;
-      margin-top: 24px;
-      flex-wrap: wrap;
-    }
-
-    .stat-item {
-      text-align: center;
-    }
-
-    .stat-value {
-      font-size: 32px;
-      font-weight: 900;
-      display: block;
-    }
-
-    .stat-label {
-      font-size: 13px;
-      opacity: 0.75;
-      margin-top: 4px;
-    }
-
-    .container {
-      max-width: 1200px;
-      margin: -40px auto 60px;
-      padding: 0 24px;
-    }
-
-    .module-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-      gap: 24px;
-      margin-bottom: 48px;
-    }
-
-    .module-card {
-      background: white;
-      border-radius: 16px;
-      overflow: hidden;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-      transition: all 0.3s;
-      cursor: pointer;
-      position: relative;
-    }
-
-    .module-card:hover {
-      transform: translateY(-6px);
-      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
-    }
-
-    .module-header {
-      padding: 28px;
-      background: linear-gradient(135deg, #f2f7ed, #e5f0d8);
-      border-bottom: 3px solid #52812c;
-    }
-
-    .module-icon {
-      width: 60px;
-      height: 60px;
-      border-radius: 16px;
-      background: linear-gradient(135deg, #52812c, #426824);
-      color: white;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 28px;
-      margin-bottom: 16px;
-      box-shadow: 0 4px 12px rgba(82, 129, 44, 0.2);
-    }
-
-    .module-card h3 {
-      font-size: 20px;
-      font-weight: 800;
-      color: #1e3013;
-      margin-bottom: 8px;
-    }
-
-    .module-card .subtitle {
-      font-size: 14px;
-      color: #6b7280;
-    }
-
-    .module-body {
-      padding: 28px;
-    }
-
-    .module-card p {
-      font-size: 15px;
-      color: #4b5563;
-      line-height: 1.7;
-      margin-bottom: 20px;
-    }
-
-    .feature-list {
-      list-style: none;
-      margin-bottom: 20px;
-    }
-
-    .feature-list li {
-      font-size: 14px;
-      color: #4b5563;
-      margin-bottom: 10px;
-      padding-left: 24px;
-      position: relative;
-    }
-
-    .feature-list li::before {
-      content: '✓';
-      position: absolute;
-      left: 0;
-      color: #52812c;
-      font-weight: 700;
-    }
-
-    .module-action {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding-top: 20px;
-      border-top: 1px solid #f3f4f6;
-    }
-
-    .badge {
-      padding: 5px 12px;
-      border-radius: 12px;
-      font-size: 11px;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
-
-    .badge.new {
-      background: #fef3c7;
-      color: #92400e;
-    }
-
-    .badge.beta {
-      background: #dbeafe;
-      color: #1e40af;
-    }
-
-    .badge.staff {
-      background: #e0e7ff;
-      color: #3730a3;
-    }
-
-    .arrow-link {
-      color: #52812c;
-      font-weight: 700;
-      font-size: 14px;
-      text-decoration: none;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      transition: gap 0.2s;
-    }
-
-    .module-card:hover .arrow-link {
-      gap: 10px;
-    }
-
-    .demo-banner {
-      background: linear-gradient(135deg, #345220, #52812c);
-      color: white;
-      padding: 32px;
-      border-radius: 16px;
-      text-align: center;
-      margin-bottom: 48px;
-      box-shadow: 0 4px 20px rgba(82, 129, 44, 0.2);
-    }
-
-    .demo-banner h2 {
-      font-size: 24px;
-      font-weight: 800;
-      margin-bottom: 12px;
-    }
-
-    .demo-banner p {
-      font-size: 16px;
-      opacity: 0.9;
-      margin-bottom: 24px;
-      line-height: 1.6;
-    }
-
-    .cta-group {
-      display: flex;
-      justify-content: center;
-      gap: 16px;
-      flex-wrap: wrap;
-    }
-
-    .cta-button {
-      padding: 14px 28px;
-      border-radius: 10px;
-      font-size: 16px;
-      font-weight: 700;
-      cursor: pointer;
-      transition: all 0.2s;
-      text-decoration: none;
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .cta-button.primary {
-      background: white;
-      color: #52812c;
-      border: none;
-    }
-
-    .cta-button.primary:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 6px 20px rgba(255, 255, 255, 0.3);
-    }
-
-    .cta-button.secondary {
-      background: rgba(255, 255, 255, 0.1);
-      color: white;
-      border: 2px solid rgba(255, 255, 255, 0.3);
-    }
-
-    .cta-button.secondary:hover {
-      background: rgba(255, 255, 255, 0.2);
-      border-color: rgba(255, 255, 255, 0.5);
-    }
-
-    footer {
-      text-align: center;
-      padding: 32px 24px;
-      color: #6b7280;
-      font-size: 14px;
-      line-height: 1.7;
-    }
-
-    footer a {
-      color: #52812c;
-      text-decoration: none;
-      font-weight: 600;
-    }
-
-    @media (max-width: 768px) {
-      header h1 {
-        font-size: 32px;
-      }
-
-      .module-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .stat-row {
-        gap: 24px;
-      }
-    }
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:'Inter',system-ui,sans-serif;background:#f4f7f0;min-height:100vh}
+    header{background:linear-gradient(135deg,#345220 0%,#52812c 60%,#426824 100%);color:white;padding:48px 24px 40px;text-align:center;position:relative;overflow:hidden}
+    header::before{content:'';position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")}
+    header .tag{background:rgba(139,195,74,.2);border:1px solid rgba(139,195,74,.6);display:inline-block;padding:5px 16px;border-radius:20px;font-size:12px;font-weight:700;color:#8bc34a;margin-bottom:16px;letter-spacing:1.5px;text-transform:uppercase;position:relative}
+    header h1{font-size:32px;font-weight:900;line-height:1.2;margin-bottom:10px;position:relative}
+    header h1 span{color:#8bc34a}
+    header p{font-size:15px;opacity:.85;max-width:600px;margin:0 auto 24px;line-height:1.6;position:relative}
+    .stats-row{display:flex;justify-content:center;gap:32px;margin-top:4px;flex-wrap:wrap}
+    .stat-item{text-align:center}
+    .stat-item .val{font-size:22px;font-weight:900;color:white}
+    .stat-item .lbl{font-size:11px;color:rgba(255,255,255,.55);margin-top:2px;text-transform:uppercase;letter-spacing:.5px}
+    .divider-v{width:1px;background:rgba(255,255,255,.15);align-self:stretch}
+    .cards{max-width:660px;margin:28px auto 0;padding:0 16px 48px;display:flex;flex-direction:column;gap:14px}
+    a.card{background:white;border-radius:16px;box-shadow:0 4px 20px rgba(0,0,0,.09);padding:22px 24px;text-decoration:none;color:#1e3013;display:block;transition:transform .2s,box-shadow .2s;border-left:5px solid #52812c}
+    a.card:hover{transform:translateY(-3px);box-shadow:0 8px 32px rgba(0,0,0,.14)}
+    a.card.secondary{border-left-color:#8bc34a}
+    a.card.demo{border-left-color:#345220;background:linear-gradient(135deg,#ffffff,#f9fdf6)}
+    .card-inner{display:flex;align-items:flex-start;gap:16px}
+    .card-icon{font-size:30px;flex-shrink:0;margin-top:2px;width:44px;text-align:center}
+    .card h2{font-size:17px;font-weight:700;color:#52812c;margin-bottom:5px}
+    a.card.secondary h2{color:#426824}
+    a.card.demo h2{color:#345220}
+    .card p{font-size:13px;color:#666;line-height:1.6}
+    .card ul{font-size:13px;color:#666;line-height:1.7;margin-top:8px;padding-left:18px}
+    .card ul li{margin-bottom:4px}
+    .card .arrow{font-size:18px;color:#8bc34a;margin-left:auto;margin-top:2px;flex-shrink:0}
+    .card-badge{display:inline-block;font-size:10px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;padding:2px 8px;border-radius:4px;margin-left:8px;vertical-align:middle}
+    .badge-new{background:#fff3cd;color:#856404}
+    .badge-live{background:#d4edda;color:#155724}
+    .badge-staff{background:#e0e7ff;color:#3730a3}
+    .badge-beta{background:#dbeafe;color:#1e40af}
+    .section-label{font-size:11px;text-transform:uppercase;letter-spacing:1.5px;color:#aaa;font-weight:600;margin:8px 0 4px 4px}
+    footer{text-align:center;padding:24px;font-size:12px;color:#aaa;line-height:1.8}
+    footer a{color:#52812c;text-decoration:none;font-weight:600}
   </style>
 </head>
 <body>
-  <header>
-    <div class="header-content">
-      <div class="platform-badge">🌱 Complete AgSunrise Platform</div>
-      <h1>Young Farmer Success Platform</h1>
-      <p>Everything you need to start, grow, and succeed in farming. AI-powered support, experienced mentors, hands-on education, and smart financing — all in one place.</p>
-      
-      <div class="stat-row">
-        <div class="stat-item">
-          <span class="stat-value">127</span>
-          <span class="stat-label">Young Farmers Helped</span>
-        </div>
-        <div class="stat-item">
-          <span class="stat-value">76%</span>
-          <span class="stat-label">Application Success Rate</span>
-        </div>
-        <div class="stat-item">
-          <span class="stat-value">23</span>
-          <span class="stat-label">Active Mentorships</span>
-        </div>
-        <div class="stat-item">
-          <span class="stat-value">$4.2M</span>
-          <span class="stat-label">Loans Funded (YTD)</span>
-        </div>
-      </div>
-    </div>
-  </header>
-
-  <div class="container">
-    <div class="demo-banner">
-      <h2>🚀 Platform Demo — Ready for Greg Cunningham</h2>
-      <p>Full AgSunrise digital experience with AI chatbot, mentorship matching, education hub, smart application, and success dashboard. Built in 2 hours. Ready to ship in 90 days.</p>
-      <div class="cta-group">
-        <a href="../agsunrise/index.html" class="cta-button primary">
-          <span>📝</span> Start Application
-        </a>
-        <a href="#modules" class="cta-button secondary">
-          <span>👁️</span> Explore Platform
-        </a>
-      </div>
-    </div>
-
-    <div class="module-grid" id="modules">
-      <div class="module-card" onclick="window.location.href='../agsunrise/index.html'">
-        <div class="module-header">
-          <div class="module-icon">📝</div>
-          <h3>Smart Application</h3>
-          <div class="subtitle">5-step digital loan application</div>
-        </div>
-        <div class="module-body">
-          <p>Mobile-first application with auto-save, document upload, and real-time status updates. Complete in 15 minutes from your phone.</p>
-          <ul class="feature-list">
-            <li>Pre-qualification quiz</li>
-            <li>Auto-save progress</li>
-            <li>Document upload & OCR</li>
-            <li>SMS/email status updates</li>
-            <li>Multi-program recommendations</li>
-          </ul>
-          <div class="module-action">
-            <span class="badge new">Enhanced</span>
-            <span class="arrow-link">Apply Now →</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="module-card" onclick="window.location.href='chatbot/agbot.js'">
-        <div class="module-header">
-          <div class="module-icon">🤖</div>
-          <h3>AgBot AI Assistant</h3>
-          <div class="subtitle">24/7 intelligent support</div>
-        </div>
-        <div class="module-body">
-          <p>AI-powered chatbot that answers questions instantly. Available on every page, knows your application status, and provides personalized guidance.</p>
-          <ul class="feature-list">
-            <li>Instant answers to FAQs</li>
-            <li>Eligibility checking</li>
-            <li>Document help</li>
-            <li>Application status lookup</li>
-            <li>Program recommendations</li>
-          </ul>
-          <div class="module-action">
-            <span class="badge new">Live</span>
-            <span class="arrow-link">Try AgBot →</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="module-card" onclick="window.location.href='mentorship/'">
-        <div class="module-header">
-          <div class="module-icon">🌱</div>
-          <h3>Mentorship Matching</h3>
-          <div class="subtitle">AI-powered mentor pairing</div>
-        </div>
-        <div class="module-body">
-          <p>Get paired with an experienced Farm Credit SEMO member who farms similar crops in your area. 6-month structured program with monthly check-ins.</p>
-          <ul class="feature-list">
-            <li>AI-powered matching algorithm</li>
-            <li>Mentor profiles & reviews</li>
-            <li>Structured 6-month program</li>
-            <li>Progress tracking dashboard</li>
-            <li>Business plan review</li>
-          </ul>
-          <div class="module-action">
-            <span class="badge new">New</span>
-            <span class="arrow-link">Find Mentor →</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="module-card" onclick="window.location.href='education/'">
-        <div class="module-header">
-          <div class="module-icon">📚</div>
-          <h3>Education Hub</h3>
-          <div class="subtitle">Courses, videos & resources</div>
-        </div>
-        <div class="module-body">
-          <p>Complete library of farming business education. Video lessons, interactive courses with quizzes, downloadable templates, and certificates.</p>
-          <ul class="feature-list">
-            <li>10+ video lessons</li>
-            <li>5 interactive courses</li>
-            <li>Downloadable templates</li>
-            <li>Completion certificates</li>
-            <li>Progress tracking</li>
-          </ul>
-          <div class="module-action">
-            <span class="badge new">New</span>
-            <span class="arrow-link">Start Learning →</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="module-card" onclick="window.location.href='dashboard/'">
-        <div class="module-header">
-          <div class="module-icon">📊</div>
-          <h3>Success Dashboard</h3>
-          <div class="subtitle">Real-time analytics for staff</div>
-        </div>
-        <div class="module-body">
-          <p>Complete analytics platform for Greg's team. Track applications, mentorships, education completion, and program ROI in real-time.</p>
-          <ul class="feature-list">
-            <li>Live KPI tracking</li>
-            <li>Application funnel analytics</li>
-            <li>Mentorship metrics</li>
-            <li>Board presentation exports</li>
-            <li>County & loan type breakdowns</li>
-          </ul>
-          <div class="module-action">
-            <span class="badge staff">Staff Only</span>
-            <span class="arrow-link">View Dashboard →</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="module-card" onclick="window.location.href='../cashflow/'">
-        <div class="module-header">
-          <div class="module-icon">💰</div>
-          <h3>Cash Flow Simulator</h3>
-          <div class="subtitle">Interactive financial modeling</div>
-        </div>
-        <div class="module-body">
-          <p>Real-time cash flow modeling tool. Test different scenarios, commodity price changes, and loan terms. Automatic DSCR calculation.</p>
-          <ul class="feature-list">
-            <li>Interactive sliders</li>
-            <li>Real-time DSCR calculation</li>
-            <li>Commodity price scenarios</li>
-            <li>Visual charts & indicators</li>
-            <li>Save & share projections</li>
-          </ul>
-          <div class="module-action">
-            <span class="badge beta">Phase 1.5</span>
-            <span class="arrow-link">Run Simulation →</span>
-          </div>
-        </div>
-      </div>
-    </div>
+<header>
+  <div class="tag">🌱 AgSunrise Platform</div>
+  <h1>Young Farmer <span>Success Platform</span></h1>
+  <p>Complete digital experience with AI support, mentorship, education, smart financing, and analytics — all in one place.</p>
+  <div class="stats-row">
+    <div class="stat-item"><div class="val">127</div><div class="lbl">Young Farmers</div></div>
+    <div class="divider-v"></div>
+    <div class="stat-item"><div class="val">76%</div><div class="lbl">Success Rate</div></div>
+    <div class="divider-v"></div>
+    <div class="stat-item"><div class="val">23</div><div class="lbl">Active Mentorships</div></div>
+    <div class="divider-v"></div>
+    <div class="stat-item"><div class="val">$4.2M</div><div class="lbl">Funded YTD</div></div>
   </div>
+</header>
 
-  <footer>
-    <p>
-      <strong>AgSunrise Platform Demo</strong><br/>
-      Built for Farm Credit Southeast Missouri<br/>
-      Complete young farmer digital experience • AI-powered • Mobile-first<br/><br/>
-      <a href="../../">← Back to Main Demo</a>
-    </p>
-  </footer>
+<div class="cards">
 
-  <!-- Include AgBot on this page too -->
-  <script src="chatbot/agbot.js"></script>
+  <div class="section-label">Demo Overview</div>
+
+  <a class="card demo" href="../agsunrise/index.html">
+    <div class="card-inner">
+      <div class="card-icon">🚀</div>
+      <div>
+        <h2>Platform Demo <span class="card-badge badge-live">Ready for Greg</span></h2>
+        <p>Full AgSunrise expansion built & ready to present. Five integrated modules, Farm Credit branding, mobile-responsive. Built in 2 hours, ships in 90 days.</p>
+      </div>
+      <div class="arrow">→</div>
+    </div>
+  </a>
+
+  <div class="section-label">Core Modules</div>
+
+  <a class="card" href="../agsunrise/index.html">
+    <div class="card-inner">
+      <div class="card-icon">📝</div>
+      <div>
+        <h2>Smart Application <span class="card-badge badge-live">Enhanced</span></h2>
+        <p>5-step digital loan application with auto-save, document upload, and real-time status updates. Complete in 15 minutes from your phone.</p>
+        <ul>
+          <li>Pre-qualification quiz</li>
+          <li>Multi-program recommendations</li>
+          <li>SMS/email status updates</li>
+        </ul>
+      </div>
+      <div class="arrow">→</div>
+    </div>
+  </a>
+
+  <a class="card secondary" onclick="alert('AgBot AI Assistant\n\nSee the 🤖 icon in bottom-right?\n\nClick it to chat!\n\n• 24/7 support\n• Instant answers\n• Eligibility checking\n• Document help\n• Application status\n\nLoaded on every page via one script tag.')">
+    <div class="card-inner">
+      <div class="card-icon">🤖</div>
+      <div>
+        <h2>AgBot AI Assistant <span class="card-badge badge-new">Live Now</span></h2>
+        <p>24/7 intelligent chatbot on every page. Answers eligibility, document, timeline, and program questions instantly. Click the 🤖 icon to try it!</p>
+        <ul>
+          <li>Instant FAQ answers</li>
+          <li>Context-aware responses</li>
+          <li>Quick reply buttons</li>
+        </ul>
+      </div>
+      <div class="arrow">💬</div>
+    </div>
+  </a>
+
+  <a class="card" href="mentorship/">
+    <div class="card-inner">
+      <div class="card-icon">🌱</div>
+      <div>
+        <h2>Mentorship Matching <span class="card-badge badge-new">New</span></h2>
+        <p>AI-powered pairing with experienced Farm Credit SEMO members. 6-month structured program with monthly check-ins and business plan review.</p>
+        <ul>
+          <li>Real mentor profiles (Ray, Donna, James)</li>
+          <li>Crop & location matching</li>
+          <li>Success stories & testimonials</li>
+        </ul>
+      </div>
+      <div class="arrow">→</div>
+    </div>
+  </a>
+
+  <a class="card" href="education/">
+    <div class="card-inner">
+      <div class="card-icon">📚</div>
+      <div>
+        <h2>Education Hub <span class="card-badge badge-new">New</span></h2>
+        <p>Complete library of farming business education. Video lessons, interactive courses with quizzes, downloadable templates, and certificates.</p>
+        <ul>
+          <li>10+ video lessons with progress tracking</li>
+          <li>5 interactive courses with certificates</li>
+          <li>8 downloadable templates & guides</li>
+        </ul>
+      </div>
+      <div class="arrow">→</div>
+    </div>
+  </a>
+
+  <a class="card" href="dashboard/">
+    <div class="card-inner">
+      <div class="card-icon">📊</div>
+      <div>
+        <h2>Success Dashboard <span class="card-badge badge-staff">Staff Only</span></h2>
+        <p>Real-time analytics for Greg's team. Track applications, mentorships, education completion, and program ROI. Export to PDF for board presentations.</p>
+        <ul>
+          <li>6 live KPIs with trend indicators</li>
+          <li>Application funnel & charts</li>
+          <li>Mentorship tracking table</li>
+        </ul>
+      </div>
+      <div class="arrow">→</div>
+    </div>
+  </a>
+
+  <a class="card secondary" href="../cashflow/">
+    <div class="card-inner">
+      <div class="card-icon">💰</div>
+      <div>
+        <h2>Cash Flow Simulator <span class="card-badge badge-beta">Phase 1.5</span></h2>
+        <p>Interactive financial modeling tool. Test different scenarios, commodity price changes, and loan terms. Automatic DSCR calculation.</p>
+        <ul>
+          <li>Real-time calculations</li>
+          <li>Commodity price scenarios (-30% to +30%)</li>
+          <li>Visual charts & health indicators</li>
+        </ul>
+      </div>
+      <div class="arrow">→</div>
+    </div>
+  </a>
+
+  <div class="section-label">Business Case</div>
+
+  <a class="card demo" style="cursor:default">
+    <div class="card-inner">
+      <div class="card-icon">💡</div>
+      <div>
+        <h2>Investment & ROI</h2>
+        <p><strong>Full Build:</strong> $60K, 90 days, all 5 modules + PWA<br/>
+        <strong>MVP:</strong> $40K, 60 days, AgBot + Application + Dashboard<br/>
+        <strong>Phased:</strong> $40K + $30K, validate then expand</p>
+        <ul style="margin-top:12px">
+          <li>4-month payback period</li>
+          <li>$185K annual return (time savings + revenue)</li>
+          <li>Phase 2 SaaS: $1.35M potential (54 associations @ $25K each)</li>
+        </ul>
+      </div>
+    </div>
+  </a>
+
+</div>
+
+<footer>
+  <strong>AgSunrise Platform Demo</strong><br/>
+  Built for Farm Credit Southeast Missouri<br/>
+  Complete young farmer digital experience • AI-powered • Mobile-first<br/><br/>
+  <a href="../">← Back to Main Demo</a>
+</footer>
+
+<!-- Include AgBot -->
+<script src="chatbot/agbot.js"></script>
 </body>
 </html>
