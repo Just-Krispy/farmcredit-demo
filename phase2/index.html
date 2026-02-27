@@ -16,7 +16,7 @@
     header h1{font-size:28px;font-weight:900;color:white;line-height:1.2;margin-bottom:10px}
     header h1 span{color:#8bc34a}
     header p{font-size:14px;color:rgba(255,255,255,.7);max-width:480px;margin:0 auto;line-height:1.6}
-    .wrap{max-width:680px;margin:0 auto;padding:24px 16px 48px}
+    .wrap{max-width:660px;margin:0 auto;padding:24px 16px 48px}
     .intro{background:white;border-radius:16px;padding:22px;margin-bottom:24px;box-shadow:0 4px 20px rgba(0,0,0,.07);border-left:5px solid #8bc34a;font-size:14px;line-height:1.7;color:#444}
     .intro strong{color:#52812c}
 
@@ -70,6 +70,11 @@
     .cta-btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
     .btn-primary{display:inline-block;background:#8bc34a;color:#1e3013;font-size:14px;font-weight:800;padding:12px 28px;border-radius:10px;text-decoration:none}
     .btn-secondary{display:inline-block;background:rgba(255,255,255,.1);color:white;font-size:14px;font-weight:700;padding:12px 28px;border-radius:10px;text-decoration:none;border:1px solid rgba(255,255,255,.2)}
+    @media (max-width: 768px) {
+      .cards, .wrap, .container { max-width: 100%; padding: 0 16px 32px; }
+      header h1 { font-size: 26px; }
+      .stats-row, .stat-row { gap: 20px; }
+    }
   </style>
 </head>
 <body>

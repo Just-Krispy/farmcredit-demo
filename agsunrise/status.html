@@ -1,6 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
   <meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Application Status — Farm Credit SEMO</title>
   <style>
@@ -22,7 +25,12 @@
     .tl-dot{width:12px;height:12px;border-radius:50%;background:#52812c;margin-top:4px;flex-shrink:0}
     .tl-dot.off{background:#ddd}
     .tl-text strong{display:block;font-size:14px}.tl-text span{color:#aaa;font-size:12px}
-    .error{color:#dc3545;font-size:14px;margin-top:10px}
+    .error{color:#ef4444;font-size:14px;margin-top:10px}
+    @media (max-width: 768px) {
+      .cards, .wrap, .container { max-width: 100%; padding: 0 16px 32px; }
+      header h1 { font-size: 26px; }
+      .stats-row, .stat-row { gap: 20px; }
+    }
   </style>
 </head>
 <body>

@@ -83,6 +83,11 @@
     .cta-btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
     .btn-primary{display:inline-block;background:#52812c;color:white;font-size:14px;font-weight:700;padding:12px 28px;border-radius:10px;text-decoration:none}
     .btn-secondary{display:inline-block;background:#f4f7f0;color:#52812c;font-size:14px;font-weight:700;padding:12px 28px;border-radius:10px;text-decoration:none;border:2px solid #d4e8c2}
+    @media (max-width: 768px) {
+      .cards, .wrap, .container { max-width: 100%; padding: 0 16px 32px; }
+      header h1 { font-size: 26px; }
+      .stats-row, .stat-row { gap: 20px; }
+    }
   </style>
 </head>
 <body>
