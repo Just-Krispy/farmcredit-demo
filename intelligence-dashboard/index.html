@@ -802,6 +802,32 @@
       z-index: 1;
     }
     
+    /* Footer */
+    footer {
+      background: white;
+      border-top: 1px solid #e5e7eb;
+      padding: 2rem;
+      text-align: center;
+      margin-top: 3rem;
+    }
+    
+    footer p {
+      color: #6b7280;
+      font-size: 0.875rem;
+      line-height: 1.8;
+      margin: 0;
+    }
+    
+    footer a {
+      color: var(--fc-primary);
+      text-decoration: none;
+      font-weight: 600;
+    }
+    
+    footer a:hover {
+      text-decoration: underline;
+    }
+    
     /* Responsive */
     @media (max-width: 768px) {
       .header { 
@@ -889,13 +915,16 @@
       <div class="logo-container">
         <!-- Farm Credit BioStar -->
         <div class="biostar">⭐</div>
-        <img src="../logo.svg" alt="Farm Credit SEMO" class="logo" onerror="this.style.display='none'">
+        <img src="logo.svg" alt="Farm Credit SEMO" class="logo" onerror="this.style.display='none'">
       </div>
       <h1 class="header-title">
         Farm Intelligence Dashboard
         <span class="demo-badge">DEMO</span>
       </h1>
     </div>
+    <a href="index.html" style="color: white; text-decoration: none; display: flex; align-items: center; gap: 0.5rem; font-size: 0.875rem; font-weight: 600; padding: 0.5rem 1rem; background: rgba(255,255,255,0.15); border-radius: 8px; transition: all 0.2s; backdrop-filter: blur(10px);" onmouseover="this.style.background='rgba(255,255,255,0.25)'" onmouseout="this.style.background='rgba(255,255,255,0.15)'">
+      ← Back to Demo Suite
+    </a>
   </header>
   
   <!-- Tab Navigation -->
@@ -1571,5 +1600,14 @@
       alert('PDF Export: In production, this would generate a downloadable PDF report of the Executive Summary using jsPDF or similar library.');
     }
   </script>
+  
+  <!-- Footer -->
+  <footer>
+    <p>
+      Farm Credit Southeast Missouri · <a href="https://farmcreditsemo.com" target="_blank">farmcreditsemo.com</a> · (877) 730-7327<br>
+      Equal Housing Lender · Equal Credit Opportunity · Equal Opportunity Provider<br><br>
+      <a href="index.html">← Back to Demo Suite</a>
+    </p>
+  </footer>
 </body>
 </html>
