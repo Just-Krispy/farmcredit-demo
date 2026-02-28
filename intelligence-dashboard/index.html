@@ -320,16 +320,50 @@
       color: var(--fc-dark);
     }
     
+    /* Table Container */
+    .table-container {
+      width: 100%;
+      overflow-x: auto;
+      overflow-y: visible;
+      -webkit-overflow-scrolling: touch;
+      border-radius: 8px;
+      border: 1px solid #e5e7eb;
+    }
+    
+    /* Scrollbar styling */
+    .table-container::-webkit-scrollbar {
+      height: 8px;
+    }
+    
+    .table-container::-webkit-scrollbar-track {
+      background: #f3f4f6;
+      border-radius: 4px;
+    }
+    
+    .table-container::-webkit-scrollbar-thumb {
+      background: var(--fc-accent);
+      border-radius: 4px;
+    }
+    
+    .table-container::-webkit-scrollbar-thumb:hover {
+      background: var(--fc-primary);
+    }
+    
     /* Table */
     table {
       width: 100%;
+      min-width: 800px; /* Prevent squishing on mobile */
       border-collapse: collapse;
       font-size: 0.9375rem;
+      background: white;
     }
     
     thead {
       background: linear-gradient(135deg, #f9fafb 0%, #ffffff 100%);
       border-bottom: 2px solid var(--fc-accent);
+      position: sticky;
+      top: 0;
+      z-index: 10;
     }
     
     th {
@@ -340,11 +374,13 @@
       text-transform: uppercase;
       font-size: 0.8125rem;
       letter-spacing: 0.05em;
+      white-space: nowrap;
     }
     
     td {
       padding: 1.125rem 1.25rem;
       border-bottom: 1px solid #f3f4f6;
+      white-space: nowrap;
     }
     
     tbody tr { 
@@ -371,6 +407,25 @@
     
     tbody tr:hover::before {
       transform: scaleY(1);
+    }
+    
+    /* Mobile table optimization */
+    @media (max-width: 768px) {
+      table {
+        min-width: 700px;
+      }
+      
+      th, td {
+        padding: 0.875rem 1rem;
+        font-size: 0.875rem;
+      }
+      
+      .table-container {
+        margin: 0 -1.75rem; /* Extend to card edges on mobile */
+        border-radius: 0;
+        border-left: none;
+        border-right: none;
+      }
     }
     
     .badge {
@@ -605,16 +660,40 @@
       z-index: 1;
     }
     
+    /* Scroll Hint */
+    .scroll-hint {
+      color: var(--fc-primary) !important;
+      font-weight: 600 !important;
+      animation: pulse 2s infinite;
+    }
+    
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.6; }
+    }
+    
     /* Responsive */
     @media (max-width: 768px) {
       .header { padding: 1rem; }
+      .header-title { font-size: 1.25rem; }
+      .biostar { width: 40px; height: 40px; font-size: 1.5rem; }
+      .logo { height: 35px; }
       .content { padding: 1rem; }
       .tabs { padding: 0 1rem; }
+      .tab { padding: 0.875rem 1.25rem; font-size: 0.875rem; }
       .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
-      .score-value { font-size: 3rem; }
-      .patronage-value { font-size: 2rem; }
-      table { font-size: 0.75rem; }
-      th, td { padding: 0.5rem; }
+      .score-value { font-size: 3.5rem; }
+      .patronage-value { font-size: 2.5rem; }
+      .card { padding: 1.25rem; }
+      .card-header { 
+        flex-direction: column; 
+        align-items: flex-start; 
+        gap: 0.5rem;
+        margin: -1.25rem -1.25rem 1rem -1.25rem;
+        padding: 1rem 1.25rem;
+      }
+      .card-title { font-size: 1.125rem; }
+      .scroll-hint { display: inline !important; }
     }
   </style>
 </head>
@@ -679,23 +758,28 @@
       <div class="card">
         <div class="card-header">
           <h2 class="card-title">At-Risk Loans</h2>
-          <div style="color: #6b7280; font-size: 0.875rem;">8 loans requiring attention</div>
+          <div style="color: #6b7280; font-size: 0.875rem;">
+            8 loans requiring attention
+            <span class="scroll-hint" style="display: none; margin-left: 0.5rem; font-style: italic;">• Swipe to scroll →</span>
+          </div>
         </div>
         
-        <table id="risk-table">
-          <thead>
-            <tr>
-              <th>Borrower</th>
-              <th>Amount</th>
-              <th>Risk Level</th>
-              <th>County</th>
-              <th>Primary Crop</th>
-            </tr>
-          </thead>
-          <tbody>
-            <!-- Populated by JS -->
-          </tbody>
-        </table>
+        <div class="table-container">
+          <table id="risk-table">
+            <thead>
+              <tr>
+                <th>Borrower</th>
+                <th>Amount</th>
+                <th>Risk Level</th>
+                <th>County</th>
+                <th>Primary Crop</th>
+              </tr>
+            </thead>
+            <tbody>
+              <!-- Populated by JS -->
+            </tbody>
+          </table>
+        </div>
       </div>
       
     </div>
