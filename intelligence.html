@@ -25,6 +25,40 @@
       max-width: 100vw;
     }
     
+    /* Skip to content link for screen readers */
+    .skip-to-content {
+      position: absolute;
+      top: -40px;
+      left: 0;
+      background: var(--fc-primary);
+      color: white;
+      padding: 0.75rem 1.5rem;
+      text-decoration: none;
+      font-weight: 600;
+      z-index: 10000;
+      border-radius: 0 0 8px 0;
+    }
+    
+    .skip-to-content:focus {
+      top: 0;
+    }
+    
+    /* Focus indicators */
+    *:focus-visible {
+      outline: 3px solid var(--fc-accent);
+      outline-offset: 2px;
+    }
+    
+    button:focus-visible {
+      outline: 3px solid var(--fc-accent);
+      outline-offset: 2px;
+    }
+    
+    a:focus-visible {
+      outline: 3px solid var(--fc-accent);
+      outline-offset: 2px;
+    }
+    
     :root {
       --fc-primary: #52812c;
       --fc-dark: #345220;
@@ -909,6 +943,9 @@
   </style>
 </head>
 <body>
+  <!-- Skip to content for keyboard users -->
+  <a href="#main-content" class="skip-to-content">Skip to main content</a>
+  
   <!-- Header -->
   <header class="header">
     <div class="header-left">
@@ -928,18 +965,18 @@
   </header>
   
   <!-- Tab Navigation -->
-  <nav class="tabs">
-    <button class="tab active" data-tab="overview">Overview</button>
-    <button class="tab" data-tab="market">Market Intelligence</button>
-    <button class="tab" data-tab="geographic">Geographic</button>
-    <button class="tab" data-tab="executive">Executive Summary</button>
+  <nav class="tabs" role="tablist" aria-label="Dashboard sections">
+    <button class="tab active" role="tab" aria-selected="true" aria-controls="overview" data-tab="overview" id="tab-overview">Overview</button>
+    <button class="tab" role="tab" aria-selected="false" aria-controls="market" data-tab="market" id="tab-market">Market Intelligence</button>
+    <button class="tab" role="tab" aria-selected="false" aria-controls="geographic" data-tab="geographic" id="tab-geographic">Geographic</button>
+    <button class="tab" role="tab" aria-selected="false" aria-controls="executive" data-tab="executive" id="tab-executive">Executive Summary</button>
   </nav>
   
   <!-- Main Content -->
-  <main class="content">
+  <main class="content" id="main-content">
     
     <!-- OVERVIEW TAB -->
-    <div id="overview" class="tab-panel active">
+    <div id="overview" class="tab-panel active" role="tabpanel" aria-labelledby="tab-overview">
       
       <div class="grid-2">
         <!-- Portfolio Health Score -->
@@ -1028,7 +1065,7 @@
     </div>
     
     <!-- MARKET INTELLIGENCE TAB -->
-    <div id="market" class="tab-panel">
+    <div id="market" class="tab-panel" role="tabpanel" aria-labelledby="tab-market">
       
       <div class="card">
         <div class="card-header">
@@ -1064,7 +1101,7 @@
     </div>
     
     <!-- GEOGRAPHIC TAB -->
-    <div id="geographic" class="tab-panel">
+    <div id="geographic" class="tab-panel" role="tabpanel" aria-labelledby="tab-geographic">
       
       <div class="card">
         <div class="card-header">
@@ -1078,7 +1115,7 @@
     </div>
     
     <!-- EXECUTIVE SUMMARY TAB -->
-    <div id="executive" class="tab-panel">
+    <div id="executive" class="tab-panel" role="tabpanel" aria-labelledby="tab-executive">
       
       <!-- Patronage Banner -->
       <div class="patronage-banner">
@@ -1137,11 +1174,11 @@
   </main>
   
   <!-- AI Risk Explainer Modal -->
-  <div id="risk-modal" class="modal">
+  <div id="risk-modal" class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
     <div class="modal-content">
       <div class="modal-header">
         <h3 class="modal-title" id="modal-title">AI Risk Analysis</h3>
-        <button class="modal-close" onclick="closeModal()">×</button>
+        <button class="modal-close" onclick="closeModal()" aria-label="Close modal">×</button>
       </div>
       <div class="modal-body" id="modal-body">
         <!-- Populated by JS -->
@@ -1185,12 +1222,15 @@
     atRiskLoans.forEach(loan => {
       const card = document.createElement('div');
       card.className = 'loan-card';
+      card.setAttribute('role', 'button');
+      card.setAttribute('tabindex', '0');
+      card.setAttribute('aria-label', `View AI risk analysis for ${loan.name}, ${loan.amount} loan, ${loan.risk} risk level`);
       card.innerHTML = `
         <div class="loan-header">
           <div class="loan-name">${loan.name}</div>
           <div class="loan-amount">${loan.amount}</div>
         </div>
-        <span class="badge badge-${loan.risk.toLowerCase()}">${loan.risk} RISK</span>
+        <span class="badge badge-${loan.risk.toLowerCase()}" role="status">${loan.risk} RISK</span>
         <div class="loan-details">
           <div class="loan-detail">
             <div class="loan-detail-label">County</div>
@@ -1211,6 +1251,12 @@
         </div>
       `;
       card.onclick = () => openModal(loan);
+      card.onkeydown = (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          openModal(loan);
+        }
+      };
       loansGrid.appendChild(card);
     });
     
@@ -1237,8 +1283,12 @@
         const targetTab = tab.dataset.tab;
         
         // Update active tab
-        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+        document.querySelectorAll('.tab').forEach(t => {
+          t.classList.remove('active');
+          t.setAttribute('aria-selected', 'false');
+        });
         tab.classList.add('active');
+        tab.setAttribute('aria-selected', 'true');
         
         // Update active panel
         document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
@@ -1253,6 +1303,32 @@
         if (targetTab === 'market' && !chartsInitialized && typeof Chart !== 'undefined') {
           initCommodityCharts(currentPeriod);
           chartsInitialized = true;
+        }
+      });
+      
+      // Keyboard navigation for tabs
+      tab.addEventListener('keydown', (e) => {
+        const tabs = Array.from(document.querySelectorAll('.tab'));
+        const currentIndex = tabs.indexOf(tab);
+        
+        if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+          e.preventDefault();
+          const nextIndex = (currentIndex + 1) % tabs.length;
+          tabs[nextIndex].click();
+          tabs[nextIndex].focus();
+        } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+          e.preventDefault();
+          const prevIndex = (currentIndex - 1 + tabs.length) % tabs.length;
+          tabs[prevIndex].click();
+          tabs[prevIndex].focus();
+        } else if (e.key === 'Home') {
+          e.preventDefault();
+          tabs[0].click();
+          tabs[0].focus();
+        } else if (e.key === 'End') {
+          e.preventDefault();
+          tabs[tabs.length - 1].click();
+          tabs[tabs.length - 1].focus();
         }
       });
     });
