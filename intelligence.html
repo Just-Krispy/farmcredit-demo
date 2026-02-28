@@ -10,7 +10,17 @@
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
+    * { 
+      margin: 0; 
+      padding: 0; 
+      box-sizing: border-box; 
+    }
+    
+    html, body {
+      overflow-x: hidden;
+      width: 100%;
+      max-width: 100vw;
+    }
     
     :root {
       --fc-primary: #52812c;
@@ -26,6 +36,7 @@
       background: var(--fc-bg);
       color: #1f2937;
       line-height: 1.6;
+      min-height: 100vh;
     }
     
     /* Header */
@@ -37,18 +48,24 @@
       align-items: center;
       justify-content: space-between;
       box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+      width: 100%;
+      max-width: 100vw;
+      overflow: hidden;
     }
     
     .header-left { 
       display: flex; 
       align-items: center; 
-      gap: 1.5rem; 
+      gap: 1.5rem;
+      flex: 1;
+      min-width: 0;
     }
     
     .logo-container {
       display: flex;
       align-items: center;
       gap: 0.75rem;
+      flex-shrink: 0;
     }
     
     .biostar {
@@ -61,11 +78,13 @@
       justify-content: center;
       font-size: 1.75rem;
       box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+      flex-shrink: 0;
     }
     
     .logo { 
       height: 45px; 
       filter: brightness(0) invert(1);
+      flex-shrink: 0;
     }
     
     .header-title { 
@@ -76,6 +95,8 @@
       align-items: center;
       gap: 0.75rem;
       text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+      flex-wrap: wrap;
+      min-width: 0;
     }
     
     .demo-badge {
@@ -87,6 +108,8 @@
       font-weight: 600;
       backdrop-filter: blur(10px);
       border: 1px solid rgba(255, 255, 255, 0.3);
+      white-space: nowrap;
+      flex-shrink: 0;
     }
     
     /* Tab Navigation */
@@ -142,12 +165,18 @@
     /* Main Content */
     .content {
       max-width: 1400px;
+      width: 100%;
       margin: 0 auto;
       padding: 2rem;
     }
     
-    .tab-panel { display: none; }
-    .tab-panel.active { display: block; }
+    .tab-panel { 
+      display: none; 
+      width: 100%;
+    }
+    .tab-panel.active { 
+      display: block; 
+    }
     
     /* Cards */
     .card {
@@ -158,6 +187,9 @@
       margin-bottom: 1.5rem;
       box-shadow: 0 1px 3px rgba(0,0,0,0.05);
       transition: box-shadow 0.3s ease;
+      width: 100%;
+      max-width: 100%;
+      overflow: hidden;
     }
     
     .card:hover {
@@ -175,6 +207,8 @@
       margin: -1.75rem -1.75rem 1.25rem -1.75rem;
       padding: 1.25rem 1.75rem;
       border-radius: 12px 12px 0 0;
+      flex-wrap: wrap;
+      gap: 0.75rem;
     }
     
     .card-title {
@@ -184,6 +218,8 @@
       display: flex;
       align-items: center;
       gap: 0.5rem;
+      flex: 1;
+      min-width: 0;
     }
     
     .card-title::before {
@@ -192,12 +228,28 @@
       height: 1.5rem;
       background: var(--fc-gradient);
       border-radius: 2px;
+      flex-shrink: 0;
     }
     
     /* Grid Layouts */
-    .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; }
-    .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; }
-    .grid-4 { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; }
+    .grid-2 { 
+      display: grid; 
+      grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr)); 
+      gap: 1.5rem; 
+      width: 100%;
+    }
+    .grid-3 { 
+      display: grid; 
+      grid-template-columns: repeat(auto-fit, minmax(min(250px, 100%), 1fr)); 
+      gap: 1.5rem; 
+      width: 100%;
+    }
+    .grid-4 { 
+      display: grid; 
+      grid-template-columns: repeat(auto-fit, minmax(min(200px, 100%), 1fr)); 
+      gap: 1rem; 
+      width: 100%;
+    }
     
     /* Health Score */
     .health-score {
@@ -323,8 +375,9 @@
     /* Loan Cards Grid */
     .loans-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      grid-template-columns: repeat(auto-fill, minmax(min(320px, 100%), 1fr));
       gap: 1.25rem;
+      width: 100%;
     }
     
     .loan-card {
@@ -336,6 +389,8 @@
       transition: all 0.3s ease;
       position: relative;
       overflow: hidden;
+      width: 100%;
+      max-width: 100%;
     }
     
     .loan-card::before {
@@ -457,6 +512,7 @@
       align-items: center;
       justify-content: center;
       padding: 2rem;
+      overflow-y: auto;
     }
     
     .modal.active { display: flex; }
@@ -469,6 +525,7 @@
       max-height: 90vh;
       overflow-y: auto;
       box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1);
+      margin: auto;
     }
     
     .modal-header {
@@ -477,12 +534,16 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
+      gap: 1rem;
     }
     
     .modal-title {
       font-size: 1.25rem;
       font-weight: 600;
       color: #111827;
+      flex: 1;
+      min-width: 0;
+      word-break: break-word;
     }
     
     .modal-close {
@@ -498,11 +559,49 @@
       align-items: center;
       justify-content: center;
       border-radius: 4px;
+      flex-shrink: 0;
     }
     
     .modal-close:hover { background: #f3f4f6; }
     
     .modal-body { padding: 1.5rem; }
+    
+    @media (max-width: 768px) {
+      .modal {
+        padding: 1rem;
+      }
+      .modal-content {
+        max-height: 85vh;
+        border-radius: 12px;
+      }
+      .modal-header {
+        padding: 1.25rem;
+      }
+      .modal-title {
+        font-size: 1.125rem;
+      }
+      .modal-body {
+        padding: 1.25rem;
+      }
+    }
+    
+    @media (max-width: 480px) {
+      .modal {
+        padding: 0.5rem;
+      }
+      .modal-content {
+        max-height: 90vh;
+      }
+      .modal-header {
+        padding: 1rem;
+      }
+      .modal-title {
+        font-size: 1rem;
+      }
+      .modal-body {
+        padding: 1rem;
+      }
+    }
     
     /* Commodity Cards */
     .commodity-card {
@@ -571,8 +670,22 @@
     /* Map */
     #county-map {
       height: 500px;
+      width: 100%;
+      max-width: 100%;
       border-radius: 6px;
       border: 1px solid #e5e7eb;
+    }
+    
+    @media (max-width: 768px) {
+      #county-map {
+        height: 400px;
+      }
+    }
+    
+    @media (max-width: 480px) {
+      #county-map {
+        height: 300px;
+      }
     }
     
     /* Button */
@@ -664,17 +777,42 @@
     
     /* Responsive */
     @media (max-width: 768px) {
-      .header { padding: 1rem; }
-      .header-title { font-size: 1.25rem; }
-      .biostar { width: 40px; height: 40px; font-size: 1.5rem; }
-      .logo { height: 35px; }
+      .header { 
+        padding: 1rem; 
+        flex-wrap: wrap;
+        gap: 0.75rem;
+      }
+      .header-left {
+        gap: 0.75rem;
+      }
+      .header-title { 
+        font-size: 1rem; 
+        gap: 0.5rem;
+      }
+      .biostar { width: 36px; height: 36px; font-size: 1.25rem; }
+      .logo { height: 32px; }
+      .demo-badge {
+        padding: 0.25rem 0.75rem;
+        font-size: 0.625rem;
+      }
       .content { padding: 1rem; }
-      .tabs { padding: 0 1rem; }
-      .tab { padding: 0.875rem 1.25rem; font-size: 0.875rem; }
-      .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
+      .tabs { 
+        padding: 0 1rem; 
+        gap: 0;
+      }
+      .tab { 
+        padding: 0.875rem 1rem; 
+        font-size: 0.8125rem; 
+      }
+      .grid-2, .grid-3, .grid-4, .loans-grid { 
+        grid-template-columns: 1fr !important; 
+      }
       .score-value { font-size: 3.5rem; }
       .patronage-value { font-size: 2.5rem; }
-      .card { padding: 1.25rem; }
+      .card { 
+        padding: 1.25rem; 
+        border-radius: 8px;
+      }
       .card-header { 
         flex-direction: column; 
         align-items: flex-start; 
@@ -682,7 +820,38 @@
         margin: -1.25rem -1.25rem 1rem -1.25rem;
         padding: 1rem 1.25rem;
       }
-      .card-title { font-size: 1.125rem; }
+      .card-title { 
+        font-size: 1.125rem;
+        width: 100%;
+      }
+      .loan-card {
+        padding: 1.25rem;
+        border-radius: 8px;
+      }
+      .loan-name {
+        font-size: 1rem;
+        word-break: break-word;
+      }
+      .loan-amount {
+        font-size: 1.25rem;
+      }
+    }
+    
+    @media (max-width: 480px) {
+      .header-title {
+        font-size: 0.875rem;
+      }
+      .header-left {
+        gap: 0.5rem;
+      }
+      .biostar { width: 32px; height: 32px; font-size: 1rem; }
+      .logo { height: 28px; }
+      .content { padding: 0.75rem; }
+      .tabs { padding: 0 0.75rem; }
+      .tab { padding: 0.75rem 0.75rem; font-size: 0.75rem; }
+      .card { padding: 1rem; }
+      .score-value { font-size: 2.5rem; }
+      .patronage-value { font-size: 2rem; }
     }
   </style>
 </head>
