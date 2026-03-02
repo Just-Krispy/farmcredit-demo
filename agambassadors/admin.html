@@ -1,0 +1,839 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - AgAmbassadors</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #1a472a 0%, #2d5a3d 100%);
+            color: #fff;
+            min-height: 100vh;
+        }
+
+        .demo-banner {
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+            color: #000;
+            padding: 12px 20px;
+            text-align: center;
+            font-weight: 600;
+            border-bottom: 3px solid #b45309;
+        }
+
+        nav {
+            background: rgba(0,0,0,0.3);
+            padding: 15px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .nav-container {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 25px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: #fff;
+            text-decoration: none;
+            font-weight: 500;
+            transition: opacity 0.2s;
+        }
+
+        .nav-links a:hover {
+            opacity: 0.7;
+        }
+
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 30px 20px;
+        }
+
+        .header {
+            margin-bottom: 30px;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            opacity: 0.8;
+            font-size: 1.1rem;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: rgba(255,255,255,0.08);
+            border-radius: 10px;
+            padding: 20px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #4ade80;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            opacity: 0.8;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 25px;
+            border-bottom: 2px solid rgba(255,255,255,0.1);
+            padding-bottom: 10px;
+        }
+
+        .tab {
+            background: none;
+            border: none;
+            color: #fff;
+            padding: 10px 20px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            border-radius: 8px 8px 0 0;
+            transition: background 0.2s;
+        }
+
+        .tab:hover {
+            background: rgba(255,255,255,0.05);
+        }
+
+        .tab.active {
+            background: rgba(74, 222, 128, 0.2);
+            color: #4ade80;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .section {
+            background: rgba(255,255,255,0.08);
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 25px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        h2 {
+            font-size: 1.8rem;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #4ade80 0%, #22c55e 100%);
+            color: #000;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: rgba(255,255,255,0.1);
+            color: #fff;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #f87171 0%, #dc2626 100%);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+
+        th {
+            background: rgba(74, 222, 128, 0.2);
+            padding: 12px;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        td {
+            padding: 12px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        tr:hover {
+            background: rgba(255,255,255,0.03);
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .badge-active {
+            background: rgba(74, 222, 128, 0.2);
+            color: #4ade80;
+        }
+
+        .badge-graduated {
+            background: rgba(147, 197, 253, 0.2);
+            color: #93c5fd;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 12px;
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 8px;
+            color: #fff;
+            font-size: 1rem;
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        input::placeholder, textarea::placeholder {
+            color: rgba(255,255,255,0.5);
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            backdrop-filter: blur(5px);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: linear-gradient(135deg, #1a472a 0%, #2d5a3d 100%);
+            border-radius: 12px;
+            padding: 30px;
+            max-width: 600px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .modal-header h2 {
+            font-size: 1.8rem;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            color: #fff;
+            font-size: 1.5rem;
+            cursor: pointer;
+            opacity: 0.7;
+        }
+
+        .close-btn:hover {
+            opacity: 1;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        @media (max-width: 768px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            .stats-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="demo-banner">
+        🔐 ADMIN PORTAL — Staff access only. Demo mode enabled.
+    </div>
+
+    <nav>
+        <div class="nav-container">
+            <div class="logo">🛡️ AgAmbassadors Admin</div>
+            <ul class="nav-links">
+                <li><a href="index.html">Ambassador Portal</a></li>
+                <li><a href="directory.html">Directory</a></li>
+                <li><a href="../index.html">← Back to FC Demo</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="header">
+            <h1>Admin Dashboard</h1>
+            <p class="subtitle">Manage ambassadors, events, and communications</p>
+        </div>
+
+        <!-- Stats Overview -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-value">68</div>
+                <div class="stat-label">Total Ambassadors</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">14</div>
+                <div class="stat-label">Active (Class 2026)</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">54</div>
+                <div class="stat-label">Alumni</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">92%</div>
+                <div class="stat-label">Event Attendance Rate</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">23</div>
+                <div class="stat-label">Events This Year</div>
+            </div>
+        </div>
+
+        <!-- Tabs -->
+        <div class="tabs">
+            <button class="tab active" data-tab="ambassadors">Ambassadors</button>
+            <button class="tab" data-tab="events">Events</button>
+            <button class="tab" data-tab="notifications">Notifications</button>
+            <button class="tab" data-tab="analytics">Analytics</button>
+        </div>
+
+        <!-- Ambassadors Tab -->
+        <div class="tab-content active" id="ambassadors">
+            <div class="section">
+                <div class="section-header">
+                    <h2>Ambassador Management</h2>
+                    <button class="btn" onclick="openModal('addAmbassador')">+ Add Ambassador</button>
+                </div>
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Class</th>
+                            <th>Branch</th>
+                            <th>Operation</th>
+                            <th>Acres</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="ambassadorTable">
+                        <tr>
+                            <td>Maria Chen</td>
+                            <td>2026</td>
+                            <td>Cape Girardeau</td>
+                            <td>Soybeans, Corn</td>
+                            <td>320</td>
+                            <td><span class="badge badge-active">Active</span></td>
+                            <td>
+                                <button class="btn btn-secondary" style="padding: 6px 12px;">Edit</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Derek Williams</td>
+                            <td>2026</td>
+                            <td>Scott County</td>
+                            <td>Cotton, Rice</td>
+                            <td>580</td>
+                            <td><span class="badge badge-active">Active</span></td>
+                            <td>
+                                <button class="btn btn-secondary" style="padding: 6px 12px;">Edit</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Jake Morrison</td>
+                            <td>2024</td>
+                            <td>Scott County</td>
+                            <td>Cotton, Soybeans</td>
+                            <td>850</td>
+                            <td><span class="badge badge-graduated">Graduated</span></td>
+                            <td>
+                                <button class="btn btn-secondary" style="padding: 6px 12px;">View</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Sarah Ellis</td>
+                            <td>2025</td>
+                            <td>Cape Girardeau</td>
+                            <td>Vegetables</td>
+                            <td>45</td>
+                            <td><span class="badge badge-graduated">Graduated</span></td>
+                            <td>
+                                <button class="btn btn-secondary" style="padding: 6px 12px;">View</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Events Tab -->
+        <div class="tab-content" id="events">
+            <div class="section">
+                <div class="section-header">
+                    <h2>Event Management</h2>
+                    <button class="btn" onclick="openModal('addEvent')">+ Create Event</button>
+                </div>
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Event Name</th>
+                            <th>Date</th>
+                            <th>Location</th>
+                            <th>RSVPs</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Precision Agriculture Workshop</td>
+                            <td>March 15, 2026</td>
+                            <td>Cape Girardeau Training Center</td>
+                            <td>9 / 14</td>
+                            <td>
+                                <div class="action-buttons">
+                                    <button class="btn btn-secondary" style="padding: 6px 12px;">Edit</button>
+                                    <button class="btn btn-secondary" style="padding: 6px 12px;">Send Reminder</button>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Farm Financial Management Training</td>
+                            <td>April 8, 2026</td>
+                            <td>Virtual (Zoom)</td>
+                            <td>12 / 14</td>
+                            <td>
+                                <div class="action-buttons">
+                                    <button class="btn btn-secondary" style="padding: 6px 12px;">Edit</button>
+                                    <button class="btn btn-secondary" style="padding: 6px 12px;">Send Reminder</button>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Grain Elevator Tour</td>
+                            <td>May 20, 2026</td>
+                            <td>Scott County Co-op</td>
+                            <td>6 / 14</td>
+                            <td>
+                                <div class="action-buttons">
+                                    <button class="btn btn-secondary" style="padding: 6px 12px;">Edit</button>
+                                    <button class="btn btn-secondary" style="padding: 6px 12px;">Send Reminder</button>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Notifications Tab -->
+        <div class="tab-content" id="notifications">
+            <div class="section">
+                <div class="section-header">
+                    <h2>Send Notification</h2>
+                </div>
+
+                <form id="notificationForm">
+                    <div class="form-group">
+                        <label>Recipients</label>
+                        <select>
+                            <option>All Active Ambassadors (Class 2026)</option>
+                            <option>All Alumni</option>
+                            <option>All Ambassadors (Active + Alumni)</option>
+                            <option>Specific Class...</option>
+                            <option>Specific Branch...</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Notification Method</label>
+                        <select>
+                            <option>Email + SMS</option>
+                            <option>Email Only</option>
+                            <option>SMS Only</option>
+                            <option>In-App Notification</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Subject</label>
+                        <input type="text" placeholder="e.g., Reminder: Workshop Tomorrow at 9 AM">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Message</label>
+                        <textarea placeholder="Enter your message here..."></textarea>
+                    </div>
+
+                    <button type="submit" class="btn">Send Notification</button>
+                </form>
+            </div>
+
+            <div class="section">
+                <h2>Recent Notifications</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Sent</th>
+                            <th>Subject</th>
+                            <th>Recipients</th>
+                            <th>Method</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>2 days ago</td>
+                            <td>Workshop Reminder - March 15</td>
+                            <td>14 ambassadors</td>
+                            <td>Email + SMS</td>
+                            <td><span class="badge badge-active">Delivered</span></td>
+                        </tr>
+                        <tr>
+                            <td>1 week ago</td>
+                            <td>New Resource: Farm Budget Template</td>
+                            <td>All ambassadors (68)</td>
+                            <td>Email</td>
+                            <td><span class="badge badge-active">Delivered</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Analytics Tab -->
+        <div class="tab-content" id="analytics">
+            <div class="section">
+                <h2>Program Analytics</h2>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-value">92%</div>
+                        <div class="stat-label">Avg Event Attendance</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">87%</div>
+                        <div class="stat-label">Program Completion Rate</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">45</div>
+                        <div class="stat-label">Avg Farm Updates/Month</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">78%</div>
+                        <div class="stat-label">Alumni Still Farming</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>Class Performance</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Class Year</th>
+                            <th>Ambassadors</th>
+                            <th>Graduated</th>
+                            <th>Avg Attendance</th>
+                            <th>Still Farming</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>2026 (Current)</td>
+                            <td>14</td>
+                            <td>-</td>
+                            <td>94%</td>
+                            <td>14</td>
+                        </tr>
+                        <tr>
+                            <td>2025</td>
+                            <td>12</td>
+                            <td>11</td>
+                            <td>91%</td>
+                            <td>11</td>
+                        </tr>
+                        <tr>
+                            <td>2024</td>
+                            <td>15</td>
+                            <td>14</td>
+                            <td>88%</td>
+                            <td>13</td>
+                        </tr>
+                        <tr>
+                            <td>2023</td>
+                            <td>13</td>
+                            <td>12</td>
+                            <td>90%</td>
+                            <td>10</td>
+                        </tr>
+                        <tr>
+                            <td>2022</td>
+                            <td>14</td>
+                            <td>13</td>
+                            <td>92%</td>
+                            <td>9</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Ambassador Modal -->
+    <div class="modal" id="addAmbassadorModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Add New Ambassador</h2>
+                <button class="close-btn" onclick="closeModal('addAmbassador')">&times;</button>
+            </div>
+            <form id="addAmbassadorForm">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>First Name</label>
+                        <input type="text" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Last Name</label>
+                        <input type="text" required>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Class Year</label>
+                        <select required>
+                            <option value="2026">2026</option>
+                            <option value="2027">2027</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Branch Office</label>
+                        <select required>
+                            <option>Cape Girardeau</option>
+                            <option>Scott County</option>
+                            <option>New Madrid</option>
+                            <option>Mississippi County</option>
+                            <option>Pemiscot County</option>
+                            <option>Dunklin County</option>
+                            <option>Stoddard County</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Phone</label>
+                    <input type="tel">
+                </div>
+
+                <div class="form-group">
+                    <label>Farm Operation Type</label>
+                    <input type="text" placeholder="e.g., Cotton, Soybeans, Corn">
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Total Acres</label>
+                        <input type="number">
+                    </div>
+                    <div class="form-group">
+                        <label>Generation</label>
+                        <select>
+                            <option>1st Generation</option>
+                            <option>2nd Generation</option>
+                            <option>3rd Generation</option>
+                            <option>4th+ Generation</option>
+                        </select>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn">Add Ambassador</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Add Event Modal -->
+    <div class="modal" id="addEventModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Create Event</h2>
+                <button class="close-btn" onclick="closeModal('addEvent')">&times;</button>
+            </div>
+            <form id="addEventForm">
+                <div class="form-group">
+                    <label>Event Name</label>
+                    <input type="text" required>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Date</label>
+                        <input type="date" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Time</label>
+                        <input type="time" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Location</label>
+                    <input type="text" placeholder="e.g., Cape Girardeau Training Center">
+                </div>
+
+                <div class="form-group">
+                    <label>Description</label>
+                    <textarea></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label>Target Audience</label>
+                    <select>
+                        <option>Current Class Only</option>
+                        <option>All Active + Recent Alumni</option>
+                        <option>All Ambassadors</option>
+                        <option>Specific Class...</option>
+                    </select>
+                </div>
+
+                <button type="submit" class="btn">Create Event</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Tab switching
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                
+                tab.classList.add('active');
+                document.getElementById(tab.dataset.tab).classList.add('active');
+            });
+        });
+
+        // Modal functions
+        function openModal(modalName) {
+            document.getElementById(modalName + 'Modal').classList.add('active');
+        }
+
+        function closeModal(modalName) {
+            document.getElementById(modalName + 'Modal').classList.remove('active');
+        }
+
+        // Form submissions
+        document.getElementById('addAmbassadorForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            alert('✓ Ambassador added successfully! (Demo mode)');
+            closeModal('addAmbassador');
+        });
+
+        document.getElementById('addEventForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            alert('✓ Event created successfully! (Demo mode)');
+            closeModal('addEvent');
+        });
+
+        document.getElementById('notificationForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            alert('✓ Notification sent successfully! (Demo mode)');
+        });
+    </script>
+</body>
+</html>

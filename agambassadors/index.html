@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AgAmbassadors - Farm Credit SEMO</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #1a472a 0%, #2d5a3d 100%);
+            color: #fff;
+            min-height: 100vh;
+        }
+
+        .demo-banner {
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+            color: #000;
+            padding: 12px 20px;
+            text-align: center;
+            font-weight: 600;
+            border-bottom: 3px solid #b45309;
+        }
+
+        nav {
+            background: rgba(0,0,0,0.3);
+            padding: 15px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 25px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: #fff;
+            text-decoration: none;
+            font-weight: 500;
+            transition: opacity 0.2s;
+        }
+
+        .nav-links a:hover {
+            opacity: 0.7;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .hero {
+            text-align: center;
+            padding: 60px 20px;
+            margin-bottom: 40px;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            background: linear-gradient(135deg, #4ade80 0%, #22c55e 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero p {
+            font-size: 1.3rem;
+            opacity: 0.9;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .stat-card {
+            background: rgba(255,255,255,0.08);
+            border-radius: 12px;
+            padding: 30px;
+            text-align: center;
+            border: 1px solid rgba(255,255,255,0.1);
+            transition: transform 0.2s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-4px);
+        }
+
+        .stat-value {
+            font-size: 3rem;
+            font-weight: 700;
+            color: #4ade80;
+            margin-bottom: 10px;
+        }
+
+        .stat-label {
+            font-size: 1.1rem;
+            opacity: 0.8;
+        }
+
+        .section {
+            background: rgba(255,255,255,0.08);
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 30px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        h2 {
+            font-size: 2rem;
+            font-weight: 600;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #4ade80 0%, #22c55e 100%);
+            color: #000;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(74, 222, 128, 0.3);
+        }
+
+        .btn-secondary {
+            background: rgba(255,255,255,0.1);
+            color: #fff;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255,255,255,0.15);
+        }
+
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .card {
+            background: rgba(255,255,255,0.05);
+            border-radius: 10px;
+            padding: 20px;
+            border: 1px solid rgba(255,255,255,0.1);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #4ade80 0%, #22c55e 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #000;
+        }
+
+        .card-info h3 {
+            font-size: 1.3rem;
+            margin-bottom: 5px;
+        }
+
+        .card-meta {
+            font-size: 0.9rem;
+            opacity: 0.7;
+        }
+
+        .card-details {
+            font-size: 0.95rem;
+            line-height: 1.6;
+            opacity: 0.9;
+        }
+
+        .card-details p {
+            margin-bottom: 8px;
+        }
+
+        .tag {
+            display: inline-block;
+            background: rgba(74, 222, 128, 0.2);
+            color: #4ade80;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-right: 8px;
+            margin-top: 8px;
+        }
+
+        .event-list {
+            list-style: none;
+        }
+
+        .event-item {
+            background: rgba(255,255,255,0.05);
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 15px;
+            border-left: 4px solid #4ade80;
+        }
+
+        .event-date {
+            font-size: 0.9rem;
+            color: #4ade80;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .event-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .event-description {
+            opacity: 0.8;
+            margin-bottom: 12px;
+        }
+
+        .event-rsvp {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .rsvp-count {
+            opacity: 0.7;
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2rem;
+            }
+            .nav-links {
+                flex-direction: column;
+                gap: 10px;
+            }
+            .card-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="demo-banner">
+        ⚡ DEMO MODE — This is a working prototype. All data is for demonstration purposes.
+    </div>
+
+    <nav>
+        <div class="nav-container">
+            <div class="logo">🌾 AgAmbassadors</div>
+            <ul class="nav-links">
+                <li><a href="#dashboard">Dashboard</a></li>
+                <li><a href="directory.html">Directory</a></li>
+                <li><a href="budget.html">Farm Budget</a></li>
+                <li><a href="admin.html">Admin Portal</a></li>
+                <li><a href="../index.html">← Back to FC Demo</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="hero">
+            <h1>Welcome to AgAmbassadors</h1>
+            <p>Building the next generation of agricultural leaders in Southeast Missouri</p>
+        </div>
+
+        <!-- Stats Overview -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-value">68</div>
+                <div class="stat-label">Total Ambassadors</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">5</div>
+                <div class="stat-label">Classes Graduated</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">14</div>
+                <div class="stat-label">Current Class (2026)</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">23</div>
+                <div class="stat-label">Events This Year</div>
+            </div>
+        </div>
+
+        <!-- Upcoming Events -->
+        <div class="section">
+            <div class="section-header">
+                <h2>📅 Upcoming Events</h2>
+                <a href="#" class="btn btn-secondary">View All</a>
+            </div>
+            <ul class="event-list">
+                <li class="event-item">
+                    <div class="event-date">March 15, 2026 • 9:00 AM</div>
+                    <div class="event-title">Precision Agriculture Workshop</div>
+                    <div class="event-description">
+                        Learn about GPS-guided equipment, variable rate technology, and drone mapping for yield optimization.
+                        <br><strong>Location:</strong> Cape Girardeau Training Center
+                    </div>
+                    <div class="event-rsvp">
+                        <button class="btn">RSVP</button>
+                        <span class="rsvp-count">9 ambassadors attending</span>
+                    </div>
+                </li>
+                <li class="event-item">
+                    <div class="event-date">April 8, 2026 • 1:00 PM</div>
+                    <div class="event-title">Farm Financial Management Training</div>
+                    <div class="event-description">
+                        Master budgeting, cash flow projections, and risk management strategies with Farm Credit experts.
+                        <br><strong>Location:</strong> Virtual (Zoom)
+                    </div>
+                    <div class="event-rsvp">
+                        <button class="btn">RSVP</button>
+                        <span class="rsvp-count">12 ambassadors attending</span>
+                    </div>
+                </li>
+                <li class="event-item">
+                    <div class="event-date">May 20, 2026 • 8:00 AM</div>
+                    <div class="event-title">Grain Elevator & Processing Facility Tour</div>
+                    <div class="event-description">
+                        Behind-the-scenes look at modern grain handling, storage, and commodity marketing operations.
+                        <br><strong>Location:</strong> Scott County Co-op
+                    </div>
+                    <div class="event-rsvp">
+                        <button class="btn">RSVP</button>
+                        <span class="rsvp-count">6 ambassadors attending</span>
+                    </div>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Recent Updates -->
+        <div class="section">
+            <div class="section-header">
+                <h2>💬 Recent Updates from Ambassadors</h2>
+                <a href="#" class="btn btn-secondary">Post Update</a>
+            </div>
+            <div class="card-grid">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="avatar">JM</div>
+                        <div class="card-info">
+                            <h3>Jake Morrison</h3>
+                            <div class="card-meta">Class of 2024 • Scott County</div>
+                        </div>
+                    </div>
+                    <div class="card-details">
+                        <p><strong>2 days ago:</strong> Just finished planting 450 acres of cotton using the precision ag techniques we learned in the workshop last month. Variable rate seeding is saving me 12% on seed costs. Game changer!</p>
+                        <span class="tag">Cotton</span>
+                        <span class="tag">Precision Ag</span>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <div class="avatar">SE</div>
+                        <div class="card-info">
+                            <h3>Sarah Ellis</h3>
+                            <div class="card-meta">Class of 2025 • Cape Girardeau County</div>
+                        </div>
+                    </div>
+                    <div class="card-details">
+                        <p><strong>5 days ago:</strong> Expanded our direct-to-consumer operation based on the marketing strategies we discussed. Now selling produce at 3 farmers markets. Revenue up 40% vs last year!</p>
+                        <span class="tag">Vegetables</span>
+                        <span class="tag">Direct Sales</span>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <div class="avatar">TR</div>
+                        <div class="card-info">
+                            <h3>Tom Rodriguez</h3>
+                            <div class="card-meta">Class of 2023 • Mississippi County</div>
+                        </div>
+                    </div>
+                    <div class="card-details">
+                        <p><strong>1 week ago:</strong> Successfully secured USDA EQIP funding for cover crop implementation on 200 acres. Thanks to everyone who shared their grant application tips!</p>
+                        <span class="tag">Row Crops</span>
+                        <span class="tag">Conservation</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Current Class Ambassadors -->
+        <div class="section">
+            <div class="section-header">
+                <h2>👥 Class of 2026 (Current)</h2>
+                <a href="directory.html" class="btn btn-secondary">View All Classes</a>
+            </div>
+            <div class="card-grid">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="avatar">MC</div>
+                        <div class="card-info">
+                            <h3>Maria Chen</h3>
+                            <div class="card-meta">Cape Girardeau Branch</div>
+                        </div>
+                    </div>
+                    <div class="card-details">
+                        <p><strong>Operation:</strong> 320 acres soybeans & corn</p>
+                        <p><strong>Experience:</strong> 3rd generation, took over 2024</p>
+                        <span class="tag">Soybeans</span>
+                        <span class="tag">Corn</span>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <div class="avatar">DW</div>
+                        <div class="card-info">
+                            <h3>Derek Williams</h3>
+                            <div class="card-meta">Scott County Branch</div>
+                        </div>
+                    </div>
+                    <div class="card-details">
+                        <p><strong>Operation:</strong> 580 acres cotton, rice rotation</p>
+                        <p><strong>Experience:</strong> First generation farmer, 2022</p>
+                        <span class="tag">Cotton</span>
+                        <span class="tag">Rice</span>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <div class="avatar">LP</div>
+                        <div class="card-info">
+                            <h3>Lisa Patterson</h3>
+                            <div class="card-meta">New Madrid Branch</div>
+                        </div>
+                    </div>
+                    <div class="card-details">
+                        <p><strong>Operation:</strong> 40-head cattle, 120 acres hay</p>
+                        <p><strong>Experience:</strong> 2nd generation, expanded 2025</p>
+                        <span class="tag">Livestock</span>
+                        <span class="tag">Hay</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Demo mode - localStorage simulation
+        // In production, this would connect to a real backend API
+
+        // Sample data initialization
+        if (!localStorage.getItem('agambassadors_initialized')) {
+            const sampleData = {
+                ambassadors: [
+                    {
+                        id: 1,
+                        name: 'Jake Morrison',
+                        class: 2024,
+                        branch: 'Scott County',
+                        operation: 'Cotton, Soybeans',
+                        acres: 850,
+                        generation: 4
+                    },
+                    {
+                        id: 2,
+                        name: 'Sarah Ellis',
+                        class: 2025,
+                        branch: 'Cape Girardeau',
+                        operation: 'Vegetables, Direct Sales',
+                        acres: 45,
+                        generation: 2
+                    },
+                    {
+                        id: 3,
+                        name: 'Tom Rodriguez',
+                        class: 2023,
+                        branch: 'Mississippi County',
+                        operation: 'Corn, Soybeans',
+                        acres: 1200,
+                        generation: 3
+                    }
+                ],
+                events: [
+                    {
+                        id: 1,
+                        title: 'Precision Agriculture Workshop',
+                        date: '2026-03-15',
+                        location: 'Cape Girardeau Training Center',
+                        rsvps: 9
+                    }
+                ]
+            };
+
+            localStorage.setItem('agambassadors_data', JSON.stringify(sampleData));
+            localStorage.setItem('agambassadors_initialized', 'true');
+        }
+
+        // RSVP button handlers
+        document.querySelectorAll('.event-item .btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.preventDefault();
+                if (btn.textContent === 'RSVP') {
+                    btn.textContent = '✓ Going';
+                    btn.style.background = 'rgba(74, 222, 128, 0.3)';
+                    btn.style.color = '#4ade80';
+                    const countSpan = btn.nextElementSibling;
+                    const currentCount = parseInt(countSpan.textContent);
+                    countSpan.textContent = `${currentCount + 1} ambassadors attending`;
+                } else {
+                    btn.textContent = 'RSVP';
+                    btn.style.background = '';
+                    btn.style.color = '';
+                }
+            });
+        });
+    </script>
+</body>
+</html>

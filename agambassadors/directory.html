@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ambassador Directory - AgAmbassadors</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #1a472a 0%, #2d5a3d 100%);
+            color: #fff;
+            min-height: 100vh;
+        }
+
+        .demo-banner {
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+            color: #000;
+            padding: 12px 20px;
+            text-align: center;
+            font-weight: 600;
+            border-bottom: 3px solid #b45309;
+        }
+
+        nav {
+            background: rgba(0,0,0,0.3);
+            padding: 15px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 25px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: #fff;
+            text-decoration: none;
+            font-weight: 500;
+            transition: opacity 0.2s;
+        }
+
+        .nav-links a:hover {
+            opacity: 0.7;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 30px 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        .search-filter-section {
+            background: rgba(255,255,255,0.08);
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 30px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .search-bar {
+            width: 100%;
+            padding: 15px 20px;
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 10px;
+            color: #fff;
+            font-size: 1.1rem;
+            margin-bottom: 20px;
+        }
+
+        .search-bar::placeholder {
+            color: rgba(255,255,255,0.5);
+        }
+
+        .filters {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .filter-group label {
+            font-weight: 600;
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        select {
+            padding: 10px;
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 8px;
+            color: #fff;
+            cursor: pointer;
+        }
+
+        .results-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .results-count {
+            font-size: 1.1rem;
+            opacity: 0.8;
+        }
+
+        .view-toggle {
+            display: flex;
+            gap: 10px;
+        }
+
+        .view-btn {
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+            color: #fff;
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .view-btn.active {
+            background: rgba(74, 222, 128, 0.2);
+            border-color: #4ade80;
+            color: #4ade80;
+        }
+
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 20px;
+        }
+
+        .ambassador-card {
+            background: rgba(255,255,255,0.08);
+            border-radius: 12px;
+            padding: 25px;
+            border: 1px solid rgba(255,255,255,0.1);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .ambassador-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .avatar {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #4ade80 0%, #22c55e 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #000;
+            flex-shrink: 0;
+        }
+
+        .card-info h3 {
+            font-size: 1.4rem;
+            margin-bottom: 5px;
+        }
+
+        .card-meta {
+            font-size: 0.95rem;
+            opacity: 0.7;
+        }
+
+        .card-details {
+            margin-bottom: 15px;
+        }
+
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            font-size: 0.95rem;
+        }
+
+        .detail-row:last-child {
+            border-bottom: none;
+        }
+
+        .detail-label {
+            opacity: 0.7;
+        }
+
+        .detail-value {
+            font-weight: 600;
+        }
+
+        .tag {
+            display: inline-block;
+            background: rgba(74, 222, 128, 0.2);
+            color: #4ade80;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-right: 8px;
+            margin-bottom: 8px;
+        }
+
+        .contact-btn {
+            width: 100%;
+            background: linear-gradient(135deg, #4ade80 0%, #22c55e 100%);
+            color: #000;
+            padding: 10px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .contact-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .list-view {
+            display: none;
+        }
+
+        .list-view.active {
+            display: block;
+        }
+
+        .list-item {
+            background: rgba(255,255,255,0.08);
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 15px;
+            border: 1px solid rgba(255,255,255,0.1);
+            display: grid;
+            grid-template-columns: 80px 1fr auto;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .list-item:hover {
+            background: rgba(255,255,255,0.12);
+        }
+
+        @media (max-width: 768px) {
+            .card-grid {
+                grid-template-columns: 1fr;
+            }
+            .list-item {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="demo-banner">
+        ⚡ DEMO MODE — Sample ambassador directory with 68 members across 5 classes.
+    </div>
+
+    <nav>
+        <div class="nav-container">
+            <div class="logo">📖 Ambassador Directory</div>
+            <ul class="nav-links">
+                <li><a href="index.html">Dashboard</a></li>
+                <li><a href="budget.html">Farm Budget</a></li>
+                <li><a href="admin.html">Admin Portal</a></li>
+                <li><a href="../index.html">← Back to FC Demo</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="header">
+            <h1>Ambassador Directory</h1>
+            <p class="subtitle">Connect with fellow ambassadors across Southeast Missouri</p>
+        </div>
+
+        <!-- Search & Filters -->
+        <div class="search-filter-section">
+            <input type="text" class="search-bar" id="searchInput" placeholder="Search by name, operation type, or location...">
+            
+            <div class="filters">
+                <div class="filter-group">
+                    <label>Class Year</label>
+                    <select id="classFilter">
+                        <option value="">All Classes</option>
+                        <option value="2026">2026 (Current)</option>
+                        <option value="2025">2025</option>
+                        <option value="2024">2024</option>
+                        <option value="2023">2023</option>
+                        <option value="2022">2022</option>
+                    </select>
+                </div>
+
+                <div class="filter-group">
+                    <label>Branch Office</label>
+                    <select id="branchFilter">
+                        <option value="">All Branches</option>
+                        <option value="Cape Girardeau">Cape Girardeau</option>
+                        <option value="Scott County">Scott County</option>
+                        <option value="Mississippi County">Mississippi County</option>
+                        <option value="New Madrid">New Madrid</option>
+                        <option value="Pemiscot County">Pemiscot County</option>
+                        <option value="Dunklin County">Dunklin County</option>
+                        <option value="Stoddard County">Stoddard County</option>
+                    </select>
+                </div>
+
+                <div class="filter-group">
+                    <label>Operation Type</label>
+                    <select id="operationFilter">
+                        <option value="">All Operations</option>
+                        <option value="cotton">Cotton</option>
+                        <option value="soybeans">Soybeans</option>
+                        <option value="corn">Corn</option>
+                        <option value="rice">Rice</option>
+                        <option value="livestock">Livestock</option>
+                        <option value="vegetables">Vegetables</option>
+                    </select>
+                </div>
+
+                <div class="filter-group">
+                    <label>Farm Size</label>
+                    <select id="sizeFilter">
+                        <option value="">All Sizes</option>
+                        <option value="small">Small (&lt;100 acres)</option>
+                        <option value="medium">Medium (100-500 acres)</option>
+                        <option value="large">Large (500+ acres)</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <!-- Results Header -->
+        <div class="results-header">
+            <div class="results-count" id="resultsCount">Showing 68 ambassadors</div>
+            <div class="view-toggle">
+                <button class="view-btn active" onclick="switchView('grid')">Grid View</button>
+                <button class="view-btn" onclick="switchView('list')">List View</button>
+            </div>
+        </div>
+
+        <!-- Grid View -->
+        <div class="card-grid" id="gridView">
+            <!-- Class 2026 -->
+            <div class="ambassador-card" data-class="2026" data-branch="Cape Girardeau" data-operation="soybeans corn" data-acres="320">
+                <div class="card-header">
+                    <div class="avatar">MC</div>
+                    <div class="card-info">
+                        <h3>Maria Chen</h3>
+                        <div class="card-meta">Class of 2026 • Active</div>
+                    </div>
+                </div>
+                <div class="card-details">
+                    <div class="detail-row">
+                        <span class="detail-label">Branch</span>
+                        <span class="detail-value">Cape Girardeau</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Operation</span>
+                        <span class="detail-value">Soybeans, Corn</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Farm Size</span>
+                        <span class="detail-value">320 acres</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Generation</span>
+                        <span class="detail-value">3rd Generation</span>
+                    </div>
+                </div>
+                <div style="margin-bottom: 15px;">
+                    <span class="tag">Soybeans</span>
+                    <span class="tag">Corn</span>
+                </div>
+                <button class="contact-btn">Connect</button>
+            </div>
+
+            <div class="ambassador-card" data-class="2026" data-branch="Scott County" data-operation="cotton rice" data-acres="580">
+                <div class="card-header">
+                    <div class="avatar">DW</div>
+                    <div class="card-info">
+                        <h3>Derek Williams</h3>
+                        <div class="card-meta">Class of 2026 • Active</div>
+                    </div>
+                </div>
+                <div class="card-details">
+                    <div class="detail-row">
+                        <span class="detail-label">Branch</span>
+                        <span class="detail-value">Scott County</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Operation</span>
+                        <span class="detail-value">Cotton, Rice</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Farm Size</span>
+                        <span class="detail-value">580 acres</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Generation</span>
+                        <span class="detail-value">1st Generation</span>
+                    </div>
+                </div>
+                <div style="margin-bottom: 15px;">
+                    <span class="tag">Cotton</span>
+                    <span class="tag">Rice</span>
+                </div>
+                <button class="contact-btn">Connect</button>
+            </div>
+
+            <div class="ambassador-card" data-class="2026" data-branch="New Madrid" data-operation="livestock" data-acres="120">
+                <div class="card-header">
+                    <div class="avatar">LP</div>
+                    <div class="card-info">
+                        <h3>Lisa Patterson</h3>
+                        <div class="card-meta">Class of 2026 • Active</div>
+                    </div>
+                </div>
+                <div class="card-details">
+                    <div class="detail-row">
+                        <span class="detail-label">Branch</span>
+                        <span class="detail-value">New Madrid</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Operation</span>
+                        <span class="detail-value">Cattle, Hay</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Farm Size</span>
+                        <span class="detail-value">120 acres</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Generation</span>
+                        <span class="detail-value">2nd Generation</span>
+                    </div>
+                </div>
+                <div style="margin-bottom: 15px;">
+                    <span class="tag">Livestock</span>
+                    <span class="tag">Hay</span>
+                </div>
+                <button class="contact-btn">Connect</button>
+            </div>
+
+            <!-- Class 2025 -->
+            <div class="ambassador-card" data-class="2025" data-branch="Cape Girardeau" data-operation="vegetables" data-acres="45">
+                <div class="card-header">
+                    <div class="avatar">SE</div>
+                    <div class="card-info">
+                        <h3>Sarah Ellis</h3>
+                        <div class="card-meta">Class of 2025 • Graduated</div>
+                    </div>
+                </div>
+                <div class="card-details">
+                    <div class="detail-row">
+                        <span class="detail-label">Branch</span>
+                        <span class="detail-value">Cape Girardeau</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Operation</span>
+                        <span class="detail-value">Vegetables, Direct Sales</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Farm Size</span>
+                        <span class="detail-value">45 acres</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Generation</span>
+                        <span class="detail-value">2nd Generation</span>
+                    </div>
+                </div>
+                <div style="margin-bottom: 15px;">
+                    <span class="tag">Vegetables</span>
+                    <span class="tag">Direct Sales</span>
+                </div>
+                <button class="contact-btn">Connect</button>
+            </div>
+
+            <!-- Class 2024 -->
+            <div class="ambassador-card" data-class="2024" data-branch="Scott County" data-operation="cotton soybeans" data-acres="850">
+                <div class="card-header">
+                    <div class="avatar">JM</div>
+                    <div class="card-info">
+                        <h3>Jake Morrison</h3>
+                        <div class="card-meta">Class of 2024 • Graduated</div>
+                    </div>
+                </div>
+                <div class="card-details">
+                    <div class="detail-row">
+                        <span class="detail-label">Branch</span>
+                        <span class="detail-value">Scott County</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Operation</span>
+                        <span class="detail-value">Cotton, Soybeans</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Farm Size</span>
+                        <span class="detail-value">850 acres</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Generation</span>
+                        <span class="detail-value">4th Generation</span>
+                    </div>
+                </div>
+                <div style="margin-bottom: 15px;">
+                    <span class="tag">Cotton</span>
+                    <span class="tag">Soybeans</span>
+                    <span class="tag">Precision Ag</span>
+                </div>
+                <button class="contact-btn">Connect</button>
+            </div>
+
+            <!-- Class 2023 -->
+            <div class="ambassador-card" data-class="2023" data-branch="Mississippi County" data-operation="corn soybeans" data-acres="1200">
+                <div class="card-header">
+                    <div class="avatar">TR</div>
+                    <div class="card-info">
+                        <h3>Tom Rodriguez</h3>
+                        <div class="card-meta">Class of 2023 • Graduated</div>
+                    </div>
+                </div>
+                <div class="card-details">
+                    <div class="detail-row">
+                        <span class="detail-label">Branch</span>
+                        <span class="detail-value">Mississippi County</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Operation</span>
+                        <span class="detail-value">Corn, Soybeans</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Farm Size</span>
+                        <span class="detail-value">1,200 acres</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Generation</span>
+                        <span class="detail-value">3rd Generation</span>
+                    </div>
+                </div>
+                <div style="margin-bottom: 15px;">
+                    <span class="tag">Corn</span>
+                    <span class="tag">Soybeans</span>
+                    <span class="tag">Conservation</span>
+                </div>
+                <button class="contact-btn">Connect</button>
+            </div>
+        </div>
+
+        <!-- List View -->
+        <div class="list-view" id="listView">
+            <!-- Same ambassadors in list format -->
+            <!-- Simplified for demo -->
+        </div>
+    </div>
+
+    <script>
+        // View switching
+        function switchView(view) {
+            const gridView = document.getElementById('gridView');
+            const listView = document.getElementById('listView');
+            const buttons = document.querySelectorAll('.view-btn');
+
+            buttons.forEach(btn => btn.classList.remove('active'));
+
+            if (view === 'grid') {
+                gridView.style.display = 'grid';
+                listView.classList.remove('active');
+                buttons[0].classList.add('active');
+            } else {
+                gridView.style.display = 'none';
+                listView.classList.add('active');
+                buttons[1].classList.add('active');
+            }
+        }
+
+        // Search and filter
+        const searchInput = document.getElementById('searchInput');
+        const classFilter = document.getElementById('classFilter');
+        const branchFilter = document.getElementById('branchFilter');
+        const operationFilter = document.getElementById('operationFilter');
+        const sizeFilter = document.getElementById('sizeFilter');
+
+        function filterCards() {
+            const searchTerm = searchInput.value.toLowerCase();
+            const classValue = classFilter.value;
+            const branchValue = branchFilter.value;
+            const operationValue = operationFilter.value;
+            const sizeValue = sizeFilter.value;
+
+            const cards = document.querySelectorAll('.ambassador-card');
+            let visibleCount = 0;
+
+            cards.forEach(card => {
+                const cardClass = card.dataset.class;
+                const cardBranch = card.dataset.branch;
+                const cardOperation = card.dataset.operation.toLowerCase();
+                const cardAcres = parseInt(card.dataset.acres);
+                const cardText = card.textContent.toLowerCase();
+
+                let matches = true;
+
+                // Search filter
+                if (searchTerm && !cardText.includes(searchTerm)) {
+                    matches = false;
+                }
+
+                // Class filter
+                if (classValue && cardClass !== classValue) {
+                    matches = false;
+                }
+
+                // Branch filter
+                if (branchValue && cardBranch !== branchValue) {
+                    matches = false;
+                }
+
+                // Operation filter
+                if (operationValue && !cardOperation.includes(operationValue)) {
+                    matches = false;
+                }
+
+                // Size filter
+                if (sizeValue) {
+                    if (sizeValue === 'small' && cardAcres >= 100) matches = false;
+                    if (sizeValue === 'medium' && (cardAcres < 100 || cardAcres >= 500)) matches = false;
+                    if (sizeValue === 'large' && cardAcres < 500) matches = false;
+                }
+
+                card.style.display = matches ? 'block' : 'none';
+                if (matches) visibleCount++;
+            });
+
+            document.getElementById('resultsCount').textContent = 
+                `Showing ${visibleCount} ambassador${visibleCount !== 1 ? 's' : ''}`;
+        }
+
+        // Attach event listeners
+        searchInput.addEventListener('input', filterCards);
+        classFilter.addEventListener('change', filterCards);
+        branchFilter.addEventListener('change', filterCards);
+        operationFilter.addEventListener('change', filterCards);
+        sizeFilter.addEventListener('change', filterCards);
+
+        // Connect button handlers
+        document.querySelectorAll('.contact-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                alert('📧 Connection request sent! (Demo mode)\n\nIn production, this would:\n• Send an email notification\n• Add to your network\n• Enable direct messaging');
+            });
+        });
+    </script>
+</body>
+</html>
