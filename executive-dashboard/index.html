@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Executive Dashboard — Farm Credit SEMO</title>
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:'Inter',system-ui,sans-serif;background:#f4f7f0;min-height:100vh;color:#1e3013}
+    
+    /* Header */
+    header{background:linear-gradient(135deg,#345220 0%,#52812c 60%,#426824 100%);color:white;padding:24px;position:relative;overflow:hidden}
+    header::before{content:'';position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")}
+    
+    .header-content{position:relative;max-width:1400px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:15px}
+    .greeting{font-size:28px;font-weight:900}
+    .date{opacity:.85;font-size:14px;margin-top:4px}
+    .refresh-btn{background:rgba(255,255,255,.15);border:2px solid rgba(255,255,255,.3);color:white;padding:8px 16px;border-radius:8px;font-weight:600;cursor:pointer;transition:all .2s}
+    .refresh-btn:hover{background:rgba(255,255,255,.25)}
+    
+    /* Dark Mode Toggle */
+    #dark-mode-toggle{position:absolute;top:20px;right:20px;background:rgba(255,255,255,.15);border:2px solid rgba(255,255,255,.3);color:white;width:40px;height:40px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .3s;backdrop-filter:blur(10px);z-index:100}
+    
+    .container{max-width:1400px;margin:0 auto;padding:20px}
+    
+    /* Stats Grid */
+    .stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px;margin-bottom:24px}
+    .stat-card{background:white;border-radius:16px;padding:20px;box-shadow:0 4px 20px rgba(0,0,0,.09);border-left:5px solid #52812c}
+    .stat-label{font-size:12px;text-transform:uppercase;letter-spacing:.5px;color:#666;font-weight:600;margin-bottom:8px}
+    .stat-value{font-size:32px;font-weight:900;color:#52812c;margin-bottom:4px}
+    .stat-change{font-size:14px;font-weight:600}
+    .stat-change.up{color:#10b981}
+    .stat-change.down{color:#ef4444}
+    .stat-change.neutral{color:#6b7280}
+    
+    /* Section */
+    .section{background:white;border-radius:16px;padding:24px;margin-bottom:20px;box-shadow:0 4px 20px rgba(0,0,0,.09)}
+    .section-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;padding-bottom:12px;border-bottom:2px solid #f0f0f0}
+    h2{font-size:20px;font-weight:700;color:#345220}
+    
+    /* Commodity Table */
+    table{width:100%;border-collapse:collapse}
+    th{text-align:left;font-size:12px;text-transform:uppercase;letter-spacing:.5px;color:#666;font-weight:600;padding:12px;background:#f9fafb}
+    td{padding:12px;border-bottom:1px solid #f0f0f0;font-size:14px}
+    tr:last-child td{border-bottom:none}
+    
+    /* Calendar Items */
+    .calendar-item{padding:12px;background:#f9fafb;border-radius:8px;margin-bottom:10px;border-left:4px solid #52812c}
+    .calendar-time{font-weight:700;color:#52812c;margin-bottom:4px}
+    .calendar-title{font-weight:600;margin-bottom:2px}
+    
+    /* Action Items */
+    .action-item{display:flex;align-items:flex-start;gap:12px;padding:12px;background:#f9fafb;border-radius:8px;margin-bottom:10px}
+    .action-checkbox{width:20px;height:20px;border:2px solid #52812c;border-radius:4px;flex-shrink:0;cursor:pointer;margin-top:2px}
+    .action-checkbox.checked{background:#52812c;position:relative}
+    .action-checkbox.checked::after{content:'✓';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);color:white;font-size:14px}
+    
+    /* News Items */
+    .news-item{padding:12px;border-bottom:1px solid #f0f0f0;cursor:pointer;transition:background .2s}
+    .news-item:hover{background:#f9fafb}
+    .news-item:last-child{border-bottom:none}
+    .news-title{font-weight:600;margin-bottom:4px;color:#345220}
+    .news-source{font-size:12px;color:#666}
+    
+    /* Dark Mode */
+    body.dark-mode{background:#0f1419;color:#e4e6eb}
+    body.dark-mode header{background:linear-gradient(135deg,#1a2b1a 0%,#2d4a2d 60%,#3a5a3a 100%)}
+    body.dark-mode .stat-card,body.dark-mode .section{background:#1a1f2e;box-shadow:0 4px 20px rgba(0,0,0,.4);border-color:#2d3748}
+    body.dark-mode .stat-label,body.dark-mode th,body.dark-mode .news-source{color:#9ca3af}
+    body.dark-mode h2,body.dark-mode .news-title{color:#e4e6eb}
+    body.dark-mode .section-header{border-bottom-color:#2d3748}
+    body.dark-mode td{border-bottom-color:#2d3748;color:#e4e6eb}
+    body.dark-mode .calendar-item,body.dark-mode .action-item,body.dark-mode .news-item:hover{background:rgba(255,255,255,.05)}
+    body.dark-mode th{background:#2d3748}
+    body.dark-mode #dark-mode-toggle{background:rgba(0,0,0,.3);border-color:rgba(255,255,255,.2)}
+    
+    @media (max-width:768px){
+      .stats-grid{grid-template-columns:1fr 1fr}
+      .greeting{font-size:22px}
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="header-content">
+      <div>
+        <div class="greeting">Good morning, Greg! 🌾</div>
+        <div class="date" id="currentDate">Monday, March 2, 2026</div>
+      </div>
+      <button class="refresh-btn" onclick="refreshData()">↻ Refresh Data</button>
+    </div>
+    
+    <!-- Dark Mode Toggle -->
+    <button id="dark-mode-toggle" aria-label="Toggle dark mode">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+      </svg>
+    </button>
+  </header>
+
+  <div class="container">
+    <!-- Key Metrics -->
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-label">Loan Portfolio</div>
+        <div class="stat-value">$485M</div>
+        <div class="stat-change up">↑ 2.3% YTD</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Delinquency Rate</div>
+        <div class="stat-value">2.1%</div>
+        <div class="stat-change up">↓ 0.3% vs last month</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">New Applications</div>
+        <div class="stat-value">14</div>
+        <div class="stat-change neutral">This week</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">YBS Progress</div>
+        <div class="stat-value">34%</div>
+        <div class="stat-change neutral">Target: 40%</div>
+      </div>
+    </div>
+
+    <!-- Commodities -->
+    <div class="section">
+      <div class="section-header">
+        <h2>📈 Commodity Prices (Live)</h2>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>Commodity</th>
+            <th>Price</th>
+            <th>Change</th>
+            <th>Impact</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Corn</strong></td>
+            <td>$4.28/bu</td>
+            <td class="stat-change up">↑ 0.5%</td>
+            <td>Good for livestock operations</td>
+          </tr>
+          <tr>
+            <td><strong>Soybeans</strong></td>
+            <td>$10.45/bu</td>
+            <td class="stat-change down">↓ 1.2%</td>
+            <td>Export concerns (China)</td>
+          </tr>
+          <tr>
+            <td><strong>Cotton</strong></td>
+            <td>$0.73/lb</td>
+            <td class="stat-change up">↑ 2.8%</td>
+            <td>Strong demand - Scott County growers happy</td>
+          </tr>
+          <tr>
+            <td><strong>Wheat</strong></td>
+            <td>$5.67/bu</td>
+            <td class="stat-change up">↑ 0.8%</td>
+            <td>Stable markets</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Two-column layout -->
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(400px,1fr));gap:20px">
+      <!-- Weather -->
+      <div class="section">
+        <div class="section-header">
+          <h2>☀️ SEMO Weather</h2>
+        </div>
+        <div style="line-height:1.8">
+          <p><strong>Today:</strong> 68°F, partly cloudy</p>
+          <p><strong>This Week:</strong> 70% chance rain Wed-Thu</p>
+          <p><strong>Planting Window:</strong> <span style="color:#10b981;font-weight:600">Favorable</span></p>
+          <p><strong>Soil Moisture:</strong> Adequate</p>
+        </div>
+      </div>
+
+      <!-- Interest Rates -->
+      <div class="section">
+        <div class="section-header">
+          <h2>🏦 Interest Rates</h2>
+        </div>
+        <div style="line-height:1.8">
+          <p><strong>Fed Funds:</strong> 4.50% → (unchanged)</p>
+          <p><strong>Prime Rate:</strong> 7.50%</p>
+          <p><strong>10-Year Treasury:</strong> 4.28% ↑</p>
+          <p style="margin-top:8px;font-size:13px;color:#666">Rates stable - good for loan pricing</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Calendar -->
+    <div class="section">
+      <div class="section-header">
+        <h2>📅 Your Schedule Today</h2>
+      </div>
+      <div class="calendar-item">
+        <div class="calendar-time">9:00 AM</div>
+        <div class="calendar-title">Staff Meeting</div>
+        <div style="font-size:13px;color:#666">Weekly operations review</div>
+      </div>
+      <div class="calendar-item">
+        <div class="calendar-time">2:00 PM</div>
+        <div class="calendar-title">Board Prep Meeting</div>
+        <div style="font-size:13px;color:#666">Review Q1 metrics + patronage report</div>
+      </div>
+      <div class="calendar-item">
+        <div class="calendar-time">4:30 PM</div>
+        <div class="calendar-title">Call with AgriBank</div>
+        <div style="font-size:13px;color:#666">Capital markets update</div>
+      </div>
+    </div>
+
+    <!-- Action Items -->
+    <div class="section">
+      <div class="section-header">
+        <h2>🎯 Action Items</h2>
+      </div>
+      <div class="action-item">
+        <div class="action-checkbox" onclick="toggleCheck(this)"></div>
+        <div>
+          <div style="font-weight:600">Review 2 loan applications over $500K</div>
+          <div style="font-size:13px;color:#666">Due today</div>
+        </div>
+      </div>
+      <div class="action-item">
+        <div class="action-checkbox" onclick="toggleCheck(this)"></div>
+        <div>
+          <div style="font-weight:600">Approve AgSunrise scholarship applications</div>
+          <div style="font-size:13px;color:#666">Deadline: Friday</div>
+        </div>
+      </div>
+      <div class="action-item">
+        <div class="action-checkbox" onclick="toggleCheck(this)"></div>
+        <div>
+          <div style="font-weight:600">Board report draft ready for review</div>
+          <div style="font-size:13px;color:#666">Meeting next Monday</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Ag News -->
+    <div class="section">
+      <div class="section-header">
+        <h2>📰 Ag News (Auto-Curated)</h2>
+      </div>
+      <div class="news-item">
+        <div class="news-title">Cotton prices surge on strong export demand</div>
+        <div class="news-source">Reuters · 2 hours ago</div>
+      </div>
+      <div class="news-item">
+        <div class="news-title">Farm Bill update: Senate hearing scheduled for March 15</div>
+        <div class="news-source">Farm Credit Council · 5 hours ago</div>
+      </div>
+      <div class="news-item">
+        <div class="news-title">USDA WASDE report shows tight corn supplies</div>
+        <div class="news-source">USDA · 1 day ago</div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Dark Mode
+    const darkModeToggle = document.getElementById('dark-mode-toggle');
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    const savedMode = localStorage.getItem('fc-dark-mode');
+    
+    if (savedMode === 'true' || (!savedMode && prefersDark)) {
+      document.body.classList.add('dark-mode');
+      updateDarkModeIcon(true);
+    }
+    
+    if (darkModeToggle) {
+      darkModeToggle.addEventListener('click', () => {
+        document.body.classList.toggle('dark-mode');
+        const isDark = document.body.classList.contains('dark-mode');
+        localStorage.setItem('fc-dark-mode', isDark);
+        updateDarkModeIcon(isDark);
+      });
+    }
+    
+    function updateDarkModeIcon(isDark) {
+      const icon = darkModeToggle.querySelector('svg path');
+      if (isDark) {
+        icon.setAttribute('d', 'M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z');
+      } else {
+        icon.setAttribute('d', 'M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z');
+      }
+    }
+    
+    // Current date
+    const dateEl = document.getElementById('currentDate');
+    const now = new Date();
+    const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+    dateEl.textContent = now.toLocaleDateString('en-US', options);
+    
+    // Action item checkboxes
+    function toggleCheck(el) {
+      el.classList.toggle('checked');
+    }
+    
+    // Refresh data
+    function refreshData() {
+      alert('In production, this would refresh all live data (commodities, weather, calendar, etc.)');
+    }
+    
+    // News item clicks
+    document.querySelectorAll('.news-item').forEach(item => {
+      item.addEventListener('click', () => {
+        alert('In production, this would open the full article');
+      });
+    });
+  </script>
+</body>
+</html>
