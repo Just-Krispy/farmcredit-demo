@@ -1,0 +1,23 @@
+Hey Greg! 🦞
+
+Your AgAmbassadors platform is live. Check it out on your phone:
+
+https://just-krispy.github.io/farmcredit-demo/agambassadors/
+
+What to explore:
+1. Main Dashboard - Events, recent updates, current class
+2. Ambassador Directory - Search 68 ambassadors by class/crop/location  
+3. Farm Budget Tool - Track revenue/expenses with real-time profit calculations
+4. Staff Admin Portal - Manage ambassadors, events, and notifications
+
+Features:
+✅ Light + Dark mode (toggle in top-right)
+✅ BioStar branding throughout
+✅ Mobile-responsive (works great on iPhone)
+✅ Sample data (68 ambassadors, 5 classes, 23 events)
+
+Tap the moon/sun icon to switch between light and dark themes — perfect for evening viewing.
+
+Let me know what you think! Ready to discuss Phase 1 → Production whenever you are.
+
+— Archer

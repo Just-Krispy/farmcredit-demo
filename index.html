@@ -734,6 +734,56 @@
   align-items: flex-start;
 }
 
+/* Dark Mode Chatbot Styles */
+body.dark-mode #fc-chat-modal {
+  background: #1a1f2e;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.6);
+}
+
+body.dark-mode #fc-chat-messages {
+  background: #0f1419;
+}
+
+body.dark-mode .fc-chat-message-bot > div {
+  background: #2d3748 !important;
+  color: #e4e6eb;
+}
+
+body.dark-mode #fc-chat-input {
+  background: #2d3748;
+  border-color: #3f4a5f;
+  color: #e4e6eb;
+}
+
+body.dark-mode #fc-chat-input::placeholder {
+  color: #9ca3af;
+}
+
+body.dark-mode .fc-quick-btn {
+  background: #2d3748;
+  border-color: #3f4a5f;
+  color: #e4e6eb;
+}
+
+body.dark-mode .fc-quick-btn:hover {
+  background: #3f4a5f;
+  border-color: #52812c;
+}
+
+body.dark-mode #fc-chat-messages::-webkit-scrollbar-thumb {
+  background: #3f4a5f;
+}
+
+body.dark-mode #fc-chat-messages::-webkit-scrollbar-thumb:hover {
+  background: #52812c;
+}
+
+/* Input area dark mode */
+body.dark-mode #fc-chat-modal > div:last-child {
+  background: #1a1f2e !important;
+  border-top-color: #2d3748 !important;
+}
+
 /* Mobile responsive */
 @media (max-width: 480px) {
   #fc-chat-button {
