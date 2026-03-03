@@ -391,6 +391,19 @@
       }
     }
   </style>
+  
+  <!-- DARK MODE PERSISTENCE -->
+  <style>
+  body.dark-mode{background:#0f1419;color:#e4e6eb}
+  body.dark-mode header{background:linear-gradient(135deg,#1a2b1a,#2d4a2d)}
+  body.dark-mode .card,.dark-mode .mentor-card,.dark-mode .benefit-card{background:#1a1f2e;color:#e4e6eb;box-shadow:0 4px 20px rgba(0,0,0,0.4)}
+  body.dark-mode h1,body.dark-mode h2,body.dark-mode h3{color:#8bc34a}
+  body.dark-mode p{color:#b0b3b8}
+  body.dark-mode .form-group input,body.dark-mode .form-group select,body.dark-mode .form-group textarea{background:#2d3748;color:#e4e6eb;border-color:#4a5568}
+  </style>
+  <script>
+  (function(){const d=localStorage.getItem('fc-dark-mode');if(d==='true')document.body.classList.add('dark-mode')})();
+  </script>
 </head>
 <body>
   <header>

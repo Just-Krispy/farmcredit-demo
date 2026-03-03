@@ -44,6 +44,24 @@
     footer{text-align:center;padding:24px;font-size:12px;color:#aaa;line-height:1.8}
     footer a{color:#52812c;text-decoration:none;font-weight:600}
   </style>
+  
+  <!-- DARK MODE PERSISTENCE -->
+  <style>
+  body.dark-mode{background:#0f1419;color:#e4e6eb}
+  body.dark-mode header{background:linear-gradient(135deg,#1a2b1a 0%,#2d4a2d 60%,#3a5a3a 100%)}
+  body.dark-mode a.card{background:#1a1f2e;color:#e4e6eb;box-shadow:0 4px 20px rgba(0,0,0,0.4)}
+  body.dark-mode a.card.sales{background:linear-gradient(135deg,#1a1f2e,#1e2833)}
+  body.dark-mode a.card:hover{box-shadow:0 8px 32px rgba(0,0,0,0.6)}
+  body.dark-mode .card h2{color:#8bc34a}
+  body.dark-mode a.card.secondary h2{color:#a8d08d}
+  body.dark-mode a.card.sales h2{color:#8bc34a}
+  body.dark-mode .card p{color:#b0b3b8}
+  body.dark-mode .section-label{color:#9ca3af}
+  body.dark-mode footer{color:#6b7280}
+  </style>
+  <script>
+  (function(){const d=localStorage.getItem('fc-dark-mode');if(d==='true')document.body.classList.add('dark-mode')})();
+  </script>
 </head>
 <body>
 <header>

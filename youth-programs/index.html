@@ -313,6 +313,22 @@
       }
     }
   </style>
+  
+  <!-- DARK MODE PERSISTENCE -->
+  <style>
+  body.dark-mode{background:#0f1419;color:#e4e6eb}
+  body.dark-mode header{background:linear-gradient(135deg,#1a2b1a 0%,#2d4a2d 60%,#3a5a3a 100%)}
+  body.dark-mode .card,body.dark-mode .section{background:#1a1f2e;color:#e4e6eb;box-shadow:0 4px 20px rgba(0,0,0,0.4)}
+  body.dark-mode .partnership-card{background:linear-gradient(135deg,#1a2b1a,#2d4a2d)}
+  body.dark-mode h1,body.dark-mode h2,body.dark-mode .section-title,body.dark-mode .card-name{color:#8bc34a}
+  body.dark-mode p,body.dark-mode .card-school,body.dark-mode .timeline-desc,body.dark-mode .stat-label{color:#b0b3b8}
+  body.dark-mode .timeline-date{color:#9ca3af}
+  body.dark-mode .timeline::before{background:#2d3748}
+  body.dark-mode .section-header{border-bottom-color:#2d3748}
+  </style>
+  <script>
+  (function(){const d=localStorage.getItem('fc-dark-mode');if(d==='true')document.body.classList.add('dark-mode')})();
+  </script>
 </head>
 <body>
 

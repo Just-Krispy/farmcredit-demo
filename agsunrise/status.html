@@ -32,6 +32,19 @@
       .stats-row, .stat-row { gap: 20px; }
     }
   </style>
+  <!-- DARK MODE PERSISTENCE -->
+  <style>
+  body.dark-mode{background:#0f1419;color:#e4e6eb}
+  body.dark-mode header{background:linear-gradient(135deg,#1a2b1a,#2d4a2d)}
+  body.dark-mode .card{background:#1a1f2e;color:#e4e6eb;box-shadow:0 4px 20px rgba(0,0,0,0.4)}
+  body.dark-mode h2{color:#8bc34a}
+  body.dark-mode p{color:#b0b3b8}
+  body.dark-mode input{background:#2d3748;color:#e4e6eb;border-color:#4a5568}
+  body.dark-mode .timeline{background:#1a2b1a}
+  </style>
+  <script>
+  (function(){const d=localStorage.getItem('fc-dark-mode');if(d==='true')document.body.classList.add('dark-mode')})();
+  </script>
 </head>
 <body>
 <header><div class="logo">Farm Credit <span>SEMO</span></div></header>

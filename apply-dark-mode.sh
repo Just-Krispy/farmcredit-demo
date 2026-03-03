@@ -1,0 +1,72 @@
+#!/bin/bash
+# Apply dark mode persistence to all HTML files except index.html
+
+# List of files to update
+files=(
+  "intelligence.html"
+  "intelligence-dashboard/index.html"
+  "patronage/index.html"
+  "cashflow/index.html"
+  "health-score.html"
+  "agsunrise/index.html"
+  "agsunrise/status.html"
+  "agsunrise/admin.html"
+  "agsunrise-platform/index.html"
+  "agsunrise-platform/dashboard/index.html"
+  "agsunrise-platform/education/index.html"
+  "agsunrise-platform/mentorship/index.html"
+  "reminders/index.html"
+  "roi/index.html"
+  "compare/index.html"
+  "phase2/index.html"
+  "proposal/index.html"
+  "proposal/email.html"
+  "emails/index.html"
+  "youth-programs/index.html"
+)
+
+snippet='<!-- DARK MODE PERSISTENCE -->
+<style>
+body.dark-mode{background:#0f1419;color:#e4e6eb}
+body.dark-mode header{background:linear-gradient(135deg,#1a2b1a 0%,#2d4a2d 60%,#3a5a3a 100%)}
+body.dark-mode .card,body.dark-mode .section,body.dark-mode a.card{background:#1a1f2e;color:#e4e6eb;box-shadow:0 4px 20px rgba(0,0,0,0.4)}
+body.dark-mode a.card.sales,body.dark-mode .partnership-card{background:linear-gradient(135deg,#1a1f2e,#1e2833)}
+body.dark-mode a.card:hover{box-shadow:0 8px 32px rgba(0,0,0,0.6)}
+body.dark-mode .card h2,body.dark-mode h1,body.dark-mode h2,body.dark-mode h3{color:#8bc34a}
+body.dark-mode a.card.secondary h2{color:#a8d08d}
+body.dark-mode a.card.sales h2{color:#8bc34a}
+body.dark-mode .card p,body.dark-mode p,body.dark-mode .timeline-desc,body.dark-mode .card-school{color:#b0b3b8}
+body.dark-mode .section-label,body.dark-mode .stat-label,body.dark-mode .timeline-date{color:#9ca3af}
+body.dark-mode footer{color:#6b7280}
+body.dark-mode table{background:#1a1f2e;color:#e4e6eb}
+body.dark-mode th{background:#2d3748;color:#e4e6eb}
+body.dark-mode tr:hover{background:#2d3748}
+body.dark-mode .badge,body.dark-mode .card-badge{opacity:0.9}
+body.dark-mode input,body.dark-mode select,body.dark-mode textarea{background:#2d3748;color:#e4e6eb;border-color:#4a5568}
+body.dark-mode button:not(#fc-chat-button):not(#fc-chat-send){background:linear-gradient(135deg,#2d4a2d,#3a5a3a);color:#e4e6eb}
+</style>
+<script>
+(function(){const d=localStorage.getItem("fc-dark-mode");if(d==="true")document.body.classList.add("dark-mode")})();
+</script>'
+
+count=0
+for file in "${files[@]}"; do
+  if [ -f "$file" ]; then
+    # Check if already has dark mode
+    if grep -q "fc-dark-mode" "$file"; then
+      echo "✓ $file - already has dark mode"
+    else
+      # Add snippet before </head>
+      sed -i "s|</head>|$snippet\n</head>|" "$file"
+      echo "✓ $file - added dark mode"
+      ((count++))
+    fi
+  else
+    echo "✗ $file - not found"
+  fi
+done
+
+echo ""
+echo "✅ Updated $count files"
+echo "💡 Dark mode toggle stays on index.html only"
+echo "💡 All pages now auto-apply dark mode from localStorage"

@@ -61,6 +61,21 @@
     .demo-note{background:#fff8e1;border:1px solid #ffc107;border-radius:8px;padding:10px 14px;font-size:12px;color:#856404;margin-bottom:16px}
     @media(max-width:520px){.g2,.g3{grid-template-columns:1fr}.step-lbl{display:none}}
   </style>
+  
+  <!-- DARK MODE PERSISTENCE -->
+  <style>
+  body.dark-mode{background:#0f1419;color:#e4e6eb}
+  body.dark-mode header{background:linear-gradient(135deg,#1a2b1a,#2d4a2d)}
+  body.dark-mode .hero{background:linear-gradient(135deg,#1a2b1a,#2d4a2d)}
+  body.dark-mode .card{background:#1a1f2e;color:#e4e6eb;box-shadow:0 4px 20px rgba(0,0,0,0.4)}
+  body.dark-mode h2,body.dark-mode h3{color:#8bc34a}
+  body.dark-mode p,body.dark-mode label{color:#b0b3b8}
+  body.dark-mode input,body.dark-mode select,body.dark-mode textarea{background:#2d3748;color:#e4e6eb;border-color:#4a5568}
+  body.dark-mode .success{background:#1a2b1a}
+  </style>
+  <script>
+  (function(){const d=localStorage.getItem('fc-dark-mode');if(d==='true')document.body.classList.add('dark-mode')})();
+  </script>
 </head>
 <body>
 <header><div class="logo">Farm Credit <span>SEMO</span></div><small>AgSunrise Young Farmer Program</small></header>

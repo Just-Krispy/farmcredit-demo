@@ -941,6 +941,29 @@
       .patronage-value { font-size: 2rem; }
     }
   </style>
+  
+  <!-- DARK MODE PERSISTENCE -->
+  <style>
+  body.dark-mode{background:#0f1419;color:#e4e6eb}
+  body.dark-mode header{background:linear-gradient(135deg,#1a2b1a 0%,#2d4a2d 60%,#3a5a3a 100%)}
+  body.dark-mode .card,body.dark-mode .section,body.dark-mode a.card{background:#1a1f2e;color:#e4e6eb;box-shadow:0 4px 20px rgba(0,0,0,0.4)}
+  body.dark-mode a.card.sales{background:linear-gradient(135deg,#1a1f2e,#1e2833)}
+  body.dark-mode a.card:hover{box-shadow:0 8px 32px rgba(0,0,0,0.6)}
+  body.dark-mode .card h2,body.dark-mode h1,body.dark-mode h2,body.dark-mode h3{color:#8bc34a}
+  body.dark-mode a.card.secondary h2{color:#a8d08d}
+  body.dark-mode a.card.sales h2{color:#8bc34a}
+  body.dark-mode .card p,body.dark-mode p{color:#b0b3b8}
+  body.dark-mode .section-label,body.dark-mode .stat-label{color:#9ca3af}
+  body.dark-mode footer{color:#6b7280}
+  body.dark-mode table{background:#1a1f2e;color:#e4e6eb}
+  body.dark-mode th{background:#2d3748;color:#e4e6eb}
+  body.dark-mode tr:hover{background:#2d3748}
+  body.dark-mode .badge,body.dark-mode .card-badge{opacity:0.9}
+  body.dark-mode input,body.dark-mode select,body.dark-mode textarea{background:#2d3748;color:#e4e6eb;border-color:#4a5568}
+  </style>
+  <script>
+  (function(){const d=localStorage.getItem('fc-dark-mode');if(d==='true')document.body.classList.add('dark-mode')})();
+  </script>
 </head>
 <body>
   <!-- Skip to content for keyboard users -->

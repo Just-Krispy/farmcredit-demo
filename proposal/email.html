@@ -7,6 +7,17 @@
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Farm Credit SEMO — Digital Demo</title>
+  
+  <!-- DARK MODE PERSISTENCE -->
+  <style>
+  body.dark-mode{background:#0f1419!important;color:#e4e6eb!important}
+  body.dark-mode table{background:#1a1f2e!important;color:#e4e6eb!important}
+  body.dark-mode h1,body.dark-mode h2,body.dark-mode h3{color:#8bc34a!important}
+  body.dark-mode p{color:#b0b3b8!important}
+  </style>
+  <script>
+  (function(){const d=localStorage.getItem('fc-dark-mode');if(d==='true')document.body.classList.add('dark-mode')})();
+  </script>
 </head>
 <body style="margin:0;padding:0;background-color:#f4f7f0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;">
 
