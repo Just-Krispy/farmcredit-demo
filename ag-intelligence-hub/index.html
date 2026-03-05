@@ -1,0 +1,946 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ag Intelligence Hub — Farm Credit SEMO</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --fc-primary: #52812c;
+            --fc-dark: #345220;
+            --fc-accent: #8bc34a;
+            --fc-light: #a8d08d;
+            --fc-bg: #fafbf8;
+            --fc-gradient: linear-gradient(135deg, #345220 0%, #52812c 50%, #8bc34a 100%);
+            --fc-card: #ffffff;
+            --fc-border: #e5e7eb;
+            --fc-text: #1f2937;
+            --fc-muted: #6b7280;
+            --fc-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            --fc-shadow-hover: 0 8px 24px rgba(82,129,44,0.12);
+        }
+        body { font-family: 'Inter', system-ui, sans-serif; background: var(--fc-bg); color: var(--fc-text); line-height: 1.6; min-height: 100vh; }
+        body.dark-mode {
+            --fc-bg: #0f1419; --fc-card: #1a1f2e; --fc-border: #2d3748;
+            --fc-text: #e4e6eb; --fc-muted: #9ca3af;
+            --fc-shadow: 0 1px 3px rgba(0,0,0,0.3); --fc-shadow-hover: 0 8px 24px rgba(0,0,0,0.4);
+        }
+        a.skip-to-content { position: absolute; top: -40px; left: 0; background: var(--fc-primary); color: #fff; padding: 8px; z-index: 100; }
+        a.skip-to-content:focus { top: 0; }
+
+        /* Header */
+        .header { background: var(--fc-gradient); color: #fff; padding: 1.5rem 2rem; position: relative; overflow: hidden; }
+        .header::before { content: ''; position: absolute; top: -50%; right: -10%; width: 400px; height: 400px; background: radial-gradient(circle, rgba(255,255,255,0.08) 0%, transparent 70%); border-radius: 50%; }
+        .header-inner { max-width: 1400px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; position: relative; z-index: 1; flex-wrap: wrap; gap: 1rem; }
+        .header h1 { font-size: 1.5rem; font-weight: 800; letter-spacing: -0.02em; }
+        .header-subtitle { font-size: 0.875rem; opacity: 0.85; margin-top: 0.25rem; }
+        .header-badge { background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.3); padding: 0.5rem 1rem; border-radius: 9999px; font-size: 0.8rem; font-weight: 600; backdrop-filter: blur(10px); display: flex; align-items: center; gap: 0.5rem; }
+        .header-badge .pulse { width: 8px; height: 8px; border-radius: 50%; background: #4ade80; animation: pulse 2s infinite; }
+        @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.4; } }
+
+        /* Tabs */
+        .tabs { background: var(--fc-card); border-bottom: 2px solid var(--fc-border); display: flex; max-width: 1400px; margin: 0 auto; overflow-x: auto; }
+        .tab { padding: 1rem 1.5rem; border: none; background: transparent; color: var(--fc-muted); cursor: pointer; font-family: inherit; font-size: 0.875rem; font-weight: 600; white-space: nowrap; border-bottom: 3px solid transparent; transition: all 0.2s; }
+        .tab:hover { color: var(--fc-primary); }
+        .tab.active { color: var(--fc-primary); border-bottom-color: var(--fc-primary); }
+
+        /* Container */
+        .container { max-width: 1400px; margin: 0 auto; padding: 1.5rem 2rem; }
+        .tab-panel { display: none; }
+        .tab-panel.active { display: block; }
+
+        /* Cards */
+        .card { background: var(--fc-card); border-radius: 12px; border: 1px solid var(--fc-border); padding: 1.75rem; margin-bottom: 1.5rem; box-shadow: var(--fc-shadow); transition: box-shadow 0.3s, transform 0.3s; }
+        .card:hover { box-shadow: var(--fc-shadow-hover); }
+        .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem; padding-bottom: 1.25rem; border-bottom: 2px solid var(--fc-border); }
+        .card-title { font-size: 1.25rem; font-weight: 700; color: var(--fc-dark); display: flex; align-items: center; gap: 0.5rem; }
+        body.dark-mode .card-title { color: #e4e6eb; }
+        .card-title::before { content: ''; width: 4px; height: 1.5rem; background: var(--fc-gradient); border-radius: 2px; }
+
+        /* Grids */
+        .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(400px,100%), 1fr)); gap: 1.5rem; }
+        .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(280px,100%), 1fr)); gap: 1.5rem; }
+        .grid-4 { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(220px,100%), 1fr)); gap: 1.25rem; }
+
+        /* Stats Row */
+        .stats-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 1.5rem; }
+        .stat-card { background: var(--fc-card); border-radius: 12px; border: 1px solid var(--fc-border); border-left: 5px solid var(--fc-primary); padding: 1.25rem; box-shadow: var(--fc-shadow); }
+        .stat-label { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--fc-muted); font-weight: 600; }
+        .stat-value { font-size: 1.75rem; font-weight: 900; color: var(--fc-primary); margin: 0.25rem 0; }
+        body.dark-mode .stat-value { color: var(--fc-accent); }
+        .stat-change { font-size: 0.8rem; font-weight: 600; }
+        .stat-change.up { color: #10b981; }
+        .stat-change.down { color: #ef4444; }
+        .stat-change.neutral { color: var(--fc-muted); }
+
+        /* Commodity Cards */
+        .commodity-card { background: var(--fc-card); border-radius: 10px; border: 1px solid var(--fc-border); padding: 1.25rem; position: relative; overflow: hidden; transition: all 0.3s; }
+        .commodity-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: var(--fc-gradient); transform: scaleX(0); transition: transform 0.3s; transform-origin: left; }
+        .commodity-card:hover::before { transform: scaleX(1); }
+        .commodity-card:hover { transform: translateY(-2px); box-shadow: var(--fc-shadow-hover); }
+        .commodity-name { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--fc-muted); font-weight: 600; }
+        .commodity-price { font-size: 1.5rem; font-weight: 800; color: var(--fc-dark); margin: 0.5rem 0; }
+        body.dark-mode .commodity-price { color: #e4e6eb; }
+        .commodity-unit { font-size: 0.75rem; color: var(--fc-muted); }
+        .commodity-change { display: inline-flex; align-items: center; gap: 0.25rem; padding: 0.25rem 0.5rem; border-radius: 6px; font-size: 0.75rem; font-weight: 600; }
+        .commodity-change.up { background: #ecfdf5; color: #059669; }
+        .commodity-change.down { background: #fef2f2; color: #dc2626; }
+        body.dark-mode .commodity-change.up { background: rgba(16,185,129,0.15); }
+        body.dark-mode .commodity-change.down { background: rgba(239,68,68,0.15); }
+
+        /* Weather */
+        .weather-current { display: flex; align-items: center; gap: 1.5rem; margin-bottom: 1rem; }
+        .weather-temp { font-size: 3rem; font-weight: 900; color: var(--fc-dark); }
+        body.dark-mode .weather-temp { color: #e4e6eb; }
+        .weather-desc { color: var(--fc-muted); font-size: 0.875rem; }
+        .weather-details { display: flex; gap: 1.5rem; flex-wrap: wrap; }
+        .weather-detail { font-size: 0.8rem; color: var(--fc-muted); }
+        .weather-detail strong { color: var(--fc-text); }
+        .forecast-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); gap: 0.75rem; margin-top: 1rem; }
+        .forecast-day { text-align: center; padding: 0.75rem 0.5rem; border-radius: 8px; background: var(--fc-bg); border: 1px solid var(--fc-border); }
+        .forecast-day .day { font-size: 0.7rem; font-weight: 600; text-transform: uppercase; color: var(--fc-muted); }
+        .forecast-day .icon { font-size: 1.5rem; margin: 0.25rem 0; }
+        .forecast-day .temp { font-size: 0.8rem; font-weight: 700; }
+        .forecast-day .temp-lo { color: var(--fc-muted); font-weight: 400; }
+
+        /* Map */
+        #county-map { height: 450px; width: 100%; border-radius: 8px; border: 1px solid var(--fc-border); }
+
+        /* Crop Table */
+        .crop-table { width: 100%; border-collapse: collapse; }
+        .crop-table th { text-align: left; padding: 0.75rem 1rem; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--fc-muted); border-bottom: 2px solid var(--fc-border); font-weight: 600; }
+        .crop-table td { padding: 0.75rem 1rem; border-bottom: 1px solid var(--fc-border); font-size: 0.875rem; }
+        .crop-table tr:hover { background: rgba(82,129,44,0.03); }
+        body.dark-mode .crop-table tr:hover { background: rgba(139,195,74,0.05); }
+        .crop-table .crop-icon { font-size: 1.25rem; }
+
+        /* Drought bar */
+        .drought-bar { display: flex; border-radius: 6px; overflow: hidden; height: 24px; margin: 0.5rem 0; }
+        .drought-bar div { display: flex; align-items: center; justify-content: center; font-size: 0.65rem; font-weight: 600; color: #fff; min-width: 20px; }
+        .drought-none { background: #6ee7b7; color: #064e3b !important; }
+        .drought-d0 { background: #fde047; color: #713f12 !important; }
+        .drought-d1 { background: #fbbf24; color: #713f12 !important; }
+        .drought-d2 { background: #f97316; }
+        .drought-d3 { background: #ef4444; }
+        .drought-d4 { background: #7f1d1d; }
+
+        /* Alerts */
+        .alert { padding: 1rem 1.25rem; border-radius: 8px; margin-bottom: 1rem; font-size: 0.875rem; display: flex; align-items: flex-start; gap: 0.75rem; }
+        .alert-info { background: #eff6ff; border: 1px solid #bfdbfe; color: #1e40af; }
+        .alert-warning { background: #fffbeb; border: 1px solid #fde68a; color: #92400e; }
+        .alert-success { background: #ecfdf5; border: 1px solid #a7f3d0; color: #065f46; }
+        body.dark-mode .alert-info { background: rgba(59,130,246,0.1); border-color: rgba(59,130,246,0.3); color: #93c5fd; }
+        body.dark-mode .alert-warning { background: rgba(245,158,11,0.1); border-color: rgba(245,158,11,0.3); color: #fcd34d; }
+        body.dark-mode .alert-success { background: rgba(16,185,129,0.1); border-color: rgba(16,185,129,0.3); color: #6ee7b7; }
+        .alert-icon { font-size: 1.25rem; flex-shrink: 0; }
+
+        /* AgSunrise card */
+        .agsunrise-card { background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%); border: 1px solid #f59e0b; border-radius: 12px; padding: 1.5rem; }
+        body.dark-mode .agsunrise-card { background: linear-gradient(135deg, rgba(245,158,11,0.15) 0%, rgba(253,230,138,0.1) 100%); border-color: rgba(245,158,11,0.4); }
+        .agsunrise-card h3 { color: #92400e; font-size: 1.1rem; font-weight: 700; margin-bottom: 0.75rem; display: flex; align-items: center; gap: 0.5rem; }
+        body.dark-mode .agsunrise-card h3 { color: #fcd34d; }
+        .agsunrise-stat { display: flex; justify-content: space-between; padding: 0.5rem 0; border-bottom: 1px solid rgba(245,158,11,0.2); font-size: 0.875rem; }
+        .agsunrise-stat:last-child { border: none; }
+
+        /* Briefing */
+        .briefing-item { display: flex; gap: 1rem; padding: 1rem 0; border-bottom: 1px solid var(--fc-border); }
+        .briefing-item:last-child { border: none; }
+        .briefing-icon { width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.25rem; flex-shrink: 0; }
+        .briefing-icon.market { background: #dbeafe; }
+        .briefing-icon.weather { background: #fef3c7; }
+        .briefing-icon.regulatory { background: #fce7f3; }
+        .briefing-icon.opportunity { background: #d1fae5; }
+        body.dark-mode .briefing-icon.market { background: rgba(59,130,246,0.2); }
+        body.dark-mode .briefing-icon.weather { background: rgba(245,158,11,0.2); }
+        body.dark-mode .briefing-icon.regulatory { background: rgba(236,72,153,0.2); }
+        body.dark-mode .briefing-icon.opportunity { background: rgba(16,185,129,0.2); }
+        .briefing-title { font-weight: 600; font-size: 0.9rem; }
+        .briefing-detail { font-size: 0.8rem; color: var(--fc-muted); margin-top: 0.25rem; }
+        .briefing-time { font-size: 0.7rem; color: var(--fc-muted); margin-top: 0.25rem; }
+
+        /* Timestamp footer */
+        .data-footer { display: flex; justify-content: space-between; align-items: center; padding: 1rem 0; margin-top: 1rem; border-top: 1px solid var(--fc-border); font-size: 0.75rem; color: var(--fc-muted); flex-wrap: wrap; gap: 0.5rem; }
+        .refresh-btn { background: var(--fc-primary); color: #fff; border: none; padding: 0.5rem 1rem; border-radius: 6px; font-size: 0.75rem; font-weight: 600; cursor: pointer; font-family: inherit; transition: background 0.2s; }
+        .refresh-btn:hover { background: var(--fc-dark); }
+
+        /* Badge */
+        .badge { display: inline-flex; align-items: center; gap: 0.25rem; padding: 0.2rem 0.5rem; border-radius: 6px; font-size: 0.7rem; font-weight: 600; }
+        .badge-green { background: #ecfdf5; color: #059669; }
+        .badge-yellow { background: #fffbeb; color: #d97706; }
+        .badge-red { background: #fef2f2; color: #dc2626; }
+        body.dark-mode .badge-green { background: rgba(16,185,129,0.15); }
+        body.dark-mode .badge-yellow { background: rgba(245,158,11,0.15); }
+        body.dark-mode .badge-red { background: rgba(239,68,68,0.15); }
+
+        /* Loading */
+        .loading { display: flex; align-items: center; justify-content: center; padding: 3rem; color: var(--fc-muted); gap: 0.75rem; }
+        .spinner { width: 24px; height: 24px; border: 3px solid var(--fc-border); border-top-color: var(--fc-primary); border-radius: 50%; animation: spin 0.8s linear infinite; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header { padding: 1rem 1.25rem; }
+            .header h1 { font-size: 1.2rem; }
+            .container { padding: 1rem; }
+            .tab { padding: 0.75rem 1rem; font-size: 0.8rem; }
+            .stats-row { grid-template-columns: repeat(2, 1fr); }
+            .stat-value { font-size: 1.4rem; }
+            #county-map { height: 300px; }
+            .weather-temp { font-size: 2rem; }
+        }
+        @media (max-width: 480px) {
+            .stats-row { grid-template-columns: 1fr; }
+            .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
+            .tab { padding: 0.6rem 0.75rem; font-size: 0.75rem; }
+        }
+    </style>
+    <link rel="stylesheet" href="../fc-common.css">
+</head>
+<body>
+    <a href="#main-content" class="skip-to-content">Skip to main content</a>
+
+    <div class="header">
+        <div class="header-inner">
+            <div>
+                <h1>Ag Intelligence Hub</h1>
+                <div class="header-subtitle">Farm Credit of Southeast Missouri — Real-Time Agricultural Intelligence</div>
+            </div>
+            <div class="header-badge">
+                <span class="pulse"></span>
+                <span id="data-status">Loading data...</span>
+            </div>
+        </div>
+    </div>
+
+    <nav class="tabs" role="tablist" aria-label="Dashboard sections">
+        <button class="tab active" role="tab" aria-selected="true" data-tab="overview">Market Overview</button>
+        <button class="tab" role="tab" aria-selected="false" data-tab="crops">Crop Intelligence</button>
+        <button class="tab" role="tab" aria-selected="false" data-tab="geographic">Regional Map</button>
+        <button class="tab" role="tab" aria-selected="false" data-tab="briefing">Loan Officer Briefing</button>
+        <button class="tab" role="tab" aria-selected="false" data-tab="agsunrise">AgSunrise Pipeline</button>
+    </nav>
+
+    <main id="main-content" class="container">
+
+        <!-- TAB: Market Overview -->
+        <div class="tab-panel active" id="panel-overview">
+            <div class="stats-row" id="stats-row">
+                <div class="stat-card">
+                    <div class="stat-label">Soybean Price</div>
+                    <div class="stat-value" id="stat-soy">--</div>
+                    <div class="stat-change neutral" id="stat-soy-change">Loading...</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Corn Price</div>
+                    <div class="stat-value" id="stat-corn">--</div>
+                    <div class="stat-change neutral" id="stat-corn-change">Loading...</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Rice Price</div>
+                    <div class="stat-value" id="stat-rice">--</div>
+                    <div class="stat-change neutral" id="stat-rice-change">Loading...</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Cotton Price</div>
+                    <div class="stat-value" id="stat-cotton">--</div>
+                    <div class="stat-change neutral" id="stat-cotton-change">Loading...</div>
+                </div>
+            </div>
+
+            <div class="grid-2">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">Commodity Prices</h2>
+                        <span class="badge badge-green" id="prices-badge">Live</span>
+                    </div>
+                    <div class="grid-2" id="commodity-cards" style="gap: 1rem;">
+                        <div class="loading"><div class="spinner"></div> Loading prices...</div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">Current Weather</h2>
+                        <span class="badge badge-green">Cape Girardeau</span>
+                    </div>
+                    <div id="weather-content">
+                        <div class="loading"><div class="spinner"></div> Loading weather...</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">Price Trends (90 Days)</h2>
+                </div>
+                <canvas id="price-chart" height="100"></canvas>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">Drought Monitor — SEMO Region</h2>
+                    <span class="badge badge-yellow" id="drought-date">--</span>
+                </div>
+                <div id="drought-content">
+                    <div class="loading"><div class="spinner"></div> Loading drought data...</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB: Crop Intelligence -->
+        <div class="tab-panel" id="panel-crops">
+            <div class="alert alert-info">
+                <span class="alert-icon">&#x1F4CA;</span>
+                <div>
+                    <strong>USDA NASS Data</strong> — Production statistics for the 9-county SEMO service area. Data reflects the most recent crop year from USDA QuickStats.
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">Regional Crop Production</h2>
+                </div>
+                <div style="overflow-x: auto;">
+                    <table class="crop-table" id="crop-table">
+                        <thead>
+                            <tr>
+                                <th>Crop</th>
+                                <th>Acres Planted</th>
+                                <th>Yield</th>
+                                <th>Production</th>
+                                <th>Est. Revenue</th>
+                                <th>Trend</th>
+                            </tr>
+                        </thead>
+                        <tbody id="crop-table-body">
+                            <tr><td colspan="6"><div class="loading"><div class="spinner"></div> Loading crop data...</div></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">County Breakdown</h2>
+                </div>
+                <div style="overflow-x: auto;">
+                    <table class="crop-table" id="county-crop-table">
+                        <thead>
+                            <tr>
+                                <th>County</th>
+                                <th>Primary Crop</th>
+                                <th>Acres</th>
+                                <th>Yield</th>
+                                <th>Drought Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="county-crop-body">
+                            <tr><td colspan="5"><div class="loading"><div class="spinner"></div> Loading...</div></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">Acreage Distribution</h2>
+                </div>
+                <canvas id="acreage-chart" height="80"></canvas>
+            </div>
+        </div>
+
+        <!-- TAB: Regional Map -->
+        <div class="tab-panel" id="panel-geographic">
+            <div class="alert alert-info">
+                <span class="alert-icon">&#x1F5FA;</span>
+                <div>
+                    <strong>SEMO Service Area</strong> — 12 counties in the Southeast Missouri Bootheel. Click markers for county details including crop data and drought conditions.
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">Regional Agricultural Map</h2>
+                    <div style="display:flex;gap:0.75rem;flex-wrap:wrap;">
+                        <span class="badge badge-green">&#x25CF; Low Risk</span>
+                        <span class="badge badge-yellow">&#x25CF; Moderate</span>
+                        <span class="badge badge-red">&#x25CF; High Risk</span>
+                    </div>
+                </div>
+                <div id="county-map"></div>
+            </div>
+        </div>
+
+        <!-- TAB: Loan Officer Briefing -->
+        <div class="tab-panel" id="panel-briefing">
+            <div class="alert alert-success">
+                <span class="alert-icon">&#x2615;</span>
+                <div>
+                    <strong>Good morning!</strong> Here's your daily intelligence briefing for loan officers serving the SEMO region. Updated every morning at 7 AM CT.
+                </div>
+            </div>
+            <div class="grid-2">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">Today's Briefing</h2>
+                        <span id="briefing-date" class="badge badge-green">--</span>
+                    </div>
+                    <div id="briefing-content">
+                        <div class="loading"><div class="spinner"></div> Generating briefing...</div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">Conversation Starters</h2>
+                    </div>
+                    <div id="conversation-starters">
+                        <div class="loading"><div class="spinner"></div> Loading...</div>
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">Market Impact on Lending</h2>
+                </div>
+                <div id="lending-impact">
+                    <div class="loading"><div class="spinner"></div> Analyzing...</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB: AgSunrise Pipeline -->
+        <div class="tab-panel" id="panel-agsunrise">
+            <div class="alert alert-warning">
+                <span class="alert-icon">&#x1F31F;</span>
+                <div>
+                    <strong>AgSunrise Program</strong> — Young and beginning farmer pipeline. Eligible: age &le;40 OR &le;10 years farming experience. Flexible underwriting, government coordination, mentorship pairing.
+                </div>
+            </div>
+            <div class="stats-row">
+                <div class="stat-card">
+                    <div class="stat-label">Active AgSunrise Members</div>
+                    <div class="stat-value">47</div>
+                    <div class="stat-change up">+12 this quarter</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Pipeline Prospects</div>
+                    <div class="stat-value">23</div>
+                    <div class="stat-change up">8 pre-qualified</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Avg Loan Size</div>
+                    <div class="stat-value">$285K</div>
+                    <div class="stat-change neutral">Operating + RE</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Retention Rate</div>
+                    <div class="stat-value">94%</div>
+                    <div class="stat-change up">+3% YoY</div>
+                </div>
+            </div>
+            <div class="grid-2">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">Pipeline by County</h2>
+                    </div>
+                    <canvas id="agsunrise-chart" height="120"></canvas>
+                </div>
+                <div>
+                    <div class="agsunrise-card" style="margin-bottom: 1.5rem;">
+                        <h3>&#x1F31E; AgSunrise Opportunity Index</h3>
+                        <div class="agsunrise-stat"><span>Young farmers in SEMO (age &le;40)</span><strong>~340</strong></div>
+                        <div class="agsunrise-stat"><span>Current FC SEMO penetration</span><strong>14%</strong></div>
+                        <div class="agsunrise-stat"><span>Estimated untapped opportunity</span><strong>$67M</strong></div>
+                        <div class="agsunrise-stat"><span>USDA FSA referral potential</span><strong>85 leads/yr</strong></div>
+                        <div class="agsunrise-stat"><span>AgBizInfo mentorship matches</span><strong>22 active</strong></div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header">
+                            <h2 class="card-title">Recommended Actions</h2>
+                        </div>
+                        <div class="briefing-item">
+                            <div class="briefing-icon opportunity">&#x1F4E3;</div>
+                            <div>
+                                <div class="briefing-title">FFA Chapter Outreach</div>
+                                <div class="briefing-detail">3 local FFA chapters haven't been contacted this semester. Schedule presentations for Scott, Stoddard, and New Madrid counties.</div>
+                            </div>
+                        </div>
+                        <div class="briefing-item">
+                            <div class="briefing-icon market">&#x1F4B0;</div>
+                            <div>
+                                <div class="briefing-title">USDA-FSA Beginning Farmer Loans</div>
+                                <div class="briefing-detail">FSA direct loan limit increased to $600K. 12 current members may qualify for AgSunrise + FSA combo financing.</div>
+                            </div>
+                        </div>
+                        <div class="briefing-item">
+                            <div class="briefing-icon weather">&#x1F3EB;</div>
+                            <div>
+                                <div class="briefing-title">Spring Workshop Series</div>
+                                <div class="briefing-detail">Plan "First-Gen Farmer Financial Planning" workshops. Target: February-March before planting season. Partner with MU Extension.</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="data-footer">
+            <span id="last-updated">Data updated: --</span>
+            <div style="display:flex;gap:0.5rem;align-items:center;">
+                <span id="data-source" class="badge badge-green">Demo Data</span>
+                <button class="refresh-btn" onclick="refreshData()">Refresh Data</button>
+            </div>
+        </div>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="../fc-common.js"></script>
+    <script>
+    // ==================== DATA ====================
+    // Demo data - in production, this fetches from the VPS data service on port 9877
+    const DEMO_DATA = {
+        metadata: { source: "demo", timestamp: new Date().toISOString(), region: "SE Missouri Bootheel" },
+        prices: {
+            commodities: {
+                soybeans: { price: 11.52, unit: "$/bushel", change_pct: 1.3, contract: "ZS May 2026", exchange: "CBOT" },
+                corn: { price: 4.48, unit: "$/bushel", change_pct: -0.7, contract: "ZC May 2026", exchange: "CBOT" },
+                rice: { price: 17.25, unit: "$/cwt", change_pct: 0.5, contract: "ZR May 2026", exchange: "CBOT" },
+                cotton: { price: 0.819, unit: "$/lb", change_pct: -1.2, contract: "CT May 2026", exchange: "ICE" }
+            }
+        },
+        weather: {
+            current: { temperature: 52, description: "Partly Cloudy", humidity: 58, wind_speed: "12 mph NW", pressure: "30.12 inHg" },
+            forecast: [
+                { day: "Today", icon: "\u26C5", high: 55, low: 38 },
+                { day: "Thu", icon: "\u2600\uFE0F", high: 62, low: 41 },
+                { day: "Fri", icon: "\u2600\uFE0F", high: 65, low: 43 },
+                { day: "Sat", icon: "\uD83C\uDF27\uFE0F", high: 58, low: 40 },
+                { day: "Sun", icon: "\uD83C\uDF27\uFE0F", high: 52, low: 36 },
+                { day: "Mon", icon: "\u26C5", high: 57, low: 39 },
+                { day: "Tue", icon: "\u2600\uFE0F", high: 63, low: 42 }
+            ],
+            planting_outlook: "Soil temps trending up. Early planting window may open 2-3 weeks ahead of 10-year average for corn. Monitor frost risk through mid-March."
+        },
+        crops: {
+            summary: [
+                { crop: "Soybeans", icon: "\uD83C\uDF3E", acres: 842000, yield: 50.2, unit: "bu/acre", production: "42.3M bu", price: 11.52, revenue: "$487M", trend: "up" },
+                { crop: "Corn", icon: "\uD83C\uDF3D", acres: 312000, yield: 172, unit: "bu/acre", production: "53.7M bu", price: 4.48, revenue: "$241M", trend: "up" },
+                { crop: "Rice", icon: "\uD83C\uDF3E", acres: 198000, yield: 7200, unit: "lbs/acre", production: "1.43B lbs", price: 0.1725, revenue: "$247M", trend: "neutral" },
+                { crop: "Cotton", icon: "\uD83E\uDDF5", acres: 108000, yield: 1120, unit: "lbs/acre", production: "121M lbs", price: 0.819, revenue: "$99M", trend: "down" }
+            ],
+            counties: [
+                { name: "Dunklin", lat: 36.11, lng: -90.03, primary: "Cotton/Soybeans", acres: 185000, yield: "49 bu/acre (soy)", drought: "None", risk: "low", fips: "29069" },
+                { name: "New Madrid", lat: 36.59, lng: -89.53, primary: "Rice/Soybeans", acres: 165000, yield: "7,400 lbs/acre (rice)", drought: "D0", risk: "moderate", fips: "29143" },
+                { name: "Pemiscot", lat: 36.21, lng: -89.79, primary: "Cotton/Rice", acres: 148000, yield: "1,150 lbs/acre (cotton)", drought: "None", risk: "low", fips: "29155" },
+                { name: "Stoddard", lat: 36.85, lng: -89.93, primary: "Corn/Soybeans", acres: 175000, yield: "178 bu/acre (corn)", drought: "None", risk: "low", fips: "29207" },
+                { name: "Scott", lat: 37.06, lng: -89.55, primary: "Soybeans/Corn", acres: 138000, yield: "52 bu/acre (soy)", drought: "D0", risk: "moderate", fips: "29201" },
+                { name: "Mississippi", lat: 36.82, lng: -89.29, primary: "Rice/Soybeans", acres: 112000, yield: "7,100 lbs/acre (rice)", drought: "None", risk: "low", fips: "29133" },
+                { name: "Butler", lat: 36.73, lng: -90.40, primary: "Soybeans/Corn", acres: 95000, yield: "48 bu/acre (soy)", drought: "None", risk: "low", fips: "29023" },
+                { name: "Cape Girardeau", lat: 37.31, lng: -89.52, primary: "Corn/Soybeans", acres: 72000, yield: "175 bu/acre (corn)", drought: "None", risk: "low", fips: "29031" },
+                { name: "Wayne", lat: 37.11, lng: -90.46, primary: "Soybeans/Cattle", acres: 48000, yield: "44 bu/acre (soy)", drought: "None", risk: "low", fips: "29223" },
+                { name: "Carter", lat: 36.94, lng: -91.01, primary: "Cattle/Timber", acres: 22000, yield: "Mixed", drought: "None", risk: "low", fips: "29035" },
+                { name: "Ripley", lat: 36.63, lng: -90.87, primary: "Soybeans/Cattle", acres: 38000, yield: "42 bu/acre (soy)", drought: "None", risk: "low", fips: "29181" },
+                { name: "Bollinger", lat: 37.32, lng: -90.02, primary: "Corn/Cattle", acres: 35000, yield: "165 bu/acre (corn)", drought: "None", risk: "low", fips: "29017" }
+            ]
+        },
+        drought: {
+            date: "2026-03-03",
+            region_summary: { none: 72, d0: 18, d1: 7, d2: 3, d3: 0, d4: 0 }
+        }
+    };
+
+    let DATA = DEMO_DATA;
+
+    // ==================== TAB NAVIGATION ====================
+    document.querySelectorAll('.tab').forEach(tab => {
+        tab.addEventListener('click', () => {
+            document.querySelectorAll('.tab').forEach(t => { t.classList.remove('active'); t.setAttribute('aria-selected', 'false'); });
+            document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+            tab.classList.add('active');
+            tab.setAttribute('aria-selected', 'true');
+            document.getElementById('panel-' + tab.dataset.tab).classList.add('active');
+            if (tab.dataset.tab === 'geographic' && !window._mapInit) initMap();
+        });
+    });
+
+    // ==================== RENDER FUNCTIONS ====================
+    function renderOverview() {
+        const p = DATA.prices.commodities;
+
+        // Stat cards
+        document.getElementById('stat-soy').textContent = '$' + p.soybeans.price.toFixed(2);
+        renderChange('stat-soy-change', p.soybeans.change_pct, '/bu');
+        document.getElementById('stat-corn').textContent = '$' + p.corn.price.toFixed(2);
+        renderChange('stat-corn-change', p.corn.change_pct, '/bu');
+        document.getElementById('stat-rice').textContent = '$' + p.rice.price.toFixed(2);
+        renderChange('stat-rice-change', p.rice.change_pct, '/cwt');
+        document.getElementById('stat-cotton').textContent = '$' + p.cotton.price.toFixed(3);
+        renderChange('stat-cotton-change', p.cotton.change_pct, '/lb');
+
+        // Commodity detail cards
+        const commEl = document.getElementById('commodity-cards');
+        commEl.innerHTML = Object.entries(p).map(([name, c]) => `
+            <div class="commodity-card">
+                <div class="commodity-name">${name}</div>
+                <div class="commodity-price">${name === 'cotton' ? '$' + c.price.toFixed(3) : '$' + c.price.toFixed(2)}</div>
+                <div class="commodity-unit">${c.unit} | ${c.contract}</div>
+                <div style="margin-top:0.5rem;">
+                    <span class="commodity-change ${c.change_pct >= 0 ? 'up' : 'down'}">
+                        ${c.change_pct >= 0 ? '\u25B2' : '\u25BC'} ${Math.abs(c.change_pct).toFixed(1)}%
+                    </span>
+                    <span style="font-size:0.7rem;color:var(--fc-muted);margin-left:0.5rem;">${c.exchange}</span>
+                </div>
+            </div>
+        `).join('');
+
+        // Weather
+        const w = DATA.weather;
+        document.getElementById('weather-content').innerHTML = `
+            <div class="weather-current">
+                <div style="font-size:3rem;">${w.forecast[0].icon}</div>
+                <div>
+                    <div class="weather-temp">${w.current.temperature}\u00B0F</div>
+                    <div class="weather-desc">${w.current.description}</div>
+                </div>
+            </div>
+            <div class="weather-details">
+                <div class="weather-detail">Humidity: <strong>${w.current.humidity}%</strong></div>
+                <div class="weather-detail">Wind: <strong>${w.current.wind_speed}</strong></div>
+                <div class="weather-detail">Pressure: <strong>${w.current.pressure}</strong></div>
+            </div>
+            <div class="forecast-grid">
+                ${w.forecast.map(d => `
+                    <div class="forecast-day">
+                        <div class="day">${d.day}</div>
+                        <div class="icon">${d.icon}</div>
+                        <div class="temp">${d.high}\u00B0 <span class="temp-lo">${d.low}\u00B0</span></div>
+                    </div>
+                `).join('')}
+            </div>
+            ${w.planting_outlook ? `<div class="alert alert-info" style="margin-top:1rem;"><span class="alert-icon">\uD83C\uDF31</span><div><strong>Planting Outlook:</strong> ${w.planting_outlook}</div></div>` : ''}
+        `;
+
+        // Drought
+        const dr = DATA.drought;
+        document.getElementById('drought-date').textContent = dr.date;
+        const s = dr.region_summary;
+        document.getElementById('drought-content').innerHTML = `
+            <div style="margin-bottom:0.75rem;font-size:0.875rem;color:var(--fc-muted);">Percentage of SEMO region by drought category:</div>
+            <div class="drought-bar">
+                ${s.none > 0 ? `<div class="drought-none" style="width:${s.none}%">${s.none}%</div>` : ''}
+                ${s.d0 > 0 ? `<div class="drought-d0" style="width:${s.d0}%">${s.d0}%</div>` : ''}
+                ${s.d1 > 0 ? `<div class="drought-d1" style="width:${s.d1}%">${s.d1}%</div>` : ''}
+                ${s.d2 > 0 ? `<div class="drought-d2" style="width:${s.d2}%">${s.d2}%</div>` : ''}
+                ${s.d3 > 0 ? `<div class="drought-d3" style="width:${s.d3}%">${s.d3}%</div>` : ''}
+                ${s.d4 > 0 ? `<div class="drought-d4" style="width:${s.d4}%">${s.d4}%</div>` : ''}
+            </div>
+            <div style="display:flex;gap:1rem;flex-wrap:wrap;margin-top:0.5rem;font-size:0.75rem;color:var(--fc-muted);">
+                <span><span class="drought-none" style="display:inline-block;width:12px;height:12px;border-radius:2px;vertical-align:middle;"></span> None</span>
+                <span><span class="drought-d0" style="display:inline-block;width:12px;height:12px;border-radius:2px;vertical-align:middle;"></span> D0 Abnormally Dry</span>
+                <span><span class="drought-d1" style="display:inline-block;width:12px;height:12px;border-radius:2px;vertical-align:middle;"></span> D1 Moderate</span>
+                <span><span class="drought-d2" style="display:inline-block;width:12px;height:12px;border-radius:2px;vertical-align:middle;"></span> D2 Severe</span>
+                <span><span class="drought-d3" style="display:inline-block;width:12px;height:12px;border-radius:2px;vertical-align:middle;"></span> D3 Extreme</span>
+                <span><span class="drought-d4" style="display:inline-block;width:12px;height:12px;border-radius:2px;vertical-align:middle;"></span> D4 Exceptional</span>
+            </div>
+        `;
+
+        renderPriceChart();
+    }
+
+    function renderChange(elId, pct, suffix) {
+        const el = document.getElementById(elId);
+        const dir = pct >= 0 ? 'up' : 'down';
+        el.className = 'stat-change ' + dir;
+        el.textContent = (pct >= 0 ? '\u25B2 +' : '\u25BC ') + Math.abs(pct).toFixed(1) + '% ' + suffix;
+    }
+
+    function renderPriceChart() {
+        const ctx = document.getElementById('price-chart');
+        if (window._priceChart) window._priceChart.destroy();
+
+        const days = 90;
+        const labels = [];
+        for (let i = days; i >= 0; i--) {
+            const d = new Date(); d.setDate(d.getDate() - i);
+            labels.push(d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }));
+        }
+
+        function genTrend(base, volatility, trend) {
+            const data = []; let val = base - (trend * days / 2);
+            for (let i = 0; i <= days; i++) {
+                val += trend + (Math.random() - 0.5) * volatility;
+                data.push(parseFloat(val.toFixed(3)));
+            }
+            return data;
+        }
+
+        window._priceChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels,
+                datasets: [
+                    { label: 'Soybeans ($/bu)', data: genTrend(11.52, 0.15, 0.012), borderColor: '#52812c', backgroundColor: 'rgba(82,129,44,0.08)', fill: true, tension: 0.4, pointRadius: 0, borderWidth: 2 },
+                    { label: 'Corn ($/bu)', data: genTrend(4.48, 0.06, -0.005), borderColor: '#f59e0b', backgroundColor: 'rgba(245,158,11,0.05)', fill: true, tension: 0.4, pointRadius: 0, borderWidth: 2 },
+                    { label: 'Cotton ($/lb)', data: genTrend(0.819, 0.015, -0.001), borderColor: '#6366f1', backgroundColor: 'rgba(99,102,241,0.05)', fill: true, tension: 0.4, pointRadius: 0, borderWidth: 2 }
+                ]
+            },
+            options: {
+                responsive: true, maintainAspectRatio: true,
+                interaction: { intersect: false, mode: 'index' },
+                plugins: {
+                    legend: { position: 'top', labels: { usePointStyle: true, padding: 20, font: { size: 12, family: 'Inter' } } },
+                    tooltip: { backgroundColor: 'rgba(0,0,0,0.8)', titleFont: { size: 13, weight: '600' } }
+                },
+                scales: {
+                    x: { grid: { display: false }, ticks: { maxRotation: 0, autoSkipPadding: 30, font: { size: 11 } } },
+                    y: { grid: { color: 'rgba(0,0,0,0.05)' }, ticks: { font: { size: 11 } } }
+                }
+            }
+        });
+    }
+
+    function renderCrops() {
+        const crops = DATA.crops.summary;
+        document.getElementById('crop-table-body').innerHTML = crops.map(c => `
+            <tr>
+                <td><span class="crop-icon">${c.icon}</span> <strong>${c.crop}</strong></td>
+                <td>${c.acres.toLocaleString()} ac</td>
+                <td>${c.yield.toLocaleString()} ${c.unit}</td>
+                <td>${c.production}</td>
+                <td><strong>${c.revenue}</strong></td>
+                <td><span class="badge ${c.trend === 'up' ? 'badge-green' : c.trend === 'down' ? 'badge-red' : 'badge-yellow'}">${c.trend === 'up' ? '\u25B2 Up' : c.trend === 'down' ? '\u25BC Down' : '\u25CF Stable'}</span></td>
+            </tr>
+        `).join('');
+
+        // County breakdown
+        const counties = DATA.crops.counties;
+        document.getElementById('county-crop-body').innerHTML = counties.map(c => `
+            <tr>
+                <td><strong>${c.name}</strong></td>
+                <td>${c.primary}</td>
+                <td>${c.acres.toLocaleString()}</td>
+                <td>${c.yield}</td>
+                <td><span class="badge ${c.drought === 'None' ? 'badge-green' : c.drought === 'D0' ? 'badge-yellow' : 'badge-red'}">${c.drought}</span></td>
+            </tr>
+        `).join('');
+
+        // Acreage chart
+        renderAcreageChart();
+    }
+
+    function renderAcreageChart() {
+        const ctx = document.getElementById('acreage-chart');
+        if (window._acreageChart) window._acreageChart.destroy();
+        const crops = DATA.crops.summary;
+        window._acreageChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: crops.map(c => c.crop),
+                datasets: [{
+                    label: 'Acres Planted',
+                    data: crops.map(c => c.acres),
+                    backgroundColor: ['#52812c', '#f59e0b', '#3b82f6', '#6366f1'],
+                    borderRadius: 6
+                }]
+            },
+            options: {
+                responsive: true, maintainAspectRatio: true,
+                plugins: {
+                    legend: { display: false },
+                    tooltip: { callbacks: { label: ctx => ctx.parsed.y.toLocaleString() + ' acres' } }
+                },
+                scales: {
+                    x: { grid: { display: false } },
+                    y: { grid: { color: 'rgba(0,0,0,0.05)' }, ticks: { callback: v => (v / 1000) + 'K' } }
+                }
+            }
+        });
+    }
+
+    function initMap() {
+        window._mapInit = true;
+        const map = L.map('county-map').setView([36.75, -89.85], 8);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '\u00A9 OpenStreetMap contributors'
+        }).addTo(map);
+
+        DATA.crops.counties.forEach(c => {
+            const color = c.risk === 'high' ? '#ef4444' : c.risk === 'moderate' ? '#f59e0b' : '#52812c';
+            const marker = L.circleMarker([c.lat, c.lng], {
+                radius: Math.max(8, Math.sqrt(c.acres / 1000)),
+                fillColor: color, color: '#fff', weight: 2, opacity: 1, fillOpacity: 0.7
+            }).addTo(map);
+
+            marker.bindPopup(`
+                <div style="font-family:Inter,sans-serif;min-width:200px;">
+                    <strong style="font-size:1.1em;">${c.name} County</strong><br>
+                    <hr style="margin:0.5rem 0;border:none;border-top:1px solid #e5e7eb;">
+                    <strong>Primary:</strong> ${c.primary}<br>
+                    <strong>Total Acres:</strong> ${c.acres.toLocaleString()}<br>
+                    <strong>Yield:</strong> ${c.yield}<br>
+                    <strong>Drought:</strong> ${c.drought}<br>
+                    <strong>FIPS:</strong> ${c.fips}
+                </div>
+            `);
+        });
+    }
+
+    function renderBriefing() {
+        const now = new Date();
+        document.getElementById('briefing-date').textContent = now.toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric' });
+
+        const p = DATA.prices.commodities;
+        const w = DATA.weather;
+
+        const briefingItems = [
+            {
+                type: 'market', icon: '\uD83D\uDCC8',
+                title: `Soybeans ${p.soybeans.change_pct >= 0 ? 'up' : 'down'} ${Math.abs(p.soybeans.change_pct).toFixed(1)}% to $${p.soybeans.price.toFixed(2)}/bu`,
+                detail: `CBOT ${p.soybeans.contract}. ${p.soybeans.change_pct > 1 ? 'Strong buying interest — good time to discuss crop marketing plans with borrowers.' : 'Normal trading range. Monitor for breakout above $12.'}`,
+                time: 'Market close yesterday'
+            },
+            {
+                type: 'market', icon: '\uD83C\uDF3D',
+                title: `Corn at $${p.corn.price.toFixed(2)}/bu — ${p.corn.change_pct >= 0 ? 'holding steady' : 'slight pressure'}`,
+                detail: `${p.corn.change_pct < -0.5 ? 'Downward pressure from strong supply expectations. Borrowers with unpriced 2026 corn should consider hedging options.' : 'Stable pricing supports current operating loan projections.'}`,
+                time: 'Market close yesterday'
+            },
+            {
+                type: 'weather', icon: '\u26C5',
+                title: `${w.current.temperature}\u00B0F today, ${w.forecast[1].high}\u00B0F tomorrow`,
+                detail: w.planting_outlook,
+                time: 'NOAA forecast'
+            },
+            {
+                type: 'regulatory', icon: '\uD83D\uDCCB',
+                title: 'FCA Examination Schedule: Q2 2026',
+                detail: 'Annual examination prep materials due April 15. Ensure all AgSunrise loan files have complete beginning farmer certifications.',
+                time: 'FCA regulatory calendar'
+            },
+            {
+                type: 'opportunity', icon: '\uD83D\uDCA1',
+                title: 'New Madrid County: Rice Acreage Expanding',
+                detail: 'USDA reports 8% increase in intended rice acres for New Madrid and Mississippi counties. Opportunity for operating loans and equipment financing.',
+                time: 'USDA Prospective Plantings'
+            }
+        ];
+
+        document.getElementById('briefing-content').innerHTML = briefingItems.map(item => `
+            <div class="briefing-item">
+                <div class="briefing-icon ${item.type}">${item.icon}</div>
+                <div>
+                    <div class="briefing-title">${item.title}</div>
+                    <div class="briefing-detail">${item.detail}</div>
+                    <div class="briefing-time">${item.time}</div>
+                </div>
+            </div>
+        `).join('');
+
+        // Conversation starters
+        document.getElementById('conversation-starters').innerHTML = `
+            <div class="briefing-item">
+                <div class="briefing-icon market">\uD83D\uDDE3\uFE0F</div>
+                <div>
+                    <div class="briefing-title">For grain producers:</div>
+                    <div class="briefing-detail">"Soybeans are trading at $${p.soybeans.price.toFixed(2)} — have you locked in any of your 2026 production yet? With planting coming up, now might be a good time to look at your crop marketing plan."</div>
+                </div>
+            </div>
+            <div class="briefing-item">
+                <div class="briefing-icon weather">\uD83D\uDDE3\uFE0F</div>
+                <div>
+                    <div class="briefing-title">For young farmers:</div>
+                    <div class="briefing-detail">"The AgSunrise program just expanded its eligible loan limits. If you're planning any equipment upgrades or looking at additional acres, we have some flexible options specifically for beginning farmers."</div>
+                </div>
+            </div>
+            <div class="briefing-item">
+                <div class="briefing-icon opportunity">\uD83D\uDDE3\uFE0F</div>
+                <div>
+                    <div class="briefing-title">For rice growers:</div>
+                    <div class="briefing-detail">"I saw rice acres are up 8% in your area this year. Are you thinking about expanding? We can put together a quick operating budget to see what the numbers look like at current prices."</div>
+                </div>
+            </div>
+        `;
+
+        // Lending impact
+        document.getElementById('lending-impact').innerHTML = `
+            <div class="grid-3">
+                <div style="padding:1rem;border-radius:8px;background:var(--fc-bg);border:1px solid var(--fc-border);">
+                    <div style="font-size:0.8rem;font-weight:600;color:var(--fc-muted);text-transform:uppercase;margin-bottom:0.5rem;">Operating Loan Impact</div>
+                    <div style="font-size:1.1rem;font-weight:700;color:var(--fc-dark);">Favorable</div>
+                    <div style="font-size:0.8rem;color:var(--fc-muted);margin-top:0.25rem;">Current commodity prices support projected breakeven on standard operating loans for all 4 major crops in the SEMO region.</div>
+                </div>
+                <div style="padding:1rem;border-radius:8px;background:var(--fc-bg);border:1px solid var(--fc-border);">
+                    <div style="font-size:0.8rem;font-weight:600;color:var(--fc-muted);text-transform:uppercase;margin-bottom:0.5rem;">Equipment Demand</div>
+                    <div style="font-size:1.1rem;font-weight:700;color:var(--fc-dark);">Increasing</div>
+                    <div style="font-size:0.8rem;color:var(--fc-muted);margin-top:0.25rem;">Rice acreage expansion driving demand for rice-specific equipment. 3 irrigation system inquiries in the pipeline this month.</div>
+                </div>
+                <div style="padding:1rem;border-radius:8px;background:var(--fc-bg);border:1px solid var(--fc-border);">
+                    <div style="font-size:0.8rem;font-weight:600;color:var(--fc-muted);text-transform:uppercase;margin-bottom:0.5rem;">Real Estate Market</div>
+                    <div style="font-size:1.1rem;font-weight:700;color:var(--fc-dark);">$5,800/acre avg</div>
+                    <div style="font-size:0.8rem;color:var(--fc-muted);margin-top:0.25rem;">Bootheel cropland steady. Premium irrigated rice ground commanding $7,200+/acre in New Madrid and Pemiscot counties.</div>
+                </div>
+            </div>
+        `;
+    }
+
+    function renderAgSunrise() {
+        const ctx = document.getElementById('agsunrise-chart');
+        if (window._sunriseChart) window._sunriseChart.destroy();
+        window._sunriseChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['Dunklin', 'New Madrid', 'Stoddard', 'Scott', 'Pemiscot', 'Cape G.', 'Butler', 'Other'],
+                datasets: [
+                    { label: 'Active Members', data: [9, 8, 7, 6, 5, 5, 4, 3], backgroundColor: '#52812c', borderRadius: 4 },
+                    { label: 'Prospects', data: [4, 3, 5, 3, 2, 2, 2, 2], backgroundColor: '#f59e0b', borderRadius: 4 }
+                ]
+            },
+            options: {
+                responsive: true, maintainAspectRatio: true,
+                plugins: {
+                    legend: { position: 'top', labels: { usePointStyle: true, padding: 15, font: { size: 12, family: 'Inter' } } }
+                },
+                scales: {
+                    x: { grid: { display: false }, stacked: true },
+                    y: { grid: { color: 'rgba(0,0,0,0.05)' }, stacked: true, ticks: { stepSize: 2 } }
+                }
+            }
+        });
+    }
+
+    // ==================== DATA LOADING ====================
+    async function loadData() {
+        document.getElementById('data-status').textContent = 'Loading data...';
+        try {
+            // Try VPS data service first (when deployed)
+            const resp = await fetch('https://your-vps:9877/', { signal: AbortSignal.timeout(3000) });
+            if (resp.ok) {
+                DATA = await resp.json();
+                document.getElementById('data-source').textContent = 'Live Data';
+                document.getElementById('data-source').className = 'badge badge-green';
+            }
+        } catch {
+            // Fall back to demo data (expected for GitHub Pages demo)
+            DATA = DEMO_DATA;
+            document.getElementById('data-source').textContent = 'Demo Data';
+        }
+        render();
+    }
+
+    function render() {
+        renderOverview();
+        renderCrops();
+        renderBriefing();
+        renderAgSunrise();
+        document.getElementById('data-status').textContent = 'Data loaded';
+        document.getElementById('last-updated').textContent = 'Data updated: ' + new Date().toLocaleString();
+    }
+
+    function refreshData() { loadData(); }
+
+    // Init
+    loadData();
+    </script>
+</body>
+</html>
